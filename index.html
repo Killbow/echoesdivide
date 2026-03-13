@@ -893,6 +893,88 @@
   }
   .inventory-add-btn:hover { background: var(--gold); color: var(--ink); }
 
+
+  /* Path Skills */
+  .path-skills-section { margin-bottom: 1.5rem; }
+  .path-skills-header {
+    font-family: 'Cinzel', serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    margin-bottom: 0.6rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .path-skills-header::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+  .path-skill-item {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    padding: 0.6rem 0.9rem;
+    margin-bottom: 0.4rem;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.8rem;
+    position: relative;
+    transition: border-color 0.15s;
+  }
+  .path-skill-item.dismissed {
+    opacity: 0.35;
+    border-style: dashed;
+  }
+  .path-skill-item-body { flex: 1; }
+  .path-skill-level {
+    font-family: 'Cinzel', serif;
+    font-size: 0.58rem;
+    color: var(--gold-dim);
+    letter-spacing: 0.08em;
+    margin-bottom: 0.15rem;
+  }
+  .path-skill-name {
+    font-size: 0.9rem;
+    color: var(--text);
+    margin-bottom: 0.2rem;
+  }
+  .path-skill-desc {
+    font-size: 0.78rem;
+    color: var(--text-dim);
+    font-style: italic;
+    line-height: 1.4;
+  }
+  .path-skill-dismiss {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text-faint);
+    font-size: 0.6rem;
+    font-family: 'Cinzel', serif;
+    letter-spacing: 0.08em;
+    padding: 0.2rem 0.5rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-top: 2px;
+    text-transform: uppercase;
+  }
+  .path-skill-dismiss:hover { border-color: var(--red-light); color: var(--red-light); }
+  .path-skill-item.dismissed .path-skill-dismiss {
+    color: var(--gold-dim);
+    border-color: var(--gold-dim);
+  }
+  .path-skills-empty {
+    font-style: italic;
+    color: var(--text-faint);
+    font-size: 0.85rem;
+    padding: 0.3rem 0;
+  }
+
   /* Scrollbar */
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: var(--bg3); }
@@ -952,6 +1034,10 @@
             <label>Character Name</label>
             <input type="text" id="f-name" placeholder="e.g. Varek Ashborn">
           </div>
+          <div class="form-group full">
+            <label>Backstory</label>
+            <textarea id="f-backstory" placeholder="Who are they? Where do they come from?" rows="3" style="background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:0.5rem 0.7rem;font-family:'Crimson Pro',serif;font-size:0.95rem;width:100%;outline:none;resize:vertical;transition:border-color 0.15s;"></textarea>
+          </div>
           <div class="form-group">
             <label>Race</label>
             <input type="text" id="f-race" placeholder="e.g. Half-Elf">
@@ -977,15 +1063,88 @@
         <div class="form-grid">
           <div class="form-group">
             <label>Path 1</label>
-            <input type="text" id="f-path1" placeholder="e.g. Shadow">
+            <select id="f-path1" style="background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:0.5rem 0.7rem;font-family:'Crimson Pro',serif;font-size:0.95rem;width:100%;outline:none;">
+              <option value="">— Select Path —</option>
+            <option value="Elementomancy - Primordial Path">Elementomancy - Primordial Path</option>
+            <option value="Elementomancy - Hybrid Path">Elementomancy - Hybrid Path</option>
+            <option value="Aegimancy - Guardian Path">Aegimancy - Guardian Path</option>
+            <option value="Aegimancy - Tactician Path">Aegimancy - Tactician Path</option>
+            <option value="Dynamancy - Overcharger Path">Dynamancy - Overcharger Path</option>
+            <option value="Dynamancy - Arcane Reactor Path">Dynamancy - Arcane Reactor Path</option>
+            <option value="Fascinomancy - Silver Tongue Path">Fascinomancy - Silver Tongue Path</option>
+            <option value="Fascinomancy - Glamour Path">Fascinomancy - Glamour Path</option>
+            <option value="Hagiomancy - Saint's Path">Hagiomancy - Saint's Path</option>
+            <option value="Hagiomancy - Judgement Path">Hagiomancy - Judgement Path</option>
+            <option value="Nyxomancy - Voidlord Path">Nyxomancy - Voidlord Path</option>
+            <option value="Nyxomancy - Whispered Path">Nyxomancy - Whispered Path</option>
+            <option value="Xiphoturgy - Duelist Path">Xiphoturgy - Duelist Path</option>
+            <option value="Xiphoturgy - Warrior's Path">Xiphoturgy - Warrior's Path</option>
+            <option value="Klepoturgy - Shadow Thief Path">Klepoturgy - Shadow Thief Path</option>
+            <option value="Klepoturgy - Con Artist Path">Klepoturgy - Con Artist Path</option>
+            <option value="Technoturgy - Gadgeteer Path">Technoturgy - Gadgeteer Path</option>
+            <option value="Technoturgy - Machinist Path">Technoturgy - Machinist Path</option>
+            <option value="Pugiloturgy - Crusher Path">Pugiloturgy - Crusher Path</option>
+            <option value="Pugiloturgy - Brawler Path">Pugiloturgy - Brawler Path</option>
+            <option value="Hastoturgy - Vanguard Path">Hastoturgy - Vanguard Path</option>
+            <option value="Hastoturgy - Whirlwind Path">Hastoturgy - Whirlwind Path</option>
+            <option value="Druidomancy - Verdant Path">Druidomancy - Verdant Path</option>
+            <option value="Druidomancy - Circle Path">Druidomancy - Circle Path</option>
+            <option value="Ballistoturgy - Gunslinger Path">Ballistoturgy - Gunslinger Path</option>
+            <option value="Ballistoturgy - Artillery Path">Ballistoturgy - Artillery Path</option>
+            </select>
           </div>
           <div class="form-group">
             <label>Path 2</label>
-            <input type="text" id="f-path2" placeholder="e.g. Blade">
+            <select id="f-path2" style="background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:0.5rem 0.7rem;font-family:'Crimson Pro',serif;font-size:0.95rem;width:100%;outline:none;">
+              <option value="">— Select Path —</option>
+            <option value="Elementomancy - Primordial Path">Elementomancy - Primordial Path</option>
+            <option value="Elementomancy - Hybrid Path">Elementomancy - Hybrid Path</option>
+            <option value="Aegimancy - Guardian Path">Aegimancy - Guardian Path</option>
+            <option value="Aegimancy - Tactician Path">Aegimancy - Tactician Path</option>
+            <option value="Dynamancy - Overcharger Path">Dynamancy - Overcharger Path</option>
+            <option value="Dynamancy - Arcane Reactor Path">Dynamancy - Arcane Reactor Path</option>
+            <option value="Fascinomancy - Silver Tongue Path">Fascinomancy - Silver Tongue Path</option>
+            <option value="Fascinomancy - Glamour Path">Fascinomancy - Glamour Path</option>
+            <option value="Hagiomancy - Saint's Path">Hagiomancy - Saint's Path</option>
+            <option value="Hagiomancy - Judgement Path">Hagiomancy - Judgement Path</option>
+            <option value="Nyxomancy - Voidlord Path">Nyxomancy - Voidlord Path</option>
+            <option value="Nyxomancy - Whispered Path">Nyxomancy - Whispered Path</option>
+            <option value="Xiphoturgy - Duelist Path">Xiphoturgy - Duelist Path</option>
+            <option value="Xiphoturgy - Warrior's Path">Xiphoturgy - Warrior's Path</option>
+            <option value="Klepoturgy - Shadow Thief Path">Klepoturgy - Shadow Thief Path</option>
+            <option value="Klepoturgy - Con Artist Path">Klepoturgy - Con Artist Path</option>
+            <option value="Technoturgy - Gadgeteer Path">Technoturgy - Gadgeteer Path</option>
+            <option value="Technoturgy - Machinist Path">Technoturgy - Machinist Path</option>
+            <option value="Pugiloturgy - Crusher Path">Pugiloturgy - Crusher Path</option>
+            <option value="Pugiloturgy - Brawler Path">Pugiloturgy - Brawler Path</option>
+            <option value="Hastoturgy - Vanguard Path">Hastoturgy - Vanguard Path</option>
+            <option value="Hastoturgy - Whirlwind Path">Hastoturgy - Whirlwind Path</option>
+            <option value="Druidomancy - Verdant Path">Druidomancy - Verdant Path</option>
+            <option value="Druidomancy - Circle Path">Druidomancy - Circle Path</option>
+            <option value="Ballistoturgy - Gunslinger Path">Ballistoturgy - Gunslinger Path</option>
+            <option value="Ballistoturgy - Artillery Path">Ballistoturgy - Artillery Path</option>
+            </select>
           </div>
           <div class="form-group full">
             <label>Constellation Name</label>
-            <input type="text" id="f-conname" placeholder="e.g. The Wandering Star">
+            <select id="f-conname" style="background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:0.5rem 0.7rem;font-family:'Crimson Pro',serif;font-size:0.95rem;width:100%;outline:none;">
+              <option value="">— Select Constellation —</option>
+            <option value="War - Bastion">War - Bastion</option>
+            <option value="War - Knight">War - Knight</option>
+            <option value="War - Vanguard">War - Vanguard</option>
+            <option value="War - Guide">War - Guide</option>
+            <option value="War - Assassin">War - Assassin</option>
+            <option value="War - Brute">War - Brute</option>
+            <option value="War - Feral">War - Feral</option>
+            <option value="War - Shaman">War - Shaman</option>
+            <option value="War - Thaumaturge">War - Thaumaturge</option>
+            <option value="War - Kiluna">War - Kiluna</option>
+            <option value="Magic - Arcanist">Magic - Arcanist</option>
+            <option value="Magic - Ritualist">Magic - Ritualist</option>
+            <option value="Magic - Weaver">Magic - Weaver</option>
+            <option value="Magic - Holy Warrior">Magic - Holy Warrior</option>
+            <option value="Magic - Hierophant">Magic - Hierophant</option>
+            </select>
           </div>
         </div>
       </div>
@@ -1025,9 +1184,20 @@
         <div class="detail-name" id="detail-name"></div>
         <div class="detail-meta" id="detail-meta"></div>
         <div class="detail-stats" id="detail-stats"></div>
+        <div id="detail-backstory"></div>
         <div id="detail-paths"></div>
         <div id="detail-skills-wrap"></div>
       </div>
+    </div>
+    <!-- Path Skills -->
+    <div style="margin-bottom:2rem;">
+      <div class="detail-section-title"><span>⚡ Path Skills</span></div>
+      <div id="detail-path-skills"></div>
+    </div>
+    <!-- Constellation Skills -->
+    <div style="margin-bottom:2rem;">
+      <div class="detail-section-title"><span>✦ Constellation Skills</span></div>
+      <div id="detail-constellation-skills"></div>
     </div>
     <!-- Inventory -->
     <div>
@@ -1059,6 +1229,10 @@
             <label>Character Name</label>
             <input type="text" id="ef-name" placeholder="e.g. Varek Ashborn">
           </div>
+          <div class="form-group full">
+            <label>Backstory</label>
+            <textarea id="ef-backstory" placeholder="Who are they? Where do they come from?" rows="3" style="background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:0.5rem 0.7rem;font-family:'Crimson Pro',serif;font-size:0.95rem;width:100%;outline:none;resize:vertical;transition:border-color 0.15s;"></textarea>
+          </div>
           <div class="form-group">
             <label>Race</label>
             <input type="text" id="ef-race" placeholder="e.g. Half-Elf">
@@ -1082,15 +1256,88 @@
         <div class="form-grid">
           <div class="form-group">
             <label>Path 1</label>
-            <input type="text" id="ef-path1">
+            <select id="ef-path1" style="background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:0.5rem 0.7rem;font-family:'Crimson Pro',serif;font-size:0.95rem;width:100%;outline:none;">
+              <option value="">— Select Path —</option>
+            <option value="Elementomancy - Primordial Path">Elementomancy - Primordial Path</option>
+            <option value="Elementomancy - Hybrid Path">Elementomancy - Hybrid Path</option>
+            <option value="Aegimancy - Guardian Path">Aegimancy - Guardian Path</option>
+            <option value="Aegimancy - Tactician Path">Aegimancy - Tactician Path</option>
+            <option value="Dynamancy - Overcharger Path">Dynamancy - Overcharger Path</option>
+            <option value="Dynamancy - Arcane Reactor Path">Dynamancy - Arcane Reactor Path</option>
+            <option value="Fascinomancy - Silver Tongue Path">Fascinomancy - Silver Tongue Path</option>
+            <option value="Fascinomancy - Glamour Path">Fascinomancy - Glamour Path</option>
+            <option value="Hagiomancy - Saint's Path">Hagiomancy - Saint's Path</option>
+            <option value="Hagiomancy - Judgement Path">Hagiomancy - Judgement Path</option>
+            <option value="Nyxomancy - Voidlord Path">Nyxomancy - Voidlord Path</option>
+            <option value="Nyxomancy - Whispered Path">Nyxomancy - Whispered Path</option>
+            <option value="Xiphoturgy - Duelist Path">Xiphoturgy - Duelist Path</option>
+            <option value="Xiphoturgy - Warrior's Path">Xiphoturgy - Warrior's Path</option>
+            <option value="Klepoturgy - Shadow Thief Path">Klepoturgy - Shadow Thief Path</option>
+            <option value="Klepoturgy - Con Artist Path">Klepoturgy - Con Artist Path</option>
+            <option value="Technoturgy - Gadgeteer Path">Technoturgy - Gadgeteer Path</option>
+            <option value="Technoturgy - Machinist Path">Technoturgy - Machinist Path</option>
+            <option value="Pugiloturgy - Crusher Path">Pugiloturgy - Crusher Path</option>
+            <option value="Pugiloturgy - Brawler Path">Pugiloturgy - Brawler Path</option>
+            <option value="Hastoturgy - Vanguard Path">Hastoturgy - Vanguard Path</option>
+            <option value="Hastoturgy - Whirlwind Path">Hastoturgy - Whirlwind Path</option>
+            <option value="Druidomancy - Verdant Path">Druidomancy - Verdant Path</option>
+            <option value="Druidomancy - Circle Path">Druidomancy - Circle Path</option>
+            <option value="Ballistoturgy - Gunslinger Path">Ballistoturgy - Gunslinger Path</option>
+            <option value="Ballistoturgy - Artillery Path">Ballistoturgy - Artillery Path</option>
+            </select>
           </div>
           <div class="form-group">
             <label>Path 2</label>
-            <input type="text" id="ef-path2">
+            <select id="ef-path2" style="background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:0.5rem 0.7rem;font-family:'Crimson Pro',serif;font-size:0.95rem;width:100%;outline:none;">
+              <option value="">— Select Path —</option>
+            <option value="Elementomancy - Primordial Path">Elementomancy - Primordial Path</option>
+            <option value="Elementomancy - Hybrid Path">Elementomancy - Hybrid Path</option>
+            <option value="Aegimancy - Guardian Path">Aegimancy - Guardian Path</option>
+            <option value="Aegimancy - Tactician Path">Aegimancy - Tactician Path</option>
+            <option value="Dynamancy - Overcharger Path">Dynamancy - Overcharger Path</option>
+            <option value="Dynamancy - Arcane Reactor Path">Dynamancy - Arcane Reactor Path</option>
+            <option value="Fascinomancy - Silver Tongue Path">Fascinomancy - Silver Tongue Path</option>
+            <option value="Fascinomancy - Glamour Path">Fascinomancy - Glamour Path</option>
+            <option value="Hagiomancy - Saint's Path">Hagiomancy - Saint's Path</option>
+            <option value="Hagiomancy - Judgement Path">Hagiomancy - Judgement Path</option>
+            <option value="Nyxomancy - Voidlord Path">Nyxomancy - Voidlord Path</option>
+            <option value="Nyxomancy - Whispered Path">Nyxomancy - Whispered Path</option>
+            <option value="Xiphoturgy - Duelist Path">Xiphoturgy - Duelist Path</option>
+            <option value="Xiphoturgy - Warrior's Path">Xiphoturgy - Warrior's Path</option>
+            <option value="Klepoturgy - Shadow Thief Path">Klepoturgy - Shadow Thief Path</option>
+            <option value="Klepoturgy - Con Artist Path">Klepoturgy - Con Artist Path</option>
+            <option value="Technoturgy - Gadgeteer Path">Technoturgy - Gadgeteer Path</option>
+            <option value="Technoturgy - Machinist Path">Technoturgy - Machinist Path</option>
+            <option value="Pugiloturgy - Crusher Path">Pugiloturgy - Crusher Path</option>
+            <option value="Pugiloturgy - Brawler Path">Pugiloturgy - Brawler Path</option>
+            <option value="Hastoturgy - Vanguard Path">Hastoturgy - Vanguard Path</option>
+            <option value="Hastoturgy - Whirlwind Path">Hastoturgy - Whirlwind Path</option>
+            <option value="Druidomancy - Verdant Path">Druidomancy - Verdant Path</option>
+            <option value="Druidomancy - Circle Path">Druidomancy - Circle Path</option>
+            <option value="Ballistoturgy - Gunslinger Path">Ballistoturgy - Gunslinger Path</option>
+            <option value="Ballistoturgy - Artillery Path">Ballistoturgy - Artillery Path</option>
+            </select>
           </div>
           <div class="form-group full">
             <label>Constellation Name</label>
-            <input type="text" id="ef-conname">
+            <select id="ef-conname" style="background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:0.5rem 0.7rem;font-family:'Crimson Pro',serif;font-size:0.95rem;width:100%;outline:none;">
+              <option value="">— Select Constellation —</option>
+            <option value="War - Bastion">War - Bastion</option>
+            <option value="War - Knight">War - Knight</option>
+            <option value="War - Vanguard">War - Vanguard</option>
+            <option value="War - Guide">War - Guide</option>
+            <option value="War - Assassin">War - Assassin</option>
+            <option value="War - Brute">War - Brute</option>
+            <option value="War - Feral">War - Feral</option>
+            <option value="War - Shaman">War - Shaman</option>
+            <option value="War - Thaumaturge">War - Thaumaturge</option>
+            <option value="War - Kiluna">War - Kiluna</option>
+            <option value="Magic - Arcanist">Magic - Arcanist</option>
+            <option value="Magic - Ritualist">Magic - Ritualist</option>
+            <option value="Magic - Weaver">Magic - Weaver</option>
+            <option value="Magic - Holy Warrior">Magic - Holy Warrior</option>
+            <option value="Magic - Hierophant">Magic - Hierophant</option>
+            </select>
           </div>
         </div>
       </div>
@@ -1226,10 +1473,11 @@
 
   function closeModal() {
     document.getElementById('modalBackdrop').classList.remove('open');
-    ['f-name','f-race','f-level','f-conlevel','f-xp','f-path1','f-path2','f-conname'].forEach(id => {
+    ['f-name','f-race','f-level','f-conlevel','f-xp'].forEach(id => {
       document.getElementById(id).value = '';
     });
     document.getElementById('f-portrait').value = '';
+    document.getElementById('f-backstory').value = '';
     skillRows = [];
     renderSkillRows();
   }
@@ -1267,6 +1515,7 @@
         'Path 2': document.getElementById('f-path2').value.trim() || null,
         constellationame: document.getElementById('f-conname').value.trim() || null,
         constellationlevel: parseInt(document.getElementById('f-conlevel').value) || null,
+        backstory: document.getElementById('f-backstory').value.trim() || null,
         portrait_url: null
       };
 
@@ -1477,9 +1726,10 @@
       document.getElementById('ef-level').value = char.level || '';
       document.getElementById('ef-conlevel').value = char.constellationlevel || '';
       document.getElementById('ef-xp').value = char.xp || '';
-      document.getElementById('ef-path1').value = char['Path 1'] || '';
-      document.getElementById('ef-path2').value = char['Path 2'] || '';
-      document.getElementById('ef-conname').value = char.constellationame || '';
+      const p1sel = document.getElementById('ef-path1'); p1sel.value = char['Path 1'] || '';
+      const p2sel = document.getElementById('ef-path2'); p2sel.value = char['Path 2'] || '';
+      const cnsel = document.getElementById('ef-conname'); cnsel.value = char.constellationame || '';
+      document.getElementById('ef-backstory').value = char.backstory || '';
 
       editSkillRows = skills.map(s => ({ id: s.id, dbId: s.id, name: s.skill_name, stars: s.stars, isNew: false }));
       renderEditSkillRows();
@@ -1521,6 +1771,7 @@
         'Path 1': document.getElementById('ef-path1').value.trim() || null,
         'Path 2': document.getElementById('ef-path2').value.trim() || null,
         constellationame: document.getElementById('ef-conname').value.trim() || null,
+        backstory: document.getElementById('ef-backstory').value.trim() || null,
       };
 
       // Upload new portrait if provided
@@ -1567,6 +1818,432 @@
     }
   }
 
+
+
+  // ── CONSTELLATION SKILL TREE ────────────────────────────
+  const CONSTELLATION_TREE = {
+    "War - Bastion": [
+      { level: 1, name: "1 Extra HP", desc: "+1 maximum HP." },
+      { level: 2, name: "Push Shield Attack", desc: "Call Repel with shield strikes. 1 minute cooldown." },
+      { level: 3, name: "Extra Shield HP", desc: "Your shield gains additional HP." },
+      { level: 4, name: "1 Extra HP", desc: "+1 maximum HP." },
+      { level: 5, name: "Shield Others", desc: "Completely absorb attacks for a target next to you." },
+      { level: 6, name: "Extra Shield HP", desc: "Your shield gains additional HP again." },
+      { level: 7, name: "1 Extra HP", desc: "+1 maximum HP." },
+      { level: 8, name: "Impervious Shield", desc: "Your shield is immune to Crush (still vulnerable to Artifact Crush)." },
+      { level: 9, name: "1 Extra HP", desc: "+1 maximum HP." },
+      { level: 10, name: "Starcharged Bastion", desc: "Once a day declare No Effect on any call while wielding your shield." }
+    ],
+    "War - Knight": [
+      { level: 1, name: "1 Extra HP", desc: "+1 maximum HP." },
+      { level: 2, name: "Armored Gauntlet", desc: "Block attacks using a gauntlet; wear a shield with a two-handed weapon at half shield HP." },
+      { level: 3, name: "Extra Shield HP", desc: "Your shield gains additional HP." },
+      { level: 4, name: "1 Extra HP", desc: "+1 maximum HP." },
+      { level: 5, name: "1 Armor HP", desc: "+1 Armor HP." },
+      { level: 6, name: "Forced Duel", desc: "Use the Command call to force an enemy to fight you. Broken if you attack any other enemy." },
+      { level: 7, name: "1 Extra HP", desc: "+1 maximum HP." },
+      { level: 8, name: "Mortal Strike", desc: "Call Fatal once a day on an enemy. High Tier Bosses may receive only intense damage." },
+      { level: 9, name: "1 Extra HP", desc: "+1 maximum HP." },
+      { level: 10, name: "Galaxy Knight", desc: "Your Forced Duel target can be hit with Artifact Enchanted Fatal once a day after 1 minute of Duel." }
+    ],
+    "War - Vanguard": [
+      { level: 1, name: "1 Extra HP", desc: "+1 maximum HP." },
+      { level: 2, name: "Detect Enemies", desc: "Use VRChat mechanics to detect enemies while standing still." },
+      { level: 3, name: "Extra Damage in Charge", desc: "Use the Double call during a charge." },
+      { level: 4, name: "1 Extra HP", desc: "+1 maximum HP." },
+      { level: 5, name: "Trample", desc: "Call Strikedown during a charge." },
+      { level: 6, name: "Piercing Strike", desc: "Use the Through call during an attack." },
+      { level: 7, name: "1 Extra HP", desc: "+1 maximum HP." },
+      { level: 8, name: "Mirror Charge", desc: "Call Mirrored on an attack you receive while charging at the enemy." },
+      { level: 9, name: "1 Extra HP", desc: "+1 maximum HP." },
+      { level: 10, name: "Nebula Vanguard", desc: "Charge from a standstill via avatar effect, no longer requiring a running start." }
+    ],
+    "War - Guide": [
+      { level: 1, name: "1 Extra HP", desc: "+1 maximum HP." },
+      { level: 2, name: "Find Hidden Items", desc: "Occasionally find extra items with DM assistance." },
+      { level: 3, name: "Field Heal", desc: "Heal 1 HP on allies with a 30 second cooldown." },
+      { level: 4, name: "1 Extra HP", desc: "+1 maximum HP." },
+      { level: 5, name: "Pass Between Enemies", desc: "Move between enemy avatars using VRChat mechanics." },
+      { level: 6, name: "Expeditious Retreat", desc: "While retreating with allies, use Repel and Strikedown calls to cover the withdrawal." },
+      { level: 7, name: "1 Extra HP", desc: "+1 maximum HP." },
+      { level: 8, name: "Commanding Strike", desc: "Once a day use the Command call after striking an enemy successfully." },
+      { level: 9, name: "1 Extra HP", desc: "+1 maximum HP." },
+      { level: 10, name: "Solar Guide", desc: "3 times a day make allies strike harder, allowing them to call Fatal with a basic strike." }
+    ],
+    "War - Assassin": [
+      { level: 1, name: "1 Extra HP", desc: "+1 maximum HP." },
+      { level: 2, name: "Detect Enemies", desc: "Use VRChat mechanics to detect enemies while standing still." },
+      { level: 3, name: "Sneak Attack", desc: "Striking an unaware enemy from behind quietly causes extra damage." },
+      { level: 4, name: "1 Extra HP", desc: "+1 maximum HP." },
+      { level: 5, name: "Eagle Jump", desc: "Ignore fall damage after 10 seconds of preparation." },
+      { level: 6, name: "Improvised Hideout", desc: "Access the Marketboard and heal in the field after a certain amount of time." },
+      { level: 7, name: "1 Extra HP", desc: "+1 maximum HP." },
+      { level: 8, name: "Fatal Strike", desc: "Three times a day call Fatal with your strikes." },
+      { level: 9, name: "1 Extra HP", desc: "+1 maximum HP." },
+      { level: 10, name: "Supernova Assassin", desc: "Your Sneak Attack is now AOE." }
+    ],
+    "War - Brute": [
+      { level: 1, name: "1 Extra HP", desc: "+1 maximum HP." },
+      { level: 2, name: "Unarmed Damage", desc: "Your fists count as weapons and deal increased damage." },
+      { level: 3, name: "1 Extra HP", desc: "+1 maximum HP." },
+      { level: 4, name: "1 Extra HP", desc: "+1 maximum HP." },
+      { level: 5, name: "Impact Punch", desc: "Once per combat call Impact with a powerful punch." },
+      { level: 6, name: "Natural Weapons", desc: "Unarmed attacks count as natural melee weapons; usable with claws, tails, etc." },
+      { level: 7, name: "1 Extra HP", desc: "+1 maximum HP." },
+      { level: 8, name: "Intimidating Cleave", desc: "Once per combat swing with a roar forcing enemies back with Mass Repel and Strikedown." },
+      { level: 9, name: "1 Extra HP", desc: "+1 maximum HP." },
+      { level: 10, name: "Titanstar Rampage", desc: "Once per session enter stellar-state rage: massive damage, immunity to basic control, every unarmed hit releases a cosmic shockwave." }
+    ],
+    "War - Feral": [
+      { level: 1, name: "1 Extra HP", desc: "+1 maximum HP." },
+      { level: 2, name: "Scent Tracking", desc: "Track any target by scent, even through difficult terrain." },
+      { level: 3, name: "Animal Parts", desc: "Gain small physical traits: claws, fangs, ears. Able to track by scent or cause bleeding." },
+      { level: 4, name: "1 Extra HP", desc: "+1 maximum HP." },
+      { level: 5, name: "Pounce Strikedown", desc: "Once per combat leap and deliver a Strikedown attack." },
+      { level: 6, name: "Natural Weapons", desc: "Claws and fangs count as valid melee weapons; usable with claws, tails, etc." },
+      { level: 7, name: "1 Extra HP", desc: "+1 maximum HP." },
+      { level: 8, name: "Climbing and Digging", desc: "Move vertically or underground with ease." },
+      { level: 9, name: "1 Extra HP", desc: "+1 maximum HP." },
+      { level: 10, name: "Lunar Apex Form", desc: "Once per day assume a cosmic beast shape: enhanced senses, rapid movement, every strike deals lunar-infused damage bypassing armor." }
+    ],
+    "War - Shaman": [
+      { level: 1, name: "1 Extra HP", desc: "+1 maximum HP." },
+      { level: 2, name: "Talk with the Spirits", desc: "Converse with weak spirits and lingering memories." },
+      { level: 3, name: "Animal Parts", desc: "Gain spiritual markings or minor beast traits." },
+      { level: 4, name: "1 Extra HP", desc: "+1 maximum HP." },
+      { level: 5, name: "Spiritual Paralyze", desc: "Once per combat spirit-bind a target, briefly immobilizing them." },
+      { level: 6, name: "Natural Weapons", desc: "Spirit-enhanced claws or strikes count as melee weapons." },
+      { level: 7, name: "1 Extra HP", desc: "+1 maximum HP." },
+      { level: 8, name: "Spiritual Curse", desc: "Once per day place a weakening curse making a target unable to attack; larger enemies get a small debuff." },
+      { level: 9, name: "1 Extra HP", desc: "+1 maximum HP." },
+      { level: 10, name: "Astral Totem Ascendance", desc: "Once per session summon a radiant totem of the heavens: empowers allies, weakens foes, channel cosmic spirits for devastating or healing effects." }
+    ],
+    "War - Thaumaturge": [
+      { level: 1, name: "Analyze Creature", desc: "Learn magical traits or weaknesses of a creature." },
+      { level: 2, name: "Arcane Circle", desc: "Draw ritual circles granting extra power in rituals and spells." },
+      { level: 3, name: "Detect Geist", desc: "Sense spiritual or ghostly beings nearby." },
+      { level: 4, name: "1 Extra HP", desc: "+1 maximum HP." },
+      { level: 5, name: "Read Languages", desc: "Understand forgotten or magical scripts and every language." },
+      { level: 6, name: "Make Contract", desc: "Bind a spirit, demon, or entity for aid." },
+      { level: 7, name: "15% Discount", desc: "15% discount on ritual materials." },
+      { level: 8, name: "Replicate Spell", desc: "Once per day copy a spell you have observed." },
+      { level: 9, name: "1 Extra HP", desc: "+1 maximum HP." },
+      { level: 10, name: "Contract of the Pulsar Monarch", desc: "Once per day unleash a Pulsar Burst disrupting magic, illusions, stealth, and invisibility in a wide radius." }
+    ],
+    "War - Kiluna": [
+      { level: 1, name: "Magical Journal", desc: "Record events to gain insights later." },
+      { level: 2, name: "Instant Painting", desc: "Create magical illustrations that store information using VRChat photo mechanics." },
+      { level: 3, name: "Borrow Memory", desc: "Copy a level 1 skill of an ally recorded in your magical journal." },
+      { level: 4, name: "1 Extra HP", desc: "+1 maximum HP." },
+      { level: 5, name: "Save Memory", desc: "Store a memory for perfect recall, protecting it from world shifts." },
+      { level: 6, name: "Memory Anchor", desc: "Protect illustrated allies from mind-affecting magic." },
+      { level: 7, name: "15% Discount", desc: "15% discount on artifacts." },
+      { level: 8, name: "Resurrection", desc: "Three times a day restore a fallen ally using memory imprinting (must be illustrated and in journal)." },
+      { level: 9, name: "1 Extra HP", desc: "+1 maximum HP." },
+      { level: 10, name: "Chronostar Archive", desc: "Once per day rewrite a moment from the past 10 seconds, effectively granting a small rewind." }
+    ],
+    "Magic - Arcanist": [
+      { level: 1, name: "Spellbook", desc: "Learn and record spells for later use." },
+      { level: 2, name: "Change Element", desc: "Alter the elemental type of a spell you cast." },
+      { level: 3, name: "Borrow Spell", desc: "Once per day cast a spell someone else knows." },
+      { level: 4, name: "1 Extra HP", desc: "+1 maximum HP." },
+      { level: 5, name: "Twin Spells", desc: "Cast a spell twice in rapid succession." },
+      { level: 6, name: "AOE Spells", desc: "Once per combat convert a single-target spell into area-effect." },
+      { level: 7, name: "15% Discount", desc: "15% discount on magical components." },
+      { level: 8, name: "Ignore Magical Limit", desc: "Once per day cast a spell ignoring cooldowns or preparation limits." },
+      { level: 9, name: "1 Extra HP", desc: "+1 maximum HP." },
+      { level: 10, name: "Quasar Lexicon", desc: "Once per session cast any spell you have witnessed." }
+    ],
+    "Magic - Ritualist": [
+      { level: 1, name: "Empowered Ritual", desc: "Your rituals take slightly less time and are stronger." },
+      { level: 2, name: "Analyze Ritual Component", desc: "Identify materials needed for any ritual." },
+      { level: 3, name: "Double Ritual", desc: "Perform two rituals simultaneously with reduced efficiency." },
+      { level: 4, name: "1 Extra HP", desc: "+1 maximum HP." },
+      { level: 5, name: "Free Mana Salts", desc: "Gain one free ritual reagent per session." },
+      { level: 6, name: "Analyze Ritual Grounds", desc: "Detect disrupted, cursed, or augmented ritual sites." },
+      { level: 7, name: "15% Discount", desc: "15% discount on ritual ingredients." },
+      { level: 8, name: "Ritualistic Insurance", desc: "Once per day negate the negative consequences of a failed ritual." },
+      { level: 9, name: "1 Extra HP", desc: "+1 maximum HP." },
+      { level: 10, name: "Eclipse Convergence", desc: "Perform one major ritual instantly per session." }
+    ],
+    "Magic - Weaver": [
+      { level: 1, name: "Gamble Luck", desc: "Once per day reroll a random outcome in your favor." },
+      { level: 2, name: "Analyze Abilities", desc: "Detect magical traits and capabilities in others." },
+      { level: 3, name: "See Magical Thread", desc: "Perceive connections: curses, pacts, fate-chains, bindings." },
+      { level: 4, name: "1 Extra HP", desc: "+1 maximum HP." },
+      { level: 5, name: "Pull Fortune", desc: "Give an ally an aid on their next action or save yourself from misfortune." },
+      { level: 6, name: "Paralyzing Talisman", desc: "Once per day create a talisman that inflicts a paralyzing effect." },
+      { level: 7, name: "15% Discount", desc: "15% discount on talismans, charms, and fate materials." },
+      { level: 8, name: "Weave Disruption", desc: "Once per combat disrupt an enemy spell, ritual, or ability." },
+      { level: 9, name: "1 Extra HP", desc: "+1 maximum HP." },
+      { level: 10, name: "Starlight Loom", desc: "Once per day rewrite a thread of fate: negate a death, reverse a failure, or force success." }
+    ],
+    "Magic - Holy Warrior": [
+      { level: 1, name: "1 Extra HP", desc: "+1 maximum HP." },
+      { level: 2, name: "Sense Alignment", desc: "Detect moral or cosmic alignment of a target." },
+      { level: 3, name: "Extra Shield HP", desc: "Your shield becomes more durable. +1 HP." },
+      { level: 4, name: "1 Extra HP", desc: "+1 maximum HP." },
+      { level: 5, name: "Extra Armor", desc: "Gain +1 Armor HP permanently." },
+      { level: 6, name: "Rebuke Opposite Aura", desc: "Harm entities of opposite alignment with radiant force." },
+      { level: 7, name: "1 Extra HP", desc: "+1 maximum HP." },
+      { level: 8, name: "Impervious Shield", desc: "Shield becomes immune to all but Artifact-level crushing." },
+      { level: 9, name: "1 Extra HP", desc: "+1 maximum HP." },
+      { level: 10, name: "Celestial Aegis", desc: "Once per day become a living star-shield: negate all incoming damage for 10 seconds and emit a radiant pulse that repels enemies and heals allies." }
+    ],
+    "Magic - Hierophant": [
+      { level: 1, name: "Sense Alignment", desc: "Read the spiritual resonance of people and objects." },
+      { level: 2, name: "Empower Ally", desc: "Grant an ally a divine boost letting them deal double damage by paying 1 HP." },
+      { level: 3, name: "Inspirational Speech", desc: "Once per session rally allies, granting minor buffs." },
+      { level: 4, name: "1 Extra HP", desc: "+1 maximum HP." },
+      { level: 5, name: "Daily Blessing", desc: "At session start bless one ally with a protective boon." },
+      { level: 6, name: "Divine Aura", desc: "Emit a soft aura that weakens opposite alignment entities nearby." },
+      { level: 7, name: "15% Discount", desc: "15% discount on holy materials and blessings." },
+      { level: 8, name: "Divine Communion", desc: "Speak to a celestial or patron entity for guidance once per session." },
+      { level: 9, name: "1 Extra HP", desc: "+1 maximum HP." },
+      { level: 10, name: "Supernal Ascension", desc: "Once per day channel the light of a distant star: massive healing to allies or devastating radiant judgment." }
+    ]
+  };
+
+  function getUnlockedConstellationSkills(conName, conLevel) {
+    if (!conName || !conLevel) return [];
+    const skills = CONSTELLATION_TREE[conName];
+    if (!skills) return [];
+    return skills.filter(s => s.level <= conLevel);
+  }
+
+  // ── PREDEFINED SKILL TREE ────────────────────────────────
+  const SKILL_TREE = {
+    "Elementomancy": {
+      "Primordial Path": [
+        { level: 1, name: "Basic Manipulation", desc: "Control small flames, gusts, ripples, and pebbles to distract or push back foes. (Calls: Pain, Repel – Damage: 1, Cooldown: None, Duration: Instant or up to 10s)" },
+        { level: 2, name: "Elemental Burst", desc: "Release a concentrated blast of fire, water, air, or earth to stagger and damage a target. (Calls: Fire/Ice/Thunder/Natural + Impact or Strikedown – Damage: 3, Cooldown: 1 min)" },
+        { level: 3, name: "Dual Wielding", desc: "Harness two elemental effects at once, striking with combined force. (Calls: Two elemental enhancements – Damage: 3–6, Cooldown: Highest ability used)" },
+        { level: 4, name: "Elemental Form", desc: "Temporarily become a living embodiment of an element, striking through resistances. (Calls: Elemental + Through – Damage: 3/attack, Buff: +2 dmg & immunity, Cooldown: 5 min, Duration: 20s)" },
+        { level: 5, name: "Elemental Cataclysm", desc: "Unleash a massive disaster of your chosen element. (Calls: Elemental + Mass + Crush – Damage: 3/target, Cooldown: 10 min, Duration: Instant + 10s hazard)" }
+      ],
+      "Hybrid Path": [
+        { level: 1, name: "Elemental Imbuement", desc: "Infuse weapons or objects with elemental power. (Calls: Elemental + Through – Damage: Weapon +1, Cooldown: 1 min, Duration: 10s)" },
+        { level: 2, name: "Alchemical Elements", desc: "Forge hybrid elements like liquid lightning or voidfire. (Calls: Two elemental enhancements – Damage: 3 + status, Cooldown: 2 min, Duration: Instant + 10s)" },
+        { level: 3, name: "Elemental Constructs", desc: "Shape living golems or sentient storms to fight for you. (Calls: Elemental + Command – 2/hit, Cooldown: 5 min, Duration: 30s or until destroyed)" },
+        { level: 4, name: "Elemental Paradox", desc: "Opposing elements enhance each other. (Calls: Any two elemental + Mass or Through – Damage: 4–6, Cooldown: 5 min, Duration: 15s)" },
+        { level: 5, name: "Reality Shaper", desc: "Reshape local physics entirely with pure elemental energy. (Calls: Any three elemental + Mass + Fear – Damage: 3/target AOE, Cooldown: 10 min, Duration: 20s)" }
+      ]
+    },
+    "Aegimancy": {
+      "Guardian Path": [
+        { level: 1, name: "Arcane Barrier", desc: "Create a personal or stationary shield that absorbs 4 HP of damage. (Calls: Crush-resistant, Shield – Cooldown: 1 min, Duration: Until depleted or 20s)" },
+        { level: 2, name: "Counterforce", desc: "Reflect the next attack back at its source. (Calls: Mirrored – Cooldown: 2 min, Duration: 5s window)" },
+        { level: 3, name: "Multi-Layer Wards", desc: "Stack multiple defensive effects at once. (Calls: Mass + Shield – Cooldown: 5 min, Duration: 20s)" },
+        { level: 4, name: "Sanctuary", desc: "Create a 10-foot zone where no hostile actions can succeed. (Calls: No Effect – Cooldown: 10 min, Duration: 10s)" },
+        { level: 5, name: "Aegis of Eternity", desc: "Form an unbreakable shield immune to all damage types. (Calls: No Effect + Through vs. magic – Cooldown: 10 min, Duration: 10s)" }
+      ],
+      "Tactician Path": [
+        { level: 1, name: "Mirror Shield", desc: "Copy an enemy's attack and send it back as pure magic. (Calls: Mirrored + Elemental – Damage: Same as original, Cooldown: 2 min)" },
+        { level: 2, name: "Kinetic Absorption", desc: "Convert incoming damage into +2 damage for your next attack. (Calls: Buff – Cooldown: 2 min, Duration: 10s)" },
+        { level: 3, name: "Barrier Manipulation", desc: "Reshape shields into traps or pushing walls. (Calls: Repel, Crush – Cooldown: 1 min, Duration: 10s)" },
+        { level: 4, name: "Dimensional Shift", desc: "Teleport or phase through barriers unharmed. (Calls: Through – Cooldown: 2 min, Duration: Instant)" },
+        { level: 5, name: "Fortress Walker", desc: "Summon a fortified position with high HP walls and shield effects. (Calls: Mass + Shield – Cooldown: 10 min, Duration: 30s)" }
+      ]
+    },
+    "Dynamancy": {
+      "Overcharger Path": [
+        { level: 1, name: "Minor Boon", desc: "Slightly enhance speed, strength, or reflexes. (Calls: Buff – Cooldown: 1 min, Duration: 10s)" },
+        { level: 2, name: "Combat Surge", desc: "Increase combat effectiveness, adding +1 damage to all attacks. (Calls: Buff – Cooldown: 2 min, Duration: 10s)" },
+        { level: 3, name: "Unyielding Body", desc: "Grants immunity to exhaustion and stagger effects. (Calls: No Effect vs. exhaustion – Cooldown: 5 min, Duration: 20s)" },
+        { level: 4, name: "Multi-Boost", desc: "Buff multiple attributes at once (speed, power, defense). (Calls: Mass + Buff – Cooldown: 5 min, Duration: 15s)" },
+        { level: 5, name: "Titan Ascension", desc: "Reach superhuman power: +3 damage, immunity to knockback, double movement speed. (Calls: Buff + Through – Cooldown: 10 min, Duration: 20s)" }
+      ],
+      "Arcane Reactor Path": [
+        { level: 1, name: "Mana Overflow", desc: "Convert 2 HP into +2 damage for next attack. (Calls: Buff – Cooldown: 1 min, Duration: 10s)" },
+        { level: 2, name: "Symbiotic Buffing", desc: "Enhance allies by drawing their energy; both gain +1 damage. (Calls: Buff + Mass – Cooldown: 2 min, Duration: 10s)" },
+        { level: 3, name: "Limit Break", desc: "Surpass natural limits; +2 damage, immune to debuffs. (Calls: Buff + No Effect vs. debuffs – Cooldown: 5 min, Duration: 15s)" },
+        { level: 4, name: "Divine Pulse", desc: "Spread all your active buffs to nearby allies. (Calls: Mass + Buff – Cooldown: 5 min)" },
+        { level: 5, name: "True Apex", desc: "Gain permanent supernatural enhancement to one attribute of choice. (Calls: Buff – Permanent)" }
+      ]
+    },
+    "Fascinomancy": {
+      "Silver Tongue Path": [
+        { level: 1, name: "Sweet Lies", desc: "Slightly alter how people perceive your words. (Calls: Charme – Cooldown: 1 min, Duration: 10s)" },
+        { level: 2, name: "Hypnotic Speech", desc: "Suggest short commands subtly. (Calls: Command + Charme – Cooldown: 2 min, Duration: 10s)" },
+        { level: 3, name: "Mind Veil", desc: "Conceal true intentions from magical detection. (Calls: No Effect vs. detection – Cooldown: 5 min, Duration: 20s)" },
+        { level: 4, name: "Gilded Tongue", desc: "Influence entire crowds with your words. (Calls: Mass + Charme – Cooldown: 5 min, Duration: 15s)" },
+        { level: 5, name: "Absolute Influence", desc: "Your words become undeniable truth once a day. (Calls: Command + No Effect vs. resistance – Cooldown: 24h, Duration: 10s)" }
+      ],
+      "Glamour Path": [
+        { level: 1, name: "Veil of Beauty", desc: "Alter your appearance at will. (Calls: Charme – Cooldown: 1 min, Duration: 10s)" },
+        { level: 2, name: "False Reality", desc: "Create an illusion affecting all senses. (Calls: Mass + Fear or Charme – Cooldown: 5 min, Duration: 15s)" },
+        { level: 3, name: "Emotional Control", desc: "Alter emotions with a glance. (Calls: Fear, Charme, Buff, or Debuff – Cooldown: 2 min, Duration: 10s)" },
+        { level: 4, name: "Phantom Pain", desc: "Make illusions feel real, inflicting 1–3 damage. (Calls: Pain – Cooldown: 2 min, Duration: 10s)" },
+        { level: 5, name: "Rewrite Perception", desc: "Actively reshape how others see the world. (Calls: Fear + Charme – Cooldown: 10 min, Duration: 20s)" }
+      ]
+    },
+    "Hagiomancy": {
+      "Saint's Path": [
+        { level: 1, name: "Minor Cure", desc: "Heal 2 HP and minor ailments. (Calls: Heal – Cooldown: 1 min, Duration: Instant)" },
+        { level: 2, name: "Divine Cleansing", desc: "Purge poison and curses from a target. (Calls: No Effect vs. poison/curses – Cooldown: 2 min, Duration: Instant)" },
+        { level: 3, name: "Revitalization", desc: "Restore stamina/energy to allies resetting ability cooldowns. (Calls: Buff + Mass – Cooldown: 5 min, Duration: 10s)" },
+        { level: 4, name: "Resurrection", desc: "Revive a recently fallen ally at Max HP. (Calls: Max Heal – Cooldown: 24h, Duration: Instant)" },
+        { level: 5, name: "Holy Ascension", desc: "Gain angelic form; +3 damage vs. undead, immunity to dark magic. (Calls: Holy + No Effect vs. shadow – Cooldown: 10 min, Duration: 20s)" }
+      ],
+      "Judgement Path": [
+        { level: 1, name: "Searing Smite", desc: "Banish evil with holy light. (Calls: Holy + Through – Damage: 3, Cooldown: 1 min, Duration: Instant)" },
+        { level: 2, name: "Heaven's Verdict", desc: "Summon a beam of divine power. (Calls: Holy + Mass – Damage: 3/target, Cooldown: 10 min, Duration: Instant)" },
+        { level: 3, name: "Miracle Forge", desc: "Create a blessed weapon with +2 damage vs. undead. (Calls: Holy + Buff – Cooldown: 5 min, Duration: 20s)" },
+        { level: 4, name: "Chains of the Righteous", desc: "Bind a foe in glowing chains, preventing movement. (Calls: Paralyze + Holy – Cooldown: 2 min, Duration: 10s)" },
+        { level: 5, name: "Divine Revelation", desc: "Reveal absolute truth and make one miracle wish. (Calls: No Effect vs. lies – Cooldown: 24h, Duration: Instant)" }
+      ]
+    },
+    "Nyxomancy": {
+      "Voidlord Path": [
+        { level: 1, name: "Umbral Grasp", desc: "Shape shadows into grasping tendrils. (Calls: Paralyze or Repel + Shadow – Damage: 1, Cooldown: 1 min, Duration: 10s)" },
+        { level: 2, name: "Devouring Abyss", desc: "Absorb energy/light, nullifying effects. (Calls: No Effect + Shadow – Cooldown: 2 min, Duration: 10s)" },
+        { level: 3, name: "Nothingness Step", desc: "Teleport via void portals. (Calls: Through + Shadow – Cooldown: 1 min, Duration: Instant)" },
+        { level: 4, name: "Anti-Existence", desc: "Temporarily erase a target from the scene. (Calls: No Effect + Shadow – Cooldown: 5 min, Duration: 10s)" },
+        { level: 5, name: "Eternal Void", desc: "Cover the battlefield in pure darkness. (Calls: Mass + Shadow – Cooldown: 10 min, Duration: 20s)" }
+      ],
+      "Whispered Path": [
+        { level: 1, name: "Echo of the Lost", desc: "Hear forgotten or hidden knowledge. (Calls: No Effect vs. secrecy – Cooldown: 1 min, Duration: Instant)" },
+        { level: 2, name: "Nightmare Manifest", desc: "Force targets to see their worst fears. (Calls: Fear + Shadow – Cooldown: 2 min, Duration: 10s)" },
+        { level: 3, name: "Mind Erosion", desc: "Slowly erase memories/thoughts. (Calls: Debuff + Shadow – Cooldown: 5 min, Duration: 20s)" },
+        { level: 4, name: "Unseen Terror", desc: "Strikes targets with a mental blade causing them to fall on their knees. (Calls: Strike Down + Shadow – Cooldown: 2 min, Duration: 10s)" },
+        { level: 5, name: "Abyssal Domain", desc: "Create a pocket realm under your control. (Calls: Mass + Shadow + Fear – Cooldown: 10 min, Duration: 20s)" }
+      ]
+    },
+    "Xiphoturgy": {
+      "Duelist Path": [
+        { level: 1, name: "Blade's Focus", desc: "Sharpen reflexes; next attack gains +1 damage. (Calls: Buff – Cooldown: 1 min, Duration: 10s)" },
+        { level: 2, name: "Riposte Mastery", desc: "Counter an attack with a precise strike. (Calls: Through – Damage: 3, Cooldown: 1 min, Duration: Instant)" },
+        { level: 3, name: "Dancing Edge", desc: "Dodge and strike in one motion. (Calls: Buff + Through – Damage: 2, Cooldown: 2 min, Duration: 5s)" },
+        { level: 4, name: "Unbreakable Guard", desc: "Deflect even the strongest attack. (Calls: No Effect – Cooldown: 2 min, Duration: 5s)" },
+        { level: 5, name: "Master of the Duel", desc: "Overwhelm a single foe with flawless strikes. (Calls: Through – Damage: 3/hit up to 3 hits, Cooldown: 5 min, Duration: 10s)" }
+      ],
+      "Warrior's Path": [
+        { level: 1, name: "Brutal Strikes", desc: "Deal +1 damage but lose 1 HP per attack. (Calls: Buff – Cooldown: None, Duration: Until deactivated)" },
+        { level: 2, name: "Cleaving Blade", desc: "Wide slashes hitting multiple foes. (Calls: Mass – Damage: 2/target, Cooldown: 1 min, Duration: Instant)" },
+        { level: 3, name: "Unrelenting Assault", desc: "Chain attacks get +1 damage per hit (max +3). (Calls: Buff – Cooldown: 2 min, Duration: 10s)" },
+        { level: 4, name: "Armor Breaker", desc: "Shatter armor, ignoring all defense bonuses. (Calls: Through + Crush – Damage: 3, Cooldown: 5 min, Duration: Instant)" },
+        { level: 5, name: "Warlord's Wrath", desc: "Devastating final blow; if target survives, apply Fear. (Calls: Fear + Through – Damage: 6, Cooldown: 10 min, Duration: Instant)" }
+      ]
+    },
+    "Klepoturgy": {
+      "Shadow Thief Path": [
+        { level: 1, name: "Ghost Step", desc: "Move silently, immune to detection. (Calls: No Effect vs. detection – Cooldown: 1 min, Duration: 10s)" },
+        { level: 2, name: "Quick Fingers", desc: "Steal without being noticed. (Calls: Fumble – Cooldown: 1 min, Duration: Instant)" },
+        { level: 3, name: "Vanishing Act", desc: "Disappear instantly in danger. (Calls: No Effect vs. targeting – Cooldown: 2 min, Duration: 5s)" },
+        { level: 4, name: "Master of Shadows", desc: "Blend perfectly with darkness. (Calls: No Effect vs. vision – Cooldown: 1 min, Duration: 20s)" },
+        { level: 5, name: "Phantom of the Streets", desc: "Steal even from guarded or magically warded targets. (Calls: Fumble + Through – Cooldown: 5 min, Duration: Instant)" }
+      ],
+      "Con Artist Path": [
+        { level: 1, name: "Silver Tongue", desc: "Charm and deceive with ease. (Calls: Charme – Cooldown: 1 min, Duration: 10s)" },
+        { level: 2, name: "False Identity", desc: "Maintain perfect disguises. (Calls: No Effect vs. detection – Cooldown: 5 min, Duration: Until dispelled)" },
+        { level: 3, name: "Misdirection Mastery", desc: "Distract and confuse mid-action. (Calls: Repel + Charme – Cooldown: 1 min, Duration: 5s)" },
+        { level: 4, name: "Confidence Trickster", desc: "Manipulate people into giving valuables. (Calls: Command + Charme – Cooldown: 5 min, Duration: Instant)" },
+        { level: 5, name: "King of Lies", desc: "Lies become impossible to discern from truth. (Calls: No Effect vs. truth detection – Cooldown: 24h, Duration: Until exposed)" }
+      ]
+    },
+    "Technoturgy": {
+      "Gadgeteer Path": [
+        { level: 1, name: "Tinker's Touch", desc: "Repair or modify machinery instantly. (Calls: No Effect vs. mechanical damage – Cooldown: 1 min, Duration: Instant)" },
+        { level: 2, name: "Pocket Arsenal", desc: "Deploy a small gadget for quick offense or defense. (Calls: Buff, Pain, or Repel – Damage: 1–2, Cooldown: 1 min, Duration: 10s)" },
+        { level: 3, name: "Mechanized Reflexes", desc: "Enhance reflexes with tech augments. (Calls: Buff – Cooldown: 1 min, Duration: 10s)" },
+        { level: 4, name: "Adaptive Engineering", desc: "Create a new tool from scraps on the spot. (Calls: Buff or Fumble – Cooldown: 5 min, Duration: Instant)" },
+        { level: 5, name: "Master Gadgeteer", desc: "Instantly access any specialized tool. (Calls: Buff + Mass – Cooldown: 5 min, Duration: 10s)" }
+      ],
+      "Machinist Path": [
+        { level: 1, name: "Blueprint Visionary", desc: "Understand any machine instantly. (Calls: No Effect vs. complexity – Cooldown: 1 min, Duration: Instant)" },
+        { level: 2, name: "Heavy Handiwork", desc: "Operate and repair large machinery quickly. (Calls: Buff – Cooldown: 1 min, Duration: 10s)" },
+        { level: 3, name: "Turret Deployment", desc: "Place an automated turret that deals 2 damage per hit. (Calls: Mass – Cooldown: 5 min, Duration: 20s)" },
+        { level: 4, name: "Mechanical Behemoth", desc: "Construct/pilot a large mech with +3 damage per attack. (Calls: Buff + Mass – Cooldown: 10 min, Duration: 30s)" },
+        { level: 5, name: "Forge Master", desc: "Build a massive war machine capable of sustained area damage. (Calls: Mass + Crush – Damage: 3/target, Cooldown: 10 min, Duration: 30s)" }
+      ]
+    },
+    "Pugiloturgy": {
+      "Crusher Path": [
+        { level: 1, name: "Bonebreaker", desc: "Heavy blunt strikes deal +1 damage to limbs. (Calls: Double – Cooldown: None, Duration: Instant)" },
+        { level: 2, name: "Shockwave Slam", desc: "Slam the ground, applying Strikedown + Repel to all targets in close range. (Calls: Strikedown, Repel – Cooldown: 4 min, Duration: Instant)" },
+        { level: 3, name: "Pulverizer", desc: "Charge an attack for 3s to deal +3 damage and apply Impact. (Calls: Impact – Cooldown: 1 min, Duration: Instant + 3s)" },
+        { level: 4, name: "Shatter Guard", desc: "Break through enemy defenses with a single swing. (Calls: Crush + Fumble – Cooldown: 10 min, Duration: Instant)" },
+        { level: 5, name: "Wrecking Titan", desc: "Each strike applies Through and lets you stack 1 HP of shield. (Calls: Through + Buff – Cooldown: 10 min, Duration: 20s)" }
+      ],
+      "Brawler Path": [
+        { level: 1, name: "Brawl Instinct", desc: "Chain Kick, Pain, or Fumble effects in quick succession without cooldown penalty." },
+        { level: 2, name: "Haymaker Specialist", desc: "A single devastating swing deals +2 damage and applies Stagger. (Calls: Stagger – Cooldown: 1 min, Duration: Instant)" },
+        { level: 3, name: "Counterblow", desc: "On a successful block or parry, immediately retaliate with +2 damage and Repel." },
+        { level: 4, name: "Street Warrior", desc: "Any blunt object gains Impact on hit and may apply Fumble." },
+        { level: 5, name: "Unstoppable Force", desc: "For every 5s spent in combat without breaking offense, gain +1 damage (max +5) and apply Fear on final hit." }
+      ]
+    },
+    "Hastoturgy": {
+      "Vanguard Path": [
+        { level: 1, name: "Extended Reach", desc: "Basic thrusts gain +1 damage and apply Repel at max range." },
+        { level: 2, name: "Sweeping Blow", desc: "Wide slashes apply Mass Strikedown to enemies within arc. (Calls: Mass Strikedown – Cooldown: 5 min, Duration: Instant)" },
+        { level: 3, name: "Zone Control", desc: "Any enemy entering 2m range suffers +1 damage and Pain." },
+        { level: 4, name: "Impale Tactics", desc: "Precision thrust applies Through and +2 damage vs armored targets. (Calls: Through – Cooldown: 1 min, Duration: Instant)" },
+        { level: 5, name: "Sentinel's Wrath", desc: "While guarding with weapon tip, gain No Effect against incoming melee and apply Repel on contact." }
+      ],
+      "Whirlwind Path": [
+        { level: 1, name: "Spinning Reaper", desc: "Continuous spins deal +1 damage and apply Mass Repel." },
+        { level: 2, name: "Piercing Gale", desc: "Rapid thrust combo applies Pain and Fumble if two consecutive hits land." },
+        { level: 3, name: "Dancer's Grace", desc: "Perfect footwork applies Repel and Impact when dodging into a strike." },
+        { level: 4, name: "Momentum Surge", desc: "Each consecutive hit without missing increases damage by 1 and grants Through after 5 stacks." },
+        { level: 5, name: "Storm of Spears", desc: "Deliver a relentless flurry applying Mass Pain + Mass Fumble +3 total damage over 10s." }
+      ]
+    },
+    "Druidomancy": {
+      "Verdant Path": [
+        { level: 1, name: "Sapling's Whisper", desc: "Sense and lightly influence nearby plant life; create small vines to trip or distract. (Calls: Natural + Repel – Damage: 1, Cooldown: None, Duration: Instant or 10s)" },
+        { level: 2, name: "Entangling Roots", desc: "Cause roots and vines to burst from the ground, immobilizing foes. (Calls: Natural + Hold – Damage: 2, Cooldown: 1 min, Duration: 10s)" },
+        { level: 3, name: "Wildshape Initiate", desc: "Transform into a small or medium beast for stealth or mobility. (Calls: Natural + Alter – Cooldown: 3 min, Duration: 20s)" },
+        { level: 4, name: "Verdant Wrath", desc: "Summon a storm of thorns and vines to strike multiple targets. (Calls: Natural + Mass + Impact – Damage: 3/target, Cooldown: 5 min, Duration: Instant)" },
+        { level: 5, name: "Ancient Grove Avatar", desc: "Become a towering treant, gaining immense strength and natural armor. (Calls: Natural + Enhance + Through – Damage: 3/attack, Buff: +2 dmg & armor, Cooldown: 10 min, Duration: 20s)" }
+      ],
+      "Circle Path": [
+        { level: 1, name: "Herbal Remedy", desc: "Concoct a quick healing poultice to mend minor wounds. (Calls: Natural + Heal – Healing: 2, Cooldown: 1 min, Duration: Instant)" },
+        { level: 2, name: "Nature's Ally", desc: "Summon a single beast to aid in combat. (Calls: Natural + Command – Damage: 2/hit, Cooldown: 2 min, Duration: 20s or until destroyed)" },
+        { level: 3, name: "Rebirth's Blessing", desc: "Sacrifice your vitality to heal allies nearby. (Calls: Natural + Mass + Heal – Healing: 3 to all, Cooldown: 5 min, Duration: Instant)" },
+        { level: 4, name: "Season's Fury", desc: "Rapidly shift weather to hinder enemies. (Calls: Natural + Alter + Fear – Damage: 2 + status, Cooldown: 5 min, Duration: 15s)" },
+        { level: 5, name: "Worldroot Ascension", desc: "Bind the battlefield with a living forest under your command. (Calls: Natural + Mass + Command + Fear – Damage: 3/target, Cooldown: 10 min, Duration: 20s)" }
+      ]
+    },
+    "Ballistoturgy": {
+      "Gunslinger Path": [
+        { level: 1, name: "Arcane Load", desc: "Enchant a bullet with elemental energy. (Calls: Fire/Ice/Thunder/Natural + Through – Damage: 2, Cooldown: None, Duration: Until fired)" },
+        { level: 2, name: "Bullet Phasing", desc: "Fire a round that pierces light cover and armor. (Calls: Impact + Through – Damage: 3, Cooldown: 1 min, Duration: Instant)" },
+        { level: 3, name: "Ricochet Hex", desc: "Bullets magically bounce toward other targets after hitting the first. (Damage: 2 each, Cooldown: 2 min, Duration: Instant)" },
+        { level: 4, name: "Mana Overload", desc: "Overcharge a single shot to cause a small magical explosion. (Calls: Elemental + Crush – Damage: 4, Cooldown: 5 min, Duration: Instant)" },
+        { level: 5, name: "Infinite Salvo", desc: "Fire unlimited conjured ammunition for a short duration. (Calls: Impact + Enhance – Damage: 3/hit, Cooldown: 10 min, Duration: 15s)" }
+      ],
+      "Artillery Path": [
+        { level: 1, name: "Negation Bullet", desc: "Refill a weapon's ammunition with conjured debilitating rounds. (Calls: Impact – Cooldown: 1 min, Duration: Instant)" },
+        { level: 2, name: "Suppressive Spellfire", desc: "Lay down a curtain of magic-infused bullets to pin enemies. (Calls: Impact + Mass + Fear – Damage: 2/target, Cooldown: 2 min, Duration: 10s)" },
+        { level: 3, name: "Chrono Reload", desc: "Briefly slow time to line up multiple precision shots. (Calls: Alter + Enhance – Damage: +2/hit, Cooldown: 3 min, Duration: 5s slow zone)" },
+        { level: 4, name: "Bulletstorm Reality Tear", desc: "Open a rift that rains enchanted ammunition on a wide area. (Calls: Impact + Mass + Fear + Crush – Damage: 3/target, Cooldown: 5 min, Duration: 10s)" },
+        { level: 5, name: "Warbringer's Final Word", desc: "Summon an ethereal cannon to annihilate everything in its path. (Calls: Impact + Mass + Through + Fear – Damage: 5/target, Cooldown: 10 min, Duration: Instant)" }
+      ]
+    }
+  };
+
+  function getUnlockedSkills(path1, path2, level) {
+    const unlocked = [];
+    [path1, path2].forEach(pathEntry => {
+      if (!pathEntry) return;
+      // pathEntry might be "Elementomancy - Primordial Path" or just "Elementomancy"
+      // Try to match discipline + subpath
+      for (const [discipline, paths] of Object.entries(SKILL_TREE)) {
+        for (const [subpath, skills] of Object.entries(paths)) {
+          const fullPath = discipline + ' - ' + subpath;
+          if (pathEntry === fullPath || pathEntry === discipline || pathEntry === subpath) {
+            const unlockedForPath = skills.filter(s => s.level <= level);
+            if (unlockedForPath.length) {
+              unlocked.push({ label: fullPath, skills: unlockedForPath });
+            }
+          }
+        }
+      }
+    });
+    return unlocked;
+  }
+
   // ── DETAIL PAGE ─────────────────────────────────────────
   let detailCharId = null;
 
@@ -1587,6 +2264,11 @@
       document.getElementById('detail-name').textContent = char.name;
       document.getElementById('detail-meta').innerHTML =
         `${char.race || '—'} &nbsp;·&nbsp; Level ${char.level || 1}${char.constellationlevel ? ' &nbsp;·&nbsp; ✦ Constellation ' + char.constellationlevel : ''}`;
+
+      // Backstory
+      document.getElementById('detail-backstory').innerHTML = char.backstory
+        ? `<div style="margin-top:0.5rem;padding:0.8rem 1rem;background:var(--bg3);border:1px solid var(--border);border-left:2px solid var(--gold-dim);font-style:italic;color:var(--text-dim);font-size:0.95rem;line-height:1.6;">${char.backstory}</div>`
+        : '';
 
       // Stats
       document.getElementById('detail-stats').innerHTML = `
@@ -1614,6 +2296,12 @@
             </div>`).join('')}
         </div>` : '';
 
+      // Constellation Skills
+      loadConstellationSkills(char);
+
+      // Path Skills
+      await loadPathSkills(char);
+
       // Inventory
       await loadInventory(charId);
 
@@ -1624,6 +2312,90 @@
     } finally {
       setLoading(false);
     }
+  }
+
+
+  async function loadPathSkills(char) {
+    const wrap = document.getElementById('detail-path-skills');
+    if (!wrap) return;
+    const level = char.level || 1;
+    const path1 = char['Path 1'];
+    const path2 = char['Path 2'];
+    const unlocked = getUnlockedSkills(path1, path2, level);
+
+    // Load dismissed list from Supabase (stored as a JSON array in a dismissed_skills table or fallback to localStorage key per char)
+    let dismissed = [];
+    try {
+      const rows = await sbFetch(`/dismissed_path_skills?character_id=eq.${char.id}`);
+      dismissed = rows.map(r => r.skill_name);
+    } catch(e) { dismissed = []; }
+
+    if (!unlocked.length) {
+      wrap.innerHTML = '<div class="path-skills-empty">No path skills unlocked yet — level up or set your paths.</div>';
+      return;
+    }
+
+    wrap.innerHTML = unlocked.map(group => `
+      <div class="path-skills-section">
+        <div class="path-skills-header">${group.label}</div>
+        ${group.skills.map(skill => {
+          const isDismissed = dismissed.includes(skill.name);
+          return `<div class="path-skill-item${isDismissed ? ' dismissed' : ''}" id="psk-${char.id}-${skill.name.replace(/\s+/g,'-')}">
+            <div class="path-skill-item-body">
+              <div class="path-skill-level">Level ${skill.level} Unlock</div>
+              <div class="path-skill-name">${skill.name}</div>
+              <div class="path-skill-desc">${skill.desc}</div>
+            </div>
+            <button class="path-skill-dismiss" onclick="toggleDismissSkill(${char.id}, '${skill.name.replace(/'/g,"\\'")}', this)">
+              ${isDismissed ? '↺ Restore' : '✕ Remove'}
+            </button>
+          </div>`;
+        }).join('')}
+      </div>`).join('');
+  }
+
+  async function toggleDismissSkill(charId, skillName, btn) {
+    const item = btn.closest('.path-skill-item');
+    const isDismissed = item.classList.contains('dismissed');
+    try {
+      if (isDismissed) {
+        await sbFetch(`/dismissed_path_skills?character_id=eq.${charId}&skill_name=eq.${encodeURIComponent(skillName)}`, { method: 'DELETE' });
+        item.classList.remove('dismissed');
+        btn.textContent = '✕ Remove';
+      } else {
+        await sbFetch('/dismissed_path_skills', {
+          method: 'POST',
+          body: JSON.stringify({ character_id: charId, skill_name: skillName })
+        });
+        item.classList.add('dismissed');
+        btn.textContent = '↺ Restore';
+      }
+    } catch(err) {
+      showToast('Error: ' + err.message, true);
+    }
+  }
+
+
+  function loadConstellationSkills(char) {
+    const wrap = document.getElementById('detail-constellation-skills');
+    if (!wrap) return;
+    const unlocked = getUnlockedConstellationSkills(char.constellationame, char.constellationlevel);
+    if (!unlocked.length) {
+      wrap.innerHTML = '<div class="path-skills-empty">No constellation skills unlocked yet.</div>';
+      return;
+    }
+    wrap.innerHTML = `
+      <div class="path-skills-section">
+        <div class="path-skills-header">${char.constellationame}</div>
+        ${unlocked.map(skill => `
+          <div class="path-skill-item">
+            <div class="path-skill-item-body">
+              <div class="path-skill-level">Level ${skill.level}</div>
+              <div class="path-skill-name">${skill.name}</div>
+              <div class="path-skill-desc">${skill.desc}</div>
+            </div>
+          </div>`).join('')}
+      </div>`;
   }
 
   function closeDetailPage() {
