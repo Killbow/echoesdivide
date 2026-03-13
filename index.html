@@ -975,6 +975,59 @@
     padding: 0.3rem 0;
   }
 
+
+  /* ── MAP MODAL ── */
+  .map-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(8,6,4,0.92);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    backdrop-filter: blur(3px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s;
+  }
+  .map-backdrop.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+  .map-container {
+    position: relative;
+    max-width: 95vw;
+    max-height: 90vh;
+    border: 1px solid var(--border);
+    transform: scale(0.97);
+    transition: transform 0.25s;
+  }
+  .map-backdrop.open .map-container { transform: scale(1); }
+  .map-container img {
+    display: block;
+    max-width: 95vw;
+    max-height: 88vh;
+    object-fit: contain;
+  }
+  .map-close {
+    position: absolute;
+    top: 0.6rem;
+    right: 0.6rem;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+  }
+  .map-close:hover { border-color: var(--red-light); color: var(--red-light); }
+
   /* Scrollbar */
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: var(--bg3); }
@@ -1010,6 +1063,7 @@
 
 <div class="toolbar">
   <button class="btn btn-primary" onclick="openModal()"><span>+ Enroll Character</span></button>
+  <button class="btn" onclick="openMap()"><span>🗺 World Map</span></button>
 </div>
 
 <div class="party-grid" id="partyGrid">
@@ -1173,6 +1227,15 @@
   </div>
 </div>
 
+
+
+<!-- MAP MODAL -->
+<div class="map-backdrop" id="mapBackdrop" onclick="handleMapBackdropClick(event)">
+  <div class="map-container">
+    <img src="https://aakfivejocyemgsfxkvw.supabase.co/storage/v1/object/public/assets/d8cb4565-db66-40a3-91b7-5f452a2db761.jpg" alt="World Map">
+    <button class="map-close" onclick="closeMap()">✕</button>
+  </div>
+</div>
 
 <!-- DETAIL PAGE -->
 <div class="detail-page" id="detailPage">
@@ -1605,15 +1668,10 @@
             <div class="path-value">${paths.join(' · ')}</div>
           </div>
         ` : ''}
-        ${skills.length ? `
+        ${char.backstory ? `
           <div class="card-skills">
-            <div class="skills-label">Skills</div>
-            ${skills.map(s => `
-              <div class="skill-row">
-                <span class="skill-name">${s.skill_name || s.name}</span>
-                ${renderStars(s.stars)}
-              </div>
-            `).join('')}
+            <div class="skills-label">Backstory</div>
+            <div class="skill-name" style="font-style:italic;line-height:1.5;">${char.backstory.length > 120 ? char.backstory.slice(0, 120).trim() + '…' : char.backstory}</div>
           </div>
         ` : ''}
       </div>
@@ -2459,6 +2517,18 @@
     } catch(err) {
       showToast('Error: ' + err.message, true);
     }
+  }
+
+
+  // ── MAP ─────────────────────────────────────────────────
+  function openMap() {
+    document.getElementById('mapBackdrop').classList.add('open');
+  }
+  function closeMap() {
+    document.getElementById('mapBackdrop').classList.remove('open');
+  }
+  function handleMapBackdropClick(e) {
+    if (e.target === document.getElementById('mapBackdrop')) closeMap();
   }
 
   // ── INIT ─────────────────────────────────────────────────
