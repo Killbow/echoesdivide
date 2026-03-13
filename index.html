@@ -1110,6 +1110,14 @@
             <label>XP</label>
             <input type="number" id="f-xp" placeholder="0" min="0">
           </div>
+          <div class="form-group">
+            <label>★ Gold Coins</label>
+            <input type="number" id="f-gcoin" placeholder="0" min="0">
+          </div>
+          <div class="form-group">
+            <label>◆ Currency Coins</label>
+            <input type="number" id="f-ccoin" placeholder="0" min="0">
+          </div>
         </div>
       </div>
 
@@ -1313,6 +1321,14 @@
           <div class="form-group">
             <label>XP</label>
             <input type="number" id="ef-xp" placeholder="0" min="0">
+          </div>
+          <div class="form-group">
+            <label>★ Gold Coins</label>
+            <input type="number" id="ef-gcoin" placeholder="0" min="0">
+          </div>
+          <div class="form-group">
+            <label>◆ Currency Coins</label>
+            <input type="number" id="ef-ccoin" placeholder="0" min="0">
           </div>
         </div>
       </div>
@@ -1655,7 +1671,7 @@
 
     card.innerHTML = `
       ${char.portrait_url
-        ? `<img class="card-portrait" src="${char.portrait_url}" alt="${char.name}">`
+        ? `<div class="card-portrait-wrap"><img class="card-portrait" src="${char.portrait_url}" alt="${char.name}"></div>`
         : `<div class="card-portrait-placeholder">⚔</div>`}
       <div class="card-body">
         <div class="card-name">${char.name}</div>
@@ -1875,6 +1891,12 @@
       }
 
       // Refresh the card on the page
+      // Preserve existing portrait_url if no new one was uploaded
+      if (!charData.portrait_url) {
+        const existingCard = document.querySelector(`.char-card[data-id="${editCharId}"]`);
+        const existingImg = existingCard ? existingCard.querySelector('.card-portrait') : null;
+        if (existingImg) charData.portrait_url = existingImg.src;
+      }
       const updatedChar = { ...charData, id: editCharId, skills: validSkills };
       const oldCard = document.querySelector(`.char-card[data-id="${editCharId}"]`);
       if (oldCard) oldCard.remove();
