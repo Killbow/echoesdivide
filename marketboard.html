@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Echoes Divide — Marketboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=Crimson+Pro:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#1e1508;--bg2:#2a1c0c;--bg3:#352211;--border:#6e5530;--gold:#c9a84c;--gold-light:#e8c97a;--gold-dim:#6b5a2a;--text:#e8dcc8;--text-dim:#d4c4a0;--text-faint:#a08c6a;--ink:#1a1208;--purple:#9b4dff;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'Crimson Pro',serif;min-height:100vh;overflow-x:hidden;}
+  body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.12'/%3E%3C/svg%3E");pointer-events:none;z-index:0;mix-blend-mode:multiply;}
+  body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at center,transparent 55%,rgba(10,6,2,0.4) 100%);pointer-events:none;z-index:0;}
+
+  header{position:relative;text-align:center;padding:3rem 2rem 2rem;border-bottom:1px solid var(--border);background:linear-gradient(180deg,#0e0b06 0%,transparent 100%);z-index:1;}
+  header::after{content:'';position:absolute;bottom:-1px;left:50%;transform:translateX(-50%);width:60%;height:1px;background:linear-gradient(90deg,transparent,var(--gold-dim),var(--gold),var(--gold-dim),transparent);}
+  .guild-seal{display:block;font-size:2rem;color:var(--gold-dim);margin-bottom:0.4rem;filter:drop-shadow(0 0 8px rgba(201,168,76,0.4));}
+  .guild-name{font-family:'Cinzel',serif;font-size:0.7rem;letter-spacing:0.35em;text-transform:uppercase;color:var(--text-dim);margin-bottom:0.6rem;}
+  .records-title{font-family:'Cinzel',serif;font-size:clamp(2rem,5vw,3.5rem);font-weight:900;letter-spacing:0.2em;color:var(--gold-light);text-shadow:0 0 60px rgba(201,168,76,0.5),0 2px 6px rgba(0,0,0,0.9);margin-bottom:0.6rem;line-height:1.1;}
+  .header-rule{width:40%;height:1px;margin:0.8rem auto;background:linear-gradient(90deg,transparent,var(--gold-dim),var(--gold),var(--gold-dim),transparent);}
+  .records-subtitle{font-size:0.95rem;font-style:italic;color:var(--text-dim);letter-spacing:0.1em;}
+
+  .toolbar{display:flex;justify-content:center;padding:1.5rem 2rem 0.5rem;gap:1rem;flex-wrap:wrap;position:relative;z-index:1;}
+  .btn{font-family:'Cinzel',serif;font-size:0.75rem;letter-spacing:0.12em;padding:0.65rem 1.6rem;border:1px solid var(--gold-dim);background:transparent;color:var(--text);cursor:pointer;transition:all 0.2s;text-transform:uppercase;position:relative;overflow:hidden;}
+  .btn::before{content:'';position:absolute;inset:0;background:var(--gold);opacity:0;transition:opacity 0.2s;}
+  .btn:hover{border-color:var(--gold);color:var(--ink);}
+  .btn:hover::before{opacity:1;}
+  .btn span{position:relative;z-index:1;}
+
+  /* TAB NAV */
+  .tab-nav{display:flex;justify-content:center;flex-wrap:wrap;gap:0;padding:2rem 2rem 0;position:relative;z-index:1;max-width:1100px;margin:0 auto;}
+  .tab-btn{font-family:'Cinzel',serif;font-size:0.7rem;letter-spacing:0.12em;text-transform:uppercase;padding:0.65rem 1.8rem;border:1px solid var(--border);background:transparent;color:var(--text-faint);cursor:pointer;transition:all 0.2s;border-right:none;}
+  .tab-btn:last-child{border-right:1px solid var(--border);}
+  .tab-btn.active{background:var(--bg2);color:var(--gold-light);border-color:var(--gold-dim);border-bottom:1px solid var(--bg2);position:relative;top:1px;}
+  .tab-btn:not(.active):hover{color:var(--text-dim);background:rgba(255,255,255,0.02);}
+  .tab-underline{max-width:1100px;margin:0 auto;height:1px;background:var(--border);position:relative;z-index:1;}
+
+  /* PANEL */
+  .market-panel{display:none;max-width:1100px;margin:0 auto;padding:2.5rem 2rem 5rem;position:relative;z-index:1;}
+  .market-panel.active{display:block;}
+
+  /* SEARCH */
+  .search-bar{display:flex;align-items:center;gap:0.8rem;margin-bottom:2rem;}
+  .search-bar input{flex:1;background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:0.6rem 1rem;font-family:'Crimson Pro',serif;font-size:1rem;outline:none;transition:border-color 0.15s;}
+  .search-bar input:focus{border-color:var(--gold-dim);}
+  .search-bar input::placeholder{color:var(--text-faint);}
+  .search-label{font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-faint);white-space:nowrap;}
+
+  /* ITEMS GRID */
+  .items-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1px;border:1px solid var(--border);}
+  .item-row{display:flex;justify-content:space-between;align-items:center;padding:0.65rem 1rem;background:var(--bg2);border-bottom:1px solid var(--border);transition:background 0.15s;gap:1rem;}
+  .item-row:last-child{border-bottom:none;}
+  .item-row:hover{background:var(--bg3);}
+  .item-row.hidden{display:none;}
+  .item-name{font-size:0.95rem;color:var(--text-dim);}
+  .item-price{font-family:'Cinzel',serif;font-size:0.78rem;color:var(--gold);letter-spacing:0.05em;white-space:nowrap;}
+  .item-price.service{color:var(--purple);}
+
+  /* SECTION HEADER inside panel */
+  .market-section-rule{display:flex;align-items:center;gap:1rem;margin:2rem 0 1rem;}
+  .market-section-rule::before,.market-section-rule::after{content:'';flex:1;height:1px;background:var(--border);}
+  .market-section-title{font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);white-space:nowrap;}
+
+  /* CATEGORY CARD for all-items view */
+  .category-block{margin-bottom:2.5rem;}
+  .category-heading{font-family:'Cinzel',serif;font-size:0.75rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:0.6rem;padding-bottom:0.4rem;border-bottom:1px solid var(--border);}
+
+  .empty-msg{text-align:center;color:var(--text-faint);font-style:italic;padding:3rem 0;font-size:0.95rem;}
+
+  ::-webkit-scrollbar{width:6px;} ::-webkit-scrollbar-track{background:var(--bg);} ::-webkit-scrollbar-thumb{background:var(--border);} ::-webkit-scrollbar-thumb:hover{background:var(--gold-dim);}
+</style>
+</head>
+<body>
+
+<header>
+  <span class="guild-seal">⚜</span>
+  <div class="guild-name">Echoes Divide</div>
+  <div class="records-title">Marketboard</div>
+  <div class="header-rule"></div>
+  <div class="records-subtitle">✦ Guild-Sanctioned Trade Listings ✦</div>
+</header>
+
+<div class="toolbar">
+  <button class="btn" onclick="window.location.href='index.html'"><span>&#8592; Guild Registry</span></button>
+  <button class="btn" onclick="window.location.href='lore.html'"><span>&#128214; World Codex</span></button>
+</div>
+
+<div class="tab-nav">
+  <button class="tab-btn active" onclick="switchTab('all',this)">&#9670; All Items</button>
+  <button class="tab-btn" onclick="switchTab('blacksmith',this)">&#9876; Blacksmith</button>
+  <button class="tab-btn" onclick="switchTab('faith',this)">&#9728; Faith Supplies</button>
+  <button class="tab-btn" onclick="switchTab('luxury',this)">&#9752; Luxury &amp; Crafting</button>
+  <button class="tab-btn" onclick="switchTab('transport',this)">&#9650; Transport</button>
+</div>
+<div class="tab-underline"></div>
+
+<script>
+const MARKET_DATA = {
+  blacksmith: {
+    label: "Blacksmith / Armory",
+    icon: "&#9876;",
+    items: [
+      { name: "Full Armor", price: "2,000 G" },
+      { name: "Extra Weapon", price: "150 G" },
+      { name: "Extra Shield", price: "150 G" },
+      { name: "Ball Bearings", price: "25 G" },
+      { name: "Chain", price: "50 G" },
+      { name: "Lamp", price: "25 G" },
+      { name: "Miner's Pick", price: "50 G" },
+      { name: "Repair Hammer (Single Use)", price: "50 G" },
+      { name: "Musical Instrument", price: "100 G" },
+    ]
+  },
+  faith: {
+    label: "Faith Supplies",
+    icon: "&#9728;",
+    items: [
+      { name: "Curative Flask (Heals 1 HP)", price: "20 G" },
+      { name: "Curative Bag (Heals 3 HP)", price: "50 G" },
+      { name: "Curative Kit (Heals 6 HP)", price: "100 G" },
+      { name: "Sacred Herb (Heals one Condition)", price: "75 G" },
+      { name: "Scriptures", price: "20 G" },
+      { name: "Chalk", price: "5 G" },
+      { name: "Holy Water", price: "150 G" },
+      { name: "Incense", price: "50 G" },
+      { name: "Mana Salts (Lets you cast a ritual)", price: "300 G" },
+      { name: "Service: Raise Dead", price: "3,000 G", service: true },
+    ]
+  },
+  luxury: {
+    label: "Luxury Items & Crafting Goods",
+    icon: "&#9752;",
+    items: [
+      { name: "Reef Rock", price: "28 G" },
+      { name: "Ceiba Cotton", price: "17 G" },
+      { name: "Hagnos Lumber", price: "39 G" },
+      { name: "Weaver's Spindle", price: "285 G" },
+      { name: "Moogle Tuft", price: "265 G" },
+      { name: "Turtlerock", price: "770 G" },
+      { name: "Glamour Prism", price: "218 G" },
+      { name: "Chocobo Feed", price: "12 G" },
+      { name: "Exotic Perfume", price: "427 G" },
+      { name: "High Durium Nugget", price: "2,120 G" },
+      { name: "Star Quartz", price: "5,780 G" },
+    ]
+  },
+  transport: {
+    label: "Transportation",
+    icon: "&#9650;",
+    items: [
+      { name: "Camel", price: "300 G" },
+      { name: "Donkey", price: "150 G" },
+      { name: "Horse, Draft", price: "500 G" },
+      { name: "Horse, Riding", price: "800 G" },
+      { name: "Elephant", price: "5,000 G" },
+      { name: "Mastiff", price: "200 G" },
+      { name: "Pony", price: "250 G" },
+      { name: "Warhorse", price: "2,000 G" },
+      { name: "Chocobo", price: "2,300 G" },
+      { name: "Carriage", price: "1,200 G" },
+      { name: "Chariot", price: "800 G" },
+      { name: "Sled", price: "200 G" },
+      { name: "Rowboat", price: "300 G" },
+      { name: "Sailing Boat", price: "1,500 G" },
+      { name: "Galley", price: "25,000 G" },
+      { name: "Saddlebags", price: "50 G" },
+      { name: "Feed (per day)", price: "5 G" },
+      { name: "Stabling (per day)", price: "10 G" },
+    ]
+  }
+};
+
+function buildItemRow(item, query) {
+  const nameLC = item.name.toLowerCase();
+  const hidden = query && !nameLC.includes(query) ? ' hidden' : '';
+  const priceClass = item.service ? ' service' : '';
+  return `<div class="item-row${hidden}"><span class="item-name">${item.name}</span><span class="item-price${priceClass}">${item.price}</span></div>`;
+}
+
+function renderAll(query) {
+  const panel = document.getElementById('panel-all');
+  let html = '';
+  let anyVisible = false;
+  for (const [key, cat] of Object.entries(MARKET_DATA)) {
+    const rows = cat.items.map(i => buildItemRow(i, query));
+    const catHidden = rows.every(r => r.includes(' hidden'));
+    if (!catHidden) anyVisible = true;
+    html += `<div class="category-block${catHidden ? ' hidden' : ''}">
+      <div class="category-heading">${cat.icon} &nbsp; ${cat.label}</div>
+      <div class="items-grid">${rows.join('')}</div>
+    </div>`;
+  }
+  if (!anyVisible) html = '<div class="empty-msg">No items matched your search.</div>';
+  panel.innerHTML = html;
+}
+
+function renderCategory(key) {
+  const panel = document.getElementById('panel-' + key);
+  if (!panel) return;
+  const cat = MARKET_DATA[key];
+  panel.innerHTML = `<div class="items-grid">${cat.items.map(i => buildItemRow(i, '')).join('')}</div>`;
+}
+
+function switchTab(panelId, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.market-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('panel-' + panelId).classList.add('active');
+  document.getElementById('search-wrap').style.display = panelId === 'all' ? 'flex' : 'none';
+}
+
+function onSearch(e) {
+  const q = e.target.value.trim().toLowerCase();
+  renderAll(q);
+}
+
+// Init
+document.addEventListener('DOMContentLoaded', () => {
+  for (const key of Object.keys(MARKET_DATA)) renderCategory(key);
+  renderAll('');
+});
+</script>
+
+<!-- ALL ITEMS PANEL -->
+<div class="market-panel active" id="panel-all">
+  <!-- rendered by JS -->
+</div>
+
+<!-- CATEGORY PANELS -->
+<div class="market-panel" id="panel-blacksmith"></div>
+<div class="market-panel" id="panel-faith"></div>
+<div class="market-panel" id="panel-luxury"></div>
+<div class="market-panel" id="panel-transport"></div>
+
+<!-- Search bar (shown only on All Items tab) -->
+<div id="search-wrap" class="toolbar" style="padding-top:0;margin-top:-0.5rem;">
+  <div class="search-bar" style="max-width:500px;width:100%;margin:0 auto;">
+    <span class="search-label">Search</span>
+    <input type="text" placeholder="Filter items..." oninput="onSearch(event)">
+  </div>
+</div>
+
+</body>
+</html>
