@@ -7,21 +7,22 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=Crimson+Pro:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #c9b99a;
-    --bg2: #d4c4a5;
-    --bg3: #bfae8e;
-    --border: #8a7155;
-    --border-dark: #5a3e20;
-    --gold: #5a3e20;
-    --gold-light: #3a2510;
-    --gold-dim: #8a6a3a;
-    --text: #2a1a08;
-    --text-dim: #6b4e2a;
-    --text-faint: #a08860;
+    --bg: #1e1508;
+    --bg2: #2a1c0c;
+    --bg3: #352211;
+    --border: #6e5530;
+    --border-dark: #3a2510;
+    --gold: #c9a84c;
+    --gold-light: #e8c97a;
+    --gold-dim: #6b5a2a;
+    --text: #e8dcc8;
+    --text-dim: #d4c4a0;
+    --text-faint: #a08c6a;
     --red: #8b2020;
     --red-light: #c94444;
     --ink: #1a1208;
-    --parchment-shadow: rgba(42,26,8,0.18);
+    --purple: #9b4dff;
+    --parchment-shadow: rgba(0,0,0,0.35);
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -1063,6 +1064,7 @@
 
 <div class="toolbar">
   <button class="btn btn-primary" onclick="openModal()"><span>+ Enroll Character</span></button>
+  <button class="btn" onclick="window.location.href='lore.html'"><span>📖 World Codex</span></button>
   <button class="btn" onclick="openMap()"><span>🗺 World Map</span></button>
 </div>
 
@@ -1536,7 +1538,7 @@
 
   function closeModal() {
     document.getElementById('modalBackdrop').classList.remove('open');
-    ['f-name','f-race','f-level','f-conlevel','f-xp'].forEach(id => {
+    ['f-name','f-race','f-level','f-conlevel','f-xp','f-gcoin','f-ccoin'].forEach(id => {
       document.getElementById(id).value = '';
     });
     document.getElementById('f-portrait').value = '';
@@ -1574,6 +1576,8 @@
         race: document.getElementById('f-race').value.trim() || null,
         level: parseInt(document.getElementById('f-level').value) || 1,
         xp: parseInt(document.getElementById('f-xp').value) || 0,
+        gcoin: parseInt(document.getElementById('f-gcoin').value) || 0,
+        ccoin: parseInt(document.getElementById('f-ccoin').value) || 0,
         'Path 1': document.getElementById('f-path1').value.trim() || null,
         'Path 2': document.getElementById('f-path2').value.trim() || null,
         constellationame: document.getElementById('f-conname').value.trim() || null,
@@ -1660,6 +1664,14 @@
           <div class="stat-row">
             <span class="stat-label">XP</span>
             <span class="stat-value">${char.xp || 0}</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">★ GCoin</span>
+            <span class="stat-value" style="color:var(--gold)">${char.gcoin || 0}</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">◆ CCoin</span>
+            <span class="stat-value" style="color:var(--gold-light)">${char.ccoin || 0}</span>
           </div>
         </div>
         ${paths.length ? `
@@ -1784,6 +1796,8 @@
       document.getElementById('ef-level').value = char.level || '';
       document.getElementById('ef-conlevel').value = char.constellationlevel || '';
       document.getElementById('ef-xp').value = char.xp || '';
+      document.getElementById('ef-gcoin').value = char.gcoin || '';
+      document.getElementById('ef-ccoin').value = char.ccoin || '';
       const p1sel = document.getElementById('ef-path1'); p1sel.value = char['Path 1'] || '';
       const p2sel = document.getElementById('ef-path2'); p2sel.value = char['Path 2'] || '';
       const cnsel = document.getElementById('ef-conname'); cnsel.value = char.constellationame || '';
@@ -1826,6 +1840,8 @@
         level: parseInt(document.getElementById('ef-level').value) || 1,
         constellationlevel: parseInt(document.getElementById('ef-conlevel').value) || null,
         xp: parseInt(document.getElementById('ef-xp').value) || 0,
+        gcoin: parseInt(document.getElementById('ef-gcoin').value) || 0,
+        ccoin: parseInt(document.getElementById('ef-ccoin').value) || 0,
         'Path 1': document.getElementById('ef-path1').value.trim() || null,
         'Path 2': document.getElementById('ef-path2').value.trim() || null,
         constellationame: document.getElementById('ef-conname').value.trim() || null,
@@ -2333,6 +2349,8 @@
         <div class="detail-stat"><div class="detail-stat-label">XP</div><div class="detail-stat-value">${char.xp || 0}</div></div>
         <div class="detail-stat"><div class="detail-stat-label">Level</div><div class="detail-stat-value">${char.level || 1}</div></div>
         ${char.constellationlevel ? `<div class="detail-stat"><div class="detail-stat-label">Constellation Lv.</div><div class="detail-stat-value">${char.constellationlevel}</div></div>` : ''}
+        <div class="detail-stat"><div class="detail-stat-label" style="color:var(--gold)">★ Gold Coins</div><div class="detail-stat-value" style="color:var(--gold)">${char.gcoin || 0}</div></div>
+        <div class="detail-stat"><div class="detail-stat-label" style="color:var(--gold-light)">◆ Currency Coins</div><div class="detail-stat-value" style="color:var(--gold-light)">${char.ccoin || 0}</div></div>
       `;
 
       // Paths

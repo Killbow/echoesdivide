@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Echoes Divide, World Codex</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=Crimson+Pro:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#3d2b10;--bg2:#4a3418;--bg3:#553c1e;--border:#6e5530;
+    --gold:#c9a84c;--gold-light:#e8c97a;--gold-dim:#6b5a2a;
+    --text:#e8dcc8;--text-dim:#d4c4a0;--text-faint:#a08c6a;
+    --red-light:#c94444;--ink:#1a1208;--purple:#9b4dff;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'Crimson Pro',serif;min-height:100vh;overflow-x:hidden;}
+  body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.12'/%3E%3C/svg%3E");pointer-events:none;z-index:0;mix-blend-mode:multiply;}
+  body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at center,transparent 55%,rgba(10,6,2,0.4) 100%);pointer-events:none;z-index:0;}
+  header{position:relative;text-align:center;padding:3rem 2rem 2rem;border-bottom:1px solid var(--border);background:linear-gradient(180deg,#0e0b06 0%,transparent 100%);z-index:1;}
+  header::after{content:'';position:absolute;bottom:-1px;left:50%;transform:translateX(-50%);width:60%;height:1px;background:linear-gradient(90deg,transparent,var(--gold-dim),var(--gold),var(--gold-dim),transparent);}
+  .guild-seal{display:block;font-size:2rem;color:var(--gold-dim);margin-bottom:0.4rem;filter:drop-shadow(0 0 8px rgba(201,168,76,0.4));}
+  .guild-name{font-family:'Cinzel',serif;font-size:0.7rem;letter-spacing:0.35em;text-transform:uppercase;color:var(--text-dim);margin-bottom:0.6rem;}
+  .records-title{font-family:'Cinzel',serif;font-size:clamp(2rem,5vw,3.5rem);font-weight:900;letter-spacing:0.2em;color:var(--gold-light);text-shadow:0 0 60px rgba(201,168,76,0.5),0 2px 6px rgba(0,0,0,0.9);margin-bottom:0.6rem;line-height:1.1;}
+  .header-rule{width:40%;height:1px;margin:0.8rem auto;background:linear-gradient(90deg,transparent,var(--gold-dim),var(--gold),var(--gold-dim),transparent);}
+  .records-subtitle{font-size:0.95rem;font-style:italic;color:var(--text-dim);letter-spacing:0.1em;}
+  .ornament{color:var(--gold-dim);font-size:1.2rem;margin:0 0.5rem;}
+  .top-nav{display:flex;align-items:center;justify-content:center;gap:1rem;padding:1.2rem 2rem;position:relative;z-index:1;border-bottom:1px solid var(--border);}
+  .btn-back{font-family:'Cinzel',serif;font-size:0.7rem;letter-spacing:0.12em;text-transform:uppercase;background:none;border:1px solid var(--border);color:var(--text-dim);padding:0.5rem 1.1rem;cursor:pointer;transition:all 0.15s;}
+  .btn-back:hover{border-color:var(--gold-dim);color:var(--gold);}
+  .page-wrap{max-width:1100px;margin:0 auto;padding:0 2rem 4rem;position:relative;z-index:1;}
+  .codex-tabs{display:flex;justify-content:center;padding:2rem 0 0;}
+  .codex-tab{font-family:'Cinzel',serif;font-size:0.75rem;letter-spacing:0.15em;text-transform:uppercase;background:var(--bg2);border:1px solid var(--border);color:var(--text-faint);padding:0.7rem 2.5rem;cursor:pointer;transition:all 0.2s;}
+  .codex-tab:first-child{border-right:none;}
+  .codex-tab:hover{color:var(--text-dim);}
+  .codex-tab.active{background:var(--bg3);border-color:var(--gold-dim);color:var(--gold);border-bottom-color:var(--bg3);}
+  .codex-panel{display:none;}
+  .codex-panel.active{display:block;}
+  .codex-section{border:1px solid var(--border);border-top:none;}
+  .codex-section-header{padding:1.5rem 2rem;border-bottom:1px solid var(--border);background:var(--bg);}
+  .codex-section-title{font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--purple);}
+  .codex-section-desc{font-size:0.92rem;color:var(--text-faint);font-style:italic;margin-top:0.3rem;}
+  .lore-entry{display:grid;grid-template-columns:260px 1fr;border-bottom:1px solid var(--border);background:var(--bg2);transition:background 0.2s;}
+  .lore-entry:last-child{border-bottom:none;}
+  .lore-entry:hover{background:var(--bg3);}
+  .lore-entry.rev{direction:rtl;}
+  .lore-entry.rev > *{direction:ltr;}
+  @media(max-width:700px){.lore-entry,.lore-entry.rev{grid-template-columns:1fr;direction:ltr;}.lore-img-wrap{min-height:160px;}}
+  .lore-img-wrap{position:relative;overflow:hidden;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:4rem;color:var(--text-faint);}
+  .lore-img-label{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(10,6,2,0.8));padding:1rem 0.8rem 0.6rem;font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold-dim);}
+  .lore-body{padding:1.8rem 2rem;display:flex;flex-direction:column;gap:0.8rem;}
+  .lore-tag{display:inline-block;font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;padding:0.2rem 0.6rem;border:1px solid var(--gold-dim);color:var(--gold-dim);align-self:flex-start;}
+  .lore-tag.dark{border-color:var(--purple);color:var(--purple);}
+  .lore-tag.red{border-color:var(--red-light);color:var(--red-light);}
+  .lore-tag.gold{border-color:var(--gold);color:var(--gold);}
+  .lore-title{font-family:'Cinzel',serif;font-size:1.3rem;font-weight:600;color:var(--gold-light);letter-spacing:0.04em;}
+  .lore-text{font-size:1rem;color:var(--text-dim);line-height:1.7;}
+  .lore-text em{color:var(--text);font-style:italic;}
+  .lore-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;}
+  @media(max-width:500px){.lore-grid{grid-template-columns:1fr;}}
+  .lore-cell{background:var(--bg);border:1px solid var(--border);padding:0.4rem 0.7rem;}
+  .lore-label{font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold-dim);display:block;margin-bottom:0.15rem;}
+  .lore-val{font-size:0.88rem;color:var(--text-dim);}
+  .lore-flavour{font-style:italic;color:var(--text-faint);font-size:0.92rem;padding-top:0.4rem;border-top:1px solid var(--border);}
+  .lore-ranks{display:flex;flex-wrap:wrap;gap:0.4rem;}
+  .rank{font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.08em;text-transform:uppercase;padding:0.2rem 0.6rem;border:1px solid;}
+  .rank-v{border-color:#7b4fff;color:#7b4fff;}
+  .rank-a{border-color:#4fa3e0;color:#4fa3e0;}
+  .rank-g{border-color:#8aad3a;color:#8aad3a;}
+  ::-webkit-scrollbar{width:6px;}::-webkit-scrollbar-track{background:var(--bg);}::-webkit-scrollbar-thumb{background:var(--border);}::-webkit-scrollbar-thumb:hover{background:var(--gold-dim);}
+</style>
+</head>
+<body>
+
+<header>
+  <span class="guild-seal">⚜</span>
+  <div class="guild-name">Adventurers Guild Registry</div>
+  <div class="records-title">World Codex</div>
+  <div class="header-rule"></div>
+  <div class="records-subtitle"><span class="ornament">✦</span> Places, Factions &amp; Powers of the Divide <span class="ornament">✦</span></div>
+</header>
+
+<div class="top-nav">
+  <button class="btn-back" onclick="window.location.href='index.html'">← Back to Guild Registry</button>
+</div>
+
+<div class="page-wrap">
+
+  <div class="codex-tabs">
+    <button class="codex-tab active" onclick="switchTab('places',this)">⚑ Places</button>
+    <button class="codex-tab" onclick="switchTab('factions',this)">⚔ Factions</button>
+  </div>
+
+  <!-- ══ PLACES ══ -->
+  <div class="codex-panel active" id="panel-places">
+    <div class="codex-section">
+      <div class="codex-section-header">
+        <div class="codex-section-title">Locations of the Divide</div>
+        <div class="codex-section-desc">Islands, kingdoms, and territories that shape the world.</div>
+      </div>
+
+      <!-- Azure -->
+      <div class="lore-entry">
+        <div class="lore-img-wrap">🌊<div class="lore-img-label">The City of Azure</div></div>
+        <div class="lore-body">
+          <span class="lore-tag">Island City</span>
+          <div class="lore-title">The City of Azure</div>
+          <p class="lore-text">A modest island-city spread across meadows, hills, and a broad coastal inlet, Azure is not a city of stone towers, but a living network of villages bound by trade, kinship, and common memory. Its people rise with the tide, fishing, tending their hives, and working the fields.</p>
+          <p class="lore-text">Azure's livelihood rests on three pillars: <em>fishing, beekeeping, and farming</em>. The surrounding waters yield cod, silverfin, and crab, while the uplands produce honey famed across the realm, fragrant with clover and salt. Even the poorest households keep hives.</p>
+          <div class="lore-grid">
+            <div class="lore-cell"><span class="lore-label">Banner</span><span class="lore-val">Red maple, cherry trees, lion &amp; steel shield</span></div>
+            <div class="lore-cell"><span class="lore-label">Governor</span><span class="lore-val">Frederick</span></div>
+            <div class="lore-cell"><span class="lore-label">Judge</span><span class="lore-val">Martin</span></div>
+            <div class="lore-cell"><span class="lore-label">Threat</span><span class="lore-val">Pirates &amp; greater shadow powers</span></div>
+          </div>
+          <div class="lore-flavour">"The waves keep us safe." — Azure proverb</div>
+        </div>
+      </div>
+
+      <!-- Memoria -->
+      <div class="lore-entry rev">
+        <div class="lore-img-wrap">👑<div class="lore-img-label">Memoria</div></div>
+        <div class="lore-body">
+          <span class="lore-tag dark">Cursed Kingdom</span>
+          <div class="lore-title">The Forgotten Kingdom of Memoria</div>
+          <p class="lore-text">Not merely a land of stone and rot, Memoria is a realm where <em>memory itself is life</em>. The Cycle has devoured the natural flow of existence, leaving only fragments of recollection to tether its people to what they are. To forget is to die. To die is to return without remembrance.</p>
+          <p class="lore-text">The King himself is the heart of this curse, his mind fractured into countless echoes of past reigns, voices whispering within his skull like a shattered chorus. He remembers every betrayal, every war, every fall of his crown, and yet cannot piece them into a whole.</p>
+          <div class="lore-grid">
+            <div class="lore-cell"><span class="lore-label">Core Law</span><span class="lore-val">Memory sustains strength, weapons &amp; paths</span></div>
+            <div class="lore-cell"><span class="lore-label">Mnemes</span><span class="lore-val">Sacred relics that anchor identity</span></div>
+            <div class="lore-cell"><span class="lore-label">Key Group</span><span class="lore-val">The Kiluna, traders of stolen memories</span></div>
+            <div class="lore-cell"><span class="lore-label">The Hollow</span><span class="lore-val">Memoryless husks who stalk in silence</span></div>
+          </div>
+          <div class="lore-flavour">"To lose a mneme is to begin fading into the endless wandering host."</div>
+        </div>
+      </div>
+
+      <!-- Ironwrought -->
+      <div class="lore-entry">
+        <div class="lore-img-wrap">⚙<div class="lore-img-label">Ironwrought</div></div>
+        <div class="lore-body">
+          <span class="lore-tag">Industrial City</span>
+          <div class="lore-title">Ironwrought</div>
+          <p class="lore-text">A city built on ingenuity and smoke, Ironwrought is the forge of the Divide. Its streets hum with the rhythm of machinery, and its skyline bristles with smokestacks and cranes. Here, technoturgy is not an art but a trade, practiced in workshops that never sleep.</p>
+          <p class="lore-text">The city's ruling council is made up entirely of master engineers and guild heads. No monarch rules Ironwrought, only contracts, patents, and the unspoken law that <em>what can be built, will be built</em>. Its arms exports have shaped more wars than its citizens care to admit.</p>
+          <div class="lore-grid">
+            <div class="lore-cell"><span class="lore-label">Governance</span><span class="lore-val">Council of Master Engineers</span></div>
+            <div class="lore-cell"><span class="lore-label">Export</span><span class="lore-val">Arms, machinery, arcane components</span></div>
+            <div class="lore-cell"><span class="lore-label">Culture</span><span class="lore-val">Merit over birthright</span></div>
+            <div class="lore-cell"><span class="lore-label">Danger</span><span class="lore-val">Industrial accidents &amp; corporate espionage</span></div>
+          </div>
+          <div class="lore-flavour">"If you can dream it, Ironwrought can build it, for the right price."</div>
+        </div>
+      </div>
+
+      <!-- Guild Island -->
+      <div class="lore-entry rev">
+        <div class="lore-img-wrap">⚜<div class="lore-img-label">The Guild Seat</div></div>
+        <div class="lore-body">
+          <span class="lore-tag gold">Neutral Territory</span>
+          <div class="lore-title">The Guild Island</div>
+          <p class="lore-text">The Adventurers Guild's seat rests upon an island in the very center of the Divide, cloaked in wards older than most nations, spells woven so tightly that even the greatest armies cannot breach it. Storms gather at its borders when unwanted fleets approach, and the skies themselves twist against intruders.</p>
+          <p class="lore-text">No war may be declared upon the Guild or its island. No Guild member may be conscripted without their own consent. These two laws are older than kingdoms, and no power has successfully broken them.</p>
+          <div class="lore-grid">
+            <div class="lore-cell"><span class="lore-label">Protection</span><span class="lore-val">Ancient layered ward-spells, storm defences</span></div>
+            <div class="lore-cell"><span class="lore-label">Status</span><span class="lore-val">No war may be declared upon it</span></div>
+            <div class="lore-cell"><span class="lore-label">Structure</span><span class="lore-val">Fortified halls of enchanted stone</span></div>
+            <div class="lore-cell"><span class="lore-label">Conscription</span><span class="lore-val">No member may be conscripted without consent</span></div>
+          </div>
+          <div class="lore-flavour">"To strike the Guild is to invite the wrath of every adventurer in the Divide."</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ FACTIONS ══ -->
+  <div class="codex-panel" id="panel-factions">
+    <div class="codex-section">
+      <div class="codex-section-header">
+        <div class="codex-section-title">Powers of the Divide</div>
+        <div class="codex-section-desc">Factions, faiths, and forces that shape the fate of the world.</div>
+      </div>
+
+      <!-- Adventurers Guild -->
+      <div class="lore-entry">
+        <div class="lore-img-wrap">⚜<div class="lore-img-label">Adventurers Guild</div></div>
+        <div class="lore-body">
+          <span class="lore-tag gold">Neutral Faction</span>
+          <div class="lore-title">The Adventurers Guild</div>
+          <p class="lore-text">Independent and beholden to no kingdom, creed, or crown, the Guild thrives in a world divided by magic, sects, and warring philosophies. It binds wanderers, mercenaries, heroes, and rogues not by loyalty to a banner, but by contract, coin, and camaraderie.</p>
+          <p class="lore-text">The Guild does not take sides in wars, does not endorse faiths, and does not bow to kings. It simply ensures that those who need something done can find someone willing to do it, and that those who do it are paid fairly and protected under Guild law.</p>
+          <div class="lore-grid">
+            <div class="lore-cell"><span class="lore-label">Guildmaster</span><span class="lore-val">Selantha Virelith</span></div>
+            <div class="lore-cell"><span class="lore-label">Librarian</span><span class="lore-val">Tass Marlowe</span></div>
+            <div class="lore-cell"><span class="lore-label">Front Desk</span><span class="lore-val">The Guild Girl</span></div>
+            <div class="lore-cell"><span class="lore-label">Alignment</span><span class="lore-val">Strictly neutral, not passive</span></div>
+          </div>
+          <div class="lore-flavour">"Nations may fall, dynasties may collapse, but the Guild endures."</div>
+        </div>
+      </div>
+
+      <!-- Church of Light -->
+      <div class="lore-entry rev">
+        <div class="lore-img-wrap">☀<div class="lore-img-label">Church of Light</div></div>
+        <div class="lore-body">
+          <span class="lore-tag gold">Divine Faction</span>
+          <div class="lore-title">Church of the Light Goddess</div>
+          <p class="lore-text">Among the most radiant and alluring powers of the Divide. The Goddess of Light, angelic, flowing sun-hair, a halo brighter than the moon, teaches that light manifests not only in purity, but in vitality, fertility, and the abundance of mortal desire.</p>
+          <p class="lore-text">Its temples are great marble halls draped in white and gold. Warriors blessed by its angels walk unscathed through hordes of shadowspawn, ablaze with sacred fervor. The fertility it bestows has drawn bloodlines back from extinction and restored kingdoms from destruction.</p>
+          <div class="lore-grid">
+            <div class="lore-cell"><span class="lore-label">Temples</span><span class="lore-val">Marble halls, white &amp; gold silk banners</span></div>
+            <div class="lore-cell"><span class="lore-label">Inner Order</span><span class="lore-val">The Auroral Choir</span></div>
+            <div class="lore-cell"><span class="lore-label">Vow</span><span class="lore-val">Fertility, not chastity</span></div>
+            <div class="lore-cell"><span class="lore-label">Ceremony</span><span class="lore-val">Monthly sunrise anointing rite</span></div>
+          </div>
+          <div class="lore-flavour">"Desire itself was decreed a weapon against despair." — Goddess's first law</div>
+        </div>
+      </div>
+
+      <!-- Church of Dark -->
+      <div class="lore-entry">
+        <div class="lore-img-wrap">🌑<div class="lore-img-label">Church of Darkness</div></div>
+        <div class="lore-body">
+          <span class="lore-tag dark">Shadow Faction</span>
+          <div class="lore-title">Church of the Dark Goddess</div>
+          <p class="lore-text">Where the Church of Light leads by persuasion, this faith leads by coercion, its rituals blending pain, servitude, and the thrill of surrender. Those who enter its ranks are not greeted with tender acceptance, but with the heady promise of being commanded.</p>
+          <p class="lore-text">Its temples are avoided by commoners but never empty, for ambition is drawn to power. Kings, warlords, and tyrants court its blessing, for it is said to confer legitimacy and the shadow of fear. Those who wear its symbols strike fear in the lands they walk upon.</p>
+          <div class="lore-grid">
+            <div class="lore-cell"><span class="lore-label">Vestments</span><span class="lore-val">Black and scarlet</span></div>
+            <div class="lore-cell"><span class="lore-label">Followers</span><span class="lore-val">Kings, warlords &amp; ambitious tyrants</span></div>
+            <div class="lore-cell"><span class="lore-label">Power</span><span class="lore-val">Commands shadows at the goddess's whim</span></div>
+            <div class="lore-cell"><span class="lore-label">Expansion</span><span class="lore-val">Not by benevolence, by tyranny</span></div>
+          </div>
+          <div class="lore-flavour">"Where light kindles love, this faith sharpens lust into a blade."</div>
+        </div>
+      </div>
+
+      <!-- Chaos -->
+      <div class="lore-entry rev">
+        <div class="lore-img-wrap">💀<div class="lore-img-label">Forces of Chaos</div></div>
+        <div class="lore-body">
+          <span class="lore-tag red">Enemy Faction</span>
+          <div class="lore-title">Chaos, The Forces of Mognard</div>
+          <p class="lore-text">Not the disordered horde their name suggests, but a rigorously disciplined and terrifyingly efficient military apparatus. Each soldier burns with a devotion to <em>Mognard, the Voidlord</em>, that no promise of wealth, land, or life could rival. Wherever their march has touched, the land has been undone.</p>
+          <p class="lore-text">Mognard's ambition lies in the undoing of reality's very foundations, to fracture the world, tear apart its bones, and rebuild it in his own image through the dread art of controlling world-shifts.</p>
+          <div class="lore-grid">
+            <div class="lore-cell"><span class="lore-label">Voidlord</span><span class="lore-val">Mognard</span></div>
+            <div class="lore-cell"><span class="lore-label">Lord I</span><span class="lore-val">Shadavaar, the Conqueror (slain)</span></div>
+            <div class="lore-cell"><span class="lore-label">Lord II</span><span class="lore-val">Arog Rash, the Immortal</span></div>
+            <div class="lore-cell"><span class="lore-label">Lord III</span><span class="lore-val">Rillian Rash, the Hand</span></div>
+          </div>
+          <div class="lore-ranks" style="margin-top:0.2rem;">
+            <span class="lore-label" style="width:100%;display:block;margin-bottom:0.3rem;">Corruption Marks</span>
+            <span class="rank rank-v">Violet, Initiates</span>
+            <span class="rank rank-a">Deep Azure, Veterans</span>
+            <span class="rank rank-g">Gold-Green, The Greatest</span>
+          </div>
+          <div class="lore-flavour">"His war cannot be called earthly at all." — Guild Chronicler</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function switchTab(panel, btn) {
+    document.querySelectorAll('.codex-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.codex-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('panel-' + panel).classList.add('active');
+  }
+</script>
+</body>
+</html>
