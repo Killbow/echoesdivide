@@ -926,7 +926,7 @@
         portrait_url: null
       };
 
-      const [char] = await sbFetch('/characters', {
+      const [char] = await sbFetch('/EchoesDivideChar', {
         method: 'POST',
         body: JSON.stringify(charData)
       });
@@ -935,7 +935,7 @@
       const portraitFile = document.getElementById('f-portrait').files[0];
       if (portraitFile) {
         const url = await uploadPortrait(portraitFile, char.id);
-        await sbFetch(`/characters?id=eq.${char.id}`, {
+        await sbFetch(`/EchoesDivideChar?id=eq.${char.id}`, {
           method: 'PATCH',
           body: JSON.stringify({ portrait_url: url })
         });
@@ -1038,7 +1038,7 @@
   async function loadParty() {
     setLoading(true);
     try {
-      const chars = await sbFetch('/characters?select=*&order=created_at.asc');
+      const chars = await sbFetch('/EchoesDivideChar?select=*&order=created_at.asc');
       const skills = await sbFetch('/skills?select=*');
 
       if (!chars.length) return;
