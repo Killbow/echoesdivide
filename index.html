@@ -658,6 +658,241 @@
 
   .toast.error { border-color: var(--red-light); color: var(--red-light); }
 
+
+  .card-edit-btn {
+    position: absolute;
+    bottom: 0.7rem;
+    right: 0.7rem;
+    font-family: 'Cinzel', serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text-faint);
+    padding: 0.3rem 0.7rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    z-index: 2;
+  }
+  .card-edit-btn:hover {
+    border-color: var(--gold-dim);
+    color: var(--gold);
+  }
+  .card-body { padding-bottom: 2.5rem; }
+
+  /* ── DETAIL PAGE ── */
+  .detail-page {
+    position: fixed;
+    inset: 0;
+    background: var(--bg);
+    z-index: 50;
+    overflow-y: auto;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s;
+  }
+  .detail-page.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+  .detail-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+  .detail-back {
+    font-family: 'Cinzel', serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    padding: 0.5rem 1.1rem;
+    cursor: pointer;
+    margin-bottom: 2rem;
+    transition: all 0.15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .detail-back:hover { border-color: var(--gold-dim); color: var(--gold); }
+
+  .detail-hero {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 2rem;
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  @media (max-width: 600px) {
+    .detail-hero { grid-template-columns: 1fr; }
+  }
+
+  .detail-portrait-wrap {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .detail-portrait {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    filter: sepia(20%) contrast(1.05);
+  }
+  .detail-portrait-placeholder {
+    width: 100%; aspect-ratio: 3/4;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 4rem; color: var(--text-faint);
+  }
+  .detail-info { display: flex; flex-direction: column; gap: 1rem; }
+  .detail-name {
+    font-family: 'Cinzel', serif;
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--gold-light);
+    letter-spacing: 0.05em;
+    text-shadow: 0 0 30px rgba(201,168,76,0.2);
+  }
+  .detail-meta {
+    font-size: 1rem;
+    font-style: italic;
+    color: var(--text-dim);
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .detail-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 0.6rem;
+  }
+  .detail-stat {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    padding: 0.5rem 0.8rem;
+  }
+  .detail-stat-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    margin-bottom: 0.2rem;
+  }
+  .detail-stat-value { font-size: 1rem; color: var(--text); }
+  .detail-paths {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    padding: 0.7rem 1rem;
+  }
+  .detail-paths-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    margin-bottom: 0.3rem;
+  }
+  .detail-paths-value { font-style: italic; color: var(--text-dim); }
+  .detail-skills { margin-top: 0.5rem; }
+  .detail-skill-row {
+    display: flex; justify-content: space-between;
+    align-items: center;
+    padding: 0.3rem 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.95rem;
+  }
+  .detail-skill-row:last-child { border-bottom: none; }
+
+  /* Inventory */
+  .detail-section-title {
+    font-family: 'Cinzel', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .inventory-list { display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 1.2rem; }
+  .inventory-item {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    padding: 0.7rem 1rem;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    animation: fadeIn 0.2s ease forwards;
+  }
+  .inventory-item-info { flex: 1; }
+  .inventory-item-name {
+    font-family: 'Cinzel', serif;
+    font-size: 0.85rem;
+    color: var(--gold-light);
+    margin-bottom: 0.2rem;
+  }
+  .inventory-item-desc { font-size: 0.85rem; color: var(--text-dim); font-style: italic; }
+  .inventory-delete {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text-faint);
+    width: 24px; height: 24px;
+    cursor: pointer; font-size: 0.7rem;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s; flex-shrink: 0; margin-top: 2px;
+  }
+  .inventory-delete:hover { border-color: var(--red-light); color: var(--red-light); }
+  .inventory-empty {
+    font-style: italic; color: var(--text-faint);
+    font-size: 0.9rem; padding: 0.5rem 0;
+  }
+  .inventory-add-form {
+    display: grid;
+    grid-template-columns: 1fr 2fr auto;
+    gap: 0.6rem;
+    align-items: start;
+  }
+  @media (max-width: 600px) {
+    .inventory-add-form { grid-template-columns: 1fr; }
+  }
+  .inventory-add-form input {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 0.5rem 0.7rem;
+    font-family: 'Crimson Pro', serif;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.15s;
+    width: 100%;
+  }
+  .inventory-add-form input:focus { border-color: var(--gold-dim); }
+  .inventory-add-btn {
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.55rem 1rem;
+    border: 1px solid var(--gold-dim);
+    background: rgba(201,168,76,0.08);
+    color: var(--gold);
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .inventory-add-btn:hover { background: var(--gold); color: var(--ink); }
+
   /* Scrollbar */
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: var(--bg3); }
@@ -726,6 +961,10 @@
             <input type="number" id="f-level" placeholder="1" min="1">
           </div>
           <div class="form-group">
+            <label>Constellation Level</label>
+            <input type="number" id="f-conlevel" placeholder="1" min="1">
+          </div>
+          <div class="form-group">
             <label>XP</label>
             <input type="number" id="f-xp" placeholder="0" min="0">
           </div>
@@ -734,7 +973,7 @@
 
       <!-- Paths -->
       <div class="form-section">
-        <div class="form-section-title">Paths</div>
+        <div class="form-section-title">Skill Paths</div>
         <div class="form-grid">
           <div class="form-group">
             <label>Path 1</label>
@@ -744,12 +983,16 @@
             <label>Path 2</label>
             <input type="text" id="f-path2" placeholder="e.g. Blade">
           </div>
+          <div class="form-group full">
+            <label>Constellation Name</label>
+            <input type="text" id="f-conname" placeholder="e.g. The Wandering Star">
+          </div>
         </div>
       </div>
 
-      <!-- Skills -->
+      <!-- Skill Stars -->
       <div class="form-section">
-        <div class="form-section-title">Skills</div>
+        <div class="form-section-title">Skill Stars</div>
         <div class="skills-builder" id="skillsBuilder"></div>
         <button class="add-skill-btn" onclick="addSkillRow()">+ Add Skill</button>
       </div>
@@ -771,6 +1014,105 @@
   </div>
 </div>
 
+
+<!-- DETAIL PAGE -->
+<div class="detail-page" id="detailPage">
+  <div class="detail-inner">
+    <button class="detail-back" onclick="closeDetailPage()">← Back to Guild</button>
+    <div class="detail-hero">
+      <div id="detail-portrait-col"></div>
+      <div class="detail-info">
+        <div class="detail-name" id="detail-name"></div>
+        <div class="detail-meta" id="detail-meta"></div>
+        <div class="detail-stats" id="detail-stats"></div>
+        <div id="detail-paths"></div>
+        <div id="detail-skills-wrap"></div>
+      </div>
+    </div>
+    <!-- Inventory -->
+    <div>
+      <div class="detail-section-title">
+        <span>✦ Inventory</span>
+      </div>
+      <div class="inventory-list" id="inventoryList"></div>
+      <div class="inventory-add-form">
+        <input type="text" id="inv-name" placeholder="Item name…">
+        <input type="text" id="inv-desc" placeholder="Description…">
+        <button class="inventory-add-btn" onclick="addInventoryItem()">+ Add Item</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="editModalBackdrop" onclick="handleEditBackdropClick(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Edit Character</span>
+      <button class="modal-close" onclick="closeEditModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="ef-id">
+      <div class="form-section">
+        <div class="form-section-title">Identity</div>
+        <div class="form-grid">
+          <div class="form-group full">
+            <label>Character Name</label>
+            <input type="text" id="ef-name" placeholder="e.g. Varek Ashborn">
+          </div>
+          <div class="form-group">
+            <label>Race</label>
+            <input type="text" id="ef-race" placeholder="e.g. Half-Elf">
+          </div>
+          <div class="form-group">
+            <label>Level</label>
+            <input type="number" id="ef-level" placeholder="1" min="1">
+          </div>
+          <div class="form-group">
+            <label>Constellation Level</label>
+            <input type="number" id="ef-conlevel" placeholder="1" min="1">
+          </div>
+          <div class="form-group">
+            <label>XP</label>
+            <input type="number" id="ef-xp" placeholder="0" min="0">
+          </div>
+        </div>
+      </div>
+      <div class="form-section">
+        <div class="form-section-title">Skill Paths</div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Path 1</label>
+            <input type="text" id="ef-path1">
+          </div>
+          <div class="form-group">
+            <label>Path 2</label>
+            <input type="text" id="ef-path2">
+          </div>
+          <div class="form-group full">
+            <label>Constellation Name</label>
+            <input type="text" id="ef-conname">
+          </div>
+        </div>
+      </div>
+      <div class="form-section">
+        <div class="form-section-title">Skill Stars</div>
+        <div class="skills-builder" id="editSkillsBuilder"></div>
+        <button class="add-skill-btn" onclick="addEditSkillRow()">+ Add Skill</button>
+      </div>
+      <div class="form-section">
+        <div class="form-section-title">Portrait</div>
+        <div class="form-group">
+          <label>Replace Image (PNG / JPG)</label>
+          <input type="file" id="ef-portrait" accept="image/png,image/jpeg,image/webp">
+        </div>
+      </div>
+      <div class="form-actions">
+        <button class="btn-cancel" onclick="closeEditModal()">Cancel</button>
+        <button class="btn-submit" id="editSubmitBtn" onclick="submitEdit()">Save Changes</button>
+      </div>
+    </div>
+  </div>
+</div>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -884,7 +1226,7 @@
 
   function closeModal() {
     document.getElementById('modalBackdrop').classList.remove('open');
-    ['f-name','f-race','f-level','f-xp','f-path1','f-path2'].forEach(id => {
+    ['f-name','f-race','f-level','f-conlevel','f-xp','f-path1','f-path2','f-conname'].forEach(id => {
       document.getElementById(id).value = '';
     });
     document.getElementById('f-portrait').value = '';
@@ -923,6 +1265,8 @@
         xp: parseInt(document.getElementById('f-xp').value) || 0,
         'Path 1': document.getElementById('f-path1').value.trim() || null,
         'Path 2': document.getElementById('f-path2').value.trim() || null,
+        constellationame: document.getElementById('f-conname').value.trim() || null,
+        constellationlevel: parseInt(document.getElementById('f-conlevel').value) || null,
         portrait_url: null
       };
 
@@ -999,7 +1343,7 @@
         : `<div class="card-portrait-placeholder">⚔</div>`}
       <div class="card-body">
         <div class="card-name">${char.name}</div>
-        <div class="card-meta">${char.race || '—'} &nbsp;·&nbsp; Level ${char.level || 1}</div>
+        <div class="card-meta">${char.race || '—'} &nbsp;·&nbsp; Level ${char.level || 1}${char.constellationlevel ? ' &nbsp;·&nbsp; ✦ Constellation ' + char.constellationlevel : ''}</div>
         <div class="card-stats">
           <div class="stat-row">
             <span class="stat-label">XP</span>
@@ -1008,7 +1352,7 @@
         </div>
         ${paths.length ? `
           <div class="card-paths">
-            <div class="path-label">Paths</div>
+            <div class="path-label">Skill Paths${char.constellationame ? ' &nbsp;·&nbsp; <span style=\'color:var(--gold-dim)\'>✦ ' + char.constellationame + '</span>' : ''}</div>
             <div class="path-value">${paths.join(' · ')}</div>
           </div>
         ` : ''}
@@ -1025,8 +1369,13 @@
         ` : ''}
       </div>
       <div class="card-corner-br"></div>
+      <div style="position:absolute;bottom:0.7rem;right:0.7rem;display:flex;gap:0.4rem;">
+        <button class="card-edit-btn" style="position:static" onclick="openDetailPage(${char.id})">↗ View</button>
+        <button class="card-edit-btn" style="position:static" onclick="openEditModal(${char.id})">✎ Edit</button>
+      </div>
     `;
 
+    card.dataset.id = char.id;
     grid.appendChild(card);
   }
 
@@ -1058,6 +1407,285 @@
       console.error(err);
     } finally {
       setLoading(false);
+    }
+  }
+
+
+  // ── EDIT MODAL ───────────────────────────────────────────
+  let editSkillRows = [];
+  let editCharId = null;
+
+  function addEditSkillRow(name = '', stars = 1) {
+    const id = Date.now() + Math.random();
+    editSkillRows.push({ id, name, stars, isNew: true });
+    renderEditSkillRows();
+  }
+
+  function removeEditSkillRow(id) {
+    editSkillRows = editSkillRows.filter(s => s.id !== id);
+    renderEditSkillRows();
+  }
+
+  function setEditStars(id, n) {
+    editSkillRows = editSkillRows.map(s => s.id === id ? { ...s, stars: n } : s);
+    renderEditSkillRows();
+  }
+
+  function renderEditSkillRows() {
+    const builder = document.getElementById('editSkillsBuilder');
+    builder.innerHTML = '';
+    editSkillRows.forEach(skill => {
+      const row = document.createElement('div');
+      row.className = 'skill-input-row';
+      const inp = document.createElement('input');
+      inp.type = 'text';
+      inp.placeholder = 'Skill name…';
+      inp.value = skill.name;
+      inp.style.height = '32px';
+      inp.oninput = e => { skill.name = e.target.value; };
+      const starsDiv = document.createElement('div');
+      starsDiv.className = 'stars-input';
+      for (let i = 1; i <= 5; i++) {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'star-btn' + (i <= skill.stars ? ' active' : '');
+        btn.textContent = '★';
+        btn.onclick = () => setEditStars(skill.id, i);
+        starsDiv.appendChild(btn);
+      }
+      const del = document.createElement('button');
+      del.className = 'remove-skill';
+      del.textContent = '✕';
+      del.onclick = () => removeEditSkillRow(skill.id);
+      row.appendChild(inp);
+      row.appendChild(starsDiv);
+      row.appendChild(del);
+      builder.appendChild(row);
+    });
+  }
+
+  async function openEditModal(charId) {
+    editCharId = charId;
+    setLoading(true);
+    try {
+      const [char] = await sbFetch(`/EchoesDivideChar?id=eq.${charId}`);
+      const skills = await sbFetch(`/skills?character_id=eq.${charId}`);
+
+      document.getElementById('ef-id').value = char.id;
+      document.getElementById('ef-name').value = char.name || '';
+      document.getElementById('ef-race').value = char.race || '';
+      document.getElementById('ef-level').value = char.level || '';
+      document.getElementById('ef-conlevel').value = char.constellationlevel || '';
+      document.getElementById('ef-xp').value = char.xp || '';
+      document.getElementById('ef-path1').value = char['Path 1'] || '';
+      document.getElementById('ef-path2').value = char['Path 2'] || '';
+      document.getElementById('ef-conname').value = char.constellationame || '';
+
+      editSkillRows = skills.map(s => ({ id: s.id, dbId: s.id, name: s.skill_name, stars: s.stars, isNew: false }));
+      renderEditSkillRows();
+
+      document.getElementById('editModalBackdrop').classList.add('open');
+    } catch(err) {
+      showToast('Could not load character: ' + err.message, true);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function closeEditModal() {
+    document.getElementById('editModalBackdrop').classList.remove('open');
+    editSkillRows = [];
+    editCharId = null;
+  }
+
+  function handleEditBackdropClick(e) {
+    if (e.target === document.getElementById('editModalBackdrop')) closeEditModal();
+  }
+
+  async function submitEdit() {
+    const name = document.getElementById('ef-name').value.trim();
+    if (!name) { showToast('A name is required', true); return; }
+
+    const btn = document.getElementById('editSubmitBtn');
+    btn.disabled = true;
+    btn.textContent = 'Saving…';
+    setLoading(true);
+
+    try {
+      const charData = {
+        name,
+        race: document.getElementById('ef-race').value.trim() || null,
+        level: parseInt(document.getElementById('ef-level').value) || 1,
+        constellationlevel: parseInt(document.getElementById('ef-conlevel').value) || null,
+        xp: parseInt(document.getElementById('ef-xp').value) || 0,
+        'Path 1': document.getElementById('ef-path1').value.trim() || null,
+        'Path 2': document.getElementById('ef-path2').value.trim() || null,
+        constellationame: document.getElementById('ef-conname').value.trim() || null,
+      };
+
+      // Upload new portrait if provided
+      const portraitFile = document.getElementById('ef-portrait').files[0];
+      if (portraitFile) {
+        const url = await uploadPortrait(portraitFile, editCharId);
+        charData.portrait_url = url;
+      }
+
+      await sbFetch(`/EchoesDivideChar?id=eq.${editCharId}`, {
+        method: 'PATCH',
+        body: JSON.stringify(charData)
+      });
+
+      // Delete all existing skills and reinsert
+      await sbFetch(`/skills?character_id=eq.${editCharId}`, { method: 'DELETE' });
+      const validSkills = editSkillRows.filter(s => s.name.trim());
+      if (validSkills.length > 0) {
+        await sbFetch('/skills', {
+          method: 'POST',
+          body: JSON.stringify(validSkills.map(s => ({
+            character_id: editCharId,
+            skill_name: s.name.trim(),
+            stars: s.stars
+          })))
+        });
+      }
+
+      // Refresh the card on the page
+      const updatedChar = { ...charData, id: editCharId, skills: validSkills };
+      const oldCard = document.querySelector(`.char-card[data-id="${editCharId}"]`);
+      if (oldCard) oldCard.remove();
+      addCardToGrid(updatedChar);
+
+      closeEditModal();
+      showToast(`${name} has been updated.`);
+    } catch(err) {
+      showToast('Error: ' + err.message, true);
+      console.error(err);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Save Changes';
+      setLoading(false);
+    }
+  }
+
+  // ── DETAIL PAGE ─────────────────────────────────────────
+  let detailCharId = null;
+
+  async function openDetailPage(charId) {
+    detailCharId = charId;
+    setLoading(true);
+    try {
+      const [char] = await sbFetch(`/EchoesDivideChar?id=eq.${charId}`);
+      const skills = await sbFetch(`/skills?character_id=eq.${charId}`);
+
+      // Portrait
+      const portraitCol = document.getElementById('detail-portrait-col');
+      portraitCol.innerHTML = char.portrait_url
+        ? `<div class="detail-portrait-wrap"><img class="detail-portrait" src="${char.portrait_url}" alt="${char.name}"></div>`
+        : `<div class="detail-portrait-placeholder">⚔</div>`;
+
+      // Name & meta
+      document.getElementById('detail-name').textContent = char.name;
+      document.getElementById('detail-meta').innerHTML =
+        `${char.race || '—'} &nbsp;·&nbsp; Level ${char.level || 1}${char.constellationlevel ? ' &nbsp;·&nbsp; ✦ Constellation ' + char.constellationlevel : ''}`;
+
+      // Stats
+      document.getElementById('detail-stats').innerHTML = `
+        <div class="detail-stat"><div class="detail-stat-label">XP</div><div class="detail-stat-value">${char.xp || 0}</div></div>
+        <div class="detail-stat"><div class="detail-stat-label">Level</div><div class="detail-stat-value">${char.level || 1}</div></div>
+        ${char.constellationlevel ? `<div class="detail-stat"><div class="detail-stat-label">Constellation Lv.</div><div class="detail-stat-value">${char.constellationlevel}</div></div>` : ''}
+      `;
+
+      // Paths
+      const paths = [char['Path 1'], char['Path 2']].filter(Boolean);
+      document.getElementById('detail-paths').innerHTML = paths.length ? `
+        <div class="detail-paths">
+          <div class="detail-paths-label">Skill Paths${char.constellationame ? ' &nbsp;·&nbsp; ✦ ' + char.constellationame : ''}</div>
+          <div class="detail-paths-value">${paths.join(' · ')}</div>
+        </div>` : '';
+
+      // Skills
+      document.getElementById('detail-skills-wrap').innerHTML = skills.length ? `
+        <div>
+          <div class="detail-paths-label" style="margin-bottom:0.4rem;font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold-dim);">Skill Stars</div>
+          ${skills.map(s => `
+            <div class="detail-skill-row">
+              <span style="font-style:italic;color:var(--text-dim)">${s.skill_name}</span>
+              <span class="stars">${'★'.repeat(s.stars)}<span class="empty-star">${'★'.repeat(5 - s.stars)}</span></span>
+            </div>`).join('')}
+        </div>` : '';
+
+      // Inventory
+      await loadInventory(charId);
+
+      document.getElementById('detailPage').classList.add('open');
+      window.scrollTo(0, 0);
+    } catch(err) {
+      showToast('Could not load character: ' + err.message, true);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function closeDetailPage() {
+    document.getElementById('detailPage').classList.remove('open');
+    detailCharId = null;
+  }
+
+  async function loadInventory(charId) {
+    const list = document.getElementById('inventoryList');
+    try {
+      const items = await sbFetch(`/inventory?character_id=eq.${charId}&order=created_at.asc`);
+      renderInventory(items);
+    } catch(err) {
+      list.innerHTML = '<div class="inventory-empty">Could not load inventory.</div>';
+    }
+  }
+
+  function renderInventory(items) {
+    const list = document.getElementById('inventoryList');
+    if (!items.length) {
+      list.innerHTML = '<div class="inventory-empty">No items yet — add one below.</div>';
+      return;
+    }
+    list.innerHTML = items.map(item => `
+      <div class="inventory-item" data-item-id="${item.id}">
+        <div class="inventory-item-info">
+          <div class="inventory-item-name">${item.item_name}</div>
+          ${item.item_description ? `<div class="inventory-item-desc">${item.item_description}</div>` : ''}
+        </div>
+        <button class="inventory-delete" onclick="deleteInventoryItem(${item.id})">✕</button>
+      </div>`).join('');
+  }
+
+  async function addInventoryItem() {
+    const nameEl = document.getElementById('inv-name');
+    const descEl = document.getElementById('inv-desc');
+    const name = nameEl.value.trim();
+    if (!name) { showToast('Item name is required', true); return; }
+
+    try {
+      await sbFetch('/inventory', {
+        method: 'POST',
+        body: JSON.stringify({
+          character_id: detailCharId,
+          item_name: name,
+          item_description: descEl.value.trim() || null
+        })
+      });
+      nameEl.value = '';
+      descEl.value = '';
+      await loadInventory(detailCharId);
+    } catch(err) {
+      showToast('Error: ' + err.message, true);
+    }
+  }
+
+  async function deleteInventoryItem(itemId) {
+    try {
+      await sbFetch(`/inventory?id=eq.${itemId}`, { method: 'DELETE' });
+      await loadInventory(detailCharId);
+    } catch(err) {
+      showToast('Error: ' + err.message, true);
     }
   }
 
