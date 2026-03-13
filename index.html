@@ -6,1043 +6,153 @@
 <title>Echoes Divide — Adventurers Guild</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=Crimson+Pro:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
 <style>
+
   :root {
-    --bg: #c9b99a;
-    --bg2: #d4c4a5;
-    --bg3: #bfae8e;
-    --border: #8a7155;
-    --border-dark: #5a3e20;
-    --gold: #5a3e20;
-    --gold-light: #3a2510;
-    --gold-dim: #8a6a3a;
-    --text: #2a1a08;
-    --text-dim: #6b4e2a;
-    --text-faint: #a08860;
-    --red: #8b2020;
-    --red-light: #c94444;
-    --ink: #1a1208;
-    --parchment-shadow: rgba(42,26,8,0.18);
-  }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Crimson Pro', serif;
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
-
-  /* Parchment texture layers */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image:
-      url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.12'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 0;
-    mix-blend-mode: multiply;
-  }
-
-  /* Vignette + aged edge effect */
-  body::after {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background: radial-gradient(ellipse at center, transparent 55%, rgba(90,62,32,0.35) 100%);
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  /* ── HEADER ── */
-  header {
-    position: relative;
-    text-align: center;
-    padding: 3rem 2rem 2rem;
-    border-bottom: 2px solid var(--border-dark);
-    background: linear-gradient(180deg, rgba(90,62,32,0.12) 0%, transparent 100%);
-    z-index: 1;
-  }
-
-  header::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 5px;
-    background: linear-gradient(90deg, transparent, var(--border-dark), var(--gold-dim), var(--border-dark), transparent);
-  }
-
-  header::after {
-    content: '';
-    position: absolute;
-    bottom: -2px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 60%;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, var(--gold-dim), var(--border-dark), var(--gold-dim), transparent);
-  }
-
-  .guild-seal {
-    font-size: 2rem;
-    margin-bottom: 0.6rem;
-    display: block;
-    filter: sepia(1) contrast(1.2);
-  }
-
-  .records-title {
-    font-family: 'Cinzel', serif;
-    font-size: clamp(2rem, 5vw, 3.8rem);
-    font-weight: 900;
-    letter-spacing: 0.18em;
-    color: var(--gold-light);
-    text-shadow: 1px 2px 0 rgba(90,62,32,0.3), 0 1px 3px rgba(0,0,0,0.2);
-    margin-bottom: 0.5rem;
-  }
-
-  .guild-name {
-    font-family: 'Cinzel', serif;
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: var(--gold-dim);
-    margin-bottom: 0.4rem;
-  }
-
-  .records-subtitle {
-    font-size: 1rem;
-    font-style: italic;
-    color: var(--text-dim);
-    letter-spacing: 0.08em;
-  }
-
-  .ornament {
-    color: var(--gold-dim);
-    font-size: 1.2rem;
-    margin: 0 0.5rem;
-  }
-
-  .header-rule {
-    width: 200px;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--border-dark), transparent);
-    margin: 0.8rem auto 0.6rem;
-  }
-
-  /* ── TOOLBAR ── */
-  .toolbar {
-    display: flex;
-    justify-content: center;
-    padding: 1.5rem 2rem;
-    gap: 1rem;
-    flex-wrap: wrap;
-    position: relative;
-    z-index: 1;
-  }
-
-  .btn {
-    font-family: 'Cinzel', serif;
-    font-size: 0.75rem;
-    letter-spacing: 0.12em;
-    padding: 0.65rem 1.6rem;
-    border: 1px solid var(--border-dark);
-    background: rgba(90,62,32,0.1);
-    color: var(--gold-light);
-    cursor: pointer;
-    transition: all 0.2s;
-    text-transform: uppercase;
-    position: relative;
-    box-shadow: 1px 1px 3px var(--parchment-shadow);
-  }
-
-  .btn::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: var(--border-dark);
-    opacity: 0;
-    transition: opacity 0.2s;
-  }
-
-  .btn:hover {
-    border-color: var(--gold-light);
-    color: var(--bg);
-    text-shadow: none;
-  }
-
-  .btn:hover::before { opacity: 1; }
-  .btn span { position: relative; z-index: 1; }
-
-  .btn-primary {
-    border-color: var(--border-dark);
-    background: rgba(90,62,32,0.15);
-  }
-
-  /* ── PARTY GRID ── */
-  .party-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 1.5rem;
-    padding: 1rem 2rem 3rem;
-    max-width: 1400px;
-    margin: 0 auto;
-    position: relative;
-    z-index: 1;
-  }
-
-  .empty-state {
-    grid-column: 1 / -1;
-    text-align: center;
-    padding: 4rem 2rem;
-    color: var(--text-faint);
-    font-style: italic;
-    font-size: 1.2rem;
-  }
-
-  .empty-state .empty-icon {
-    font-size: 3rem;
-    margin-bottom: 1rem;
-    display: block;
-    filter: sepia(1) opacity(0.3);
-  }
-
-  /* ── CHARACTER CARD ── */
-  .char-card {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-bottom: 2px solid var(--border-dark);
-    border-right: 2px solid var(--border-dark);
-    position: relative;
-    overflow: hidden;
-    animation: fadeIn 0.4s ease forwards;
-    opacity: 0;
-    box-shadow: 3px 4px 12px var(--parchment-shadow), inset 0 0 30px rgba(90,62,32,0.05);
-  }
-
-  @keyframes fadeIn {
-    to { opacity: 1; transform: translateY(0); }
-    from { opacity: 0; transform: translateY(12px); }
-  }
-
-  .char-card::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background:
-      linear-gradient(135deg, rgba(255,245,220,0.3) 0%, transparent 50%),
-      url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
-    pointer-events: none;
-  }
-
-  /* Corner ornaments */
-  .char-card::after {
-    content: '';
-    position: absolute;
-    top: 0; left: 0;
-    width: 20px; height: 20px;
-    border-top: 2px solid var(--border-dark);
-    border-left: 2px solid var(--border-dark);
-  }
-
-  .card-corner-br {
-    position: absolute;
-    bottom: 0; right: 0;
-    width: 20px; height: 20px;
-    border-bottom: 2px solid var(--border-dark);
-    border-right: 2px solid var(--border-dark);
-  }
-
-  .card-portrait {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-    object-position: top center;
-    display: block;
-    filter: sepia(30%) contrast(1.05) brightness(0.97);
-    border-bottom: 1px solid var(--border);
-  }
-
-  .card-portrait-placeholder {
-    width: 100%;
-    height: 200px;
-    background: var(--bg3);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-bottom: 1px solid var(--border);
-    font-size: 3rem;
-    color: var(--text-faint);
-  }
-
-  .card-body {
-    padding: 1.2rem 1.4rem 1rem;
-  }
-
-  .card-name {
-    font-family: 'Cinzel', serif;
-    font-size: 1.15rem;
-    font-weight: 600;
-    color: var(--gold-light);
-    letter-spacing: 0.05em;
-    margin-bottom: 0.25rem;
-  }
-
-  .card-meta {
-    font-size: 0.9rem;
-    font-style: italic;
-    color: var(--text-dim);
-    margin-bottom: 0.9rem;
-    padding-bottom: 0.9rem;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .card-stats {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.4rem 1rem;
-    margin-bottom: 1rem;
-    font-size: 0.85rem;
-  }
-
-  .stat-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .stat-label {
-    color: var(--text-dim);
-    text-transform: uppercase;
-    font-size: 0.7rem;
-    letter-spacing: 0.1em;
-    font-family: 'Cinzel', serif;
-  }
-
-  .stat-value {
-    color: var(--text);
-    font-weight: 400;
-  }
-
-  .card-paths {
-    margin-bottom: 1rem;
-    padding: 0.6rem 0.8rem;
-    background: rgba(90,62,32,0.08);
-    border: 1px solid var(--border);
-    font-size: 0.85rem;
-  }
-
-  .path-label {
-    color: var(--gold-dim);
-    font-family: 'Cinzel', serif;
-    font-size: 0.65rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    margin-bottom: 0.2rem;
-  }
-
-  .path-value {
-    color: var(--text-dim);
-    font-style: italic;
-  }
-
-  .card-skills {
-    border-top: 1px solid var(--border);
-    padding-top: 0.8rem;
-  }
-
-  .skills-label {
-    font-family: 'Cinzel', serif;
-    font-size: 0.65rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--gold-dim);
-    margin-bottom: 0.5rem;
-  }
-
-  .skill-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 0.3rem;
-    font-size: 0.85rem;
-  }
-
-  .skill-name { color: var(--text-dim); font-style: italic; }
-
-  .stars {
-    color: var(--gold-dim);
-    font-size: 0.75rem;
-    letter-spacing: 0.05em;
-  }
-
-  .stars .empty-star { color: var(--text-faint); }
-
-  /* ── MODAL BACKDROP ── */
-  .modal-backdrop {
-    position: fixed;
-    inset: 0;
-    background: rgba(90,62,32,0.55);
-    z-index: 100;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 1rem;
-    backdrop-filter: blur(2px);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.2s;
-  }
-
-  .modal-backdrop.open {
-    opacity: 1;
-    pointer-events: all;
-  }
-
-  /* ── MODAL ── */
-  .modal {
-    background: var(--bg2);
-    border: 1px solid var(--border-dark);
-    border-bottom: 3px solid var(--border-dark);
-    border-right: 3px solid var(--border-dark);
-    box-shadow: 5px 6px 20px rgba(42,26,8,0.35);
-    width: 100%;
-    max-width: 560px;
-    max-height: 90vh;
-    overflow-y: auto;
-    position: relative;
-    transform: translateY(20px);
-    transition: transform 0.25s;
-  }
-
-  .modal-backdrop.open .modal { transform: translateY(0); }
-
-  .modal-header {
-    padding: 1.5rem 1.8rem 1rem;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: sticky;
-    top: 0;
-    background: var(--bg2);
-    z-index: 1;
-  }
-
-  .modal-title {
-    font-family: 'Cinzel', serif;
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--gold-light);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-  }
-
-  .modal-close {
-    background: none;
-    border: 1px solid var(--border);
-    color: var(--text-dim);
-    width: 28px;
-    height: 28px;
-    cursor: pointer;
-    font-size: 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.15s;
-  }
-
-  .modal-close:hover {
-    border-color: var(--red-light);
-    color: var(--red-light);
-  }
+    --bg: #3d2b10; --bg2: #4a3418; --bg3: #553c1e;
+    --border: #6e5530; --gold: #c9a84c; --gold-light: #e8c97a;
+    --gold-dim: #6b5a2a; --text: #e8dcc8; --text-dim: #d4c4a0;
+    --text-faint: #a08c6a; --red: #8b2020; --red-light: #c94444;
+    --ink: #1a1208; --purple: #9b4dff; --purple-dim: #5a2d99;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:'Crimson Pro',serif; min-height:100vh; overflow-x:hidden; }
+  body::before { content:''; position:fixed; inset:0; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.12'/%3E%3C/svg%3E"); pointer-events:none; z-index:0; mix-blend-mode:multiply; }
+  body::after { content:''; position:fixed; inset:0; background:radial-gradient(ellipse at center,transparent 55%,rgba(10,6,2,0.4) 100%); pointer-events:none; z-index:0; }
+  header { position:relative; text-align:center; padding:3rem 2rem 2rem; border-bottom:1px solid var(--border); background:linear-gradient(180deg,#0e0b06 0%,transparent 100%); z-index:1; }
+  header::after { content:''; position:absolute; bottom:-1px; left:50%; transform:translateX(-50%); width:60%; height:1px; background:linear-gradient(90deg,transparent,var(--gold-dim),var(--gold),var(--gold-dim),transparent); }
+  .guild-seal { display:block; font-size:2rem; color:var(--gold-dim); margin-bottom:0.4rem; filter:drop-shadow(0 0 8px rgba(201,168,76,0.4)); }
+  .guild-name { font-family:'Cinzel',serif; font-size:0.7rem; letter-spacing:0.35em; text-transform:uppercase; color:var(--text-dim); margin-bottom:0.6rem; }
+  .records-title { font-family:'Cinzel',serif; font-size:clamp(2.8rem,7vw,5rem); font-weight:900; letter-spacing:0.2em; color:var(--gold-light); text-shadow:0 0 60px rgba(201,168,76,0.5),0 0 120px rgba(201,168,76,0.2),0 2px 6px rgba(0,0,0,0.9); margin-bottom:0.6rem; line-height:1.1; }
+  .header-rule { width:40%; height:1px; margin:0.8rem auto; background:linear-gradient(90deg,transparent,var(--gold-dim),var(--gold),var(--gold-dim),transparent); }
+  .records-subtitle { font-size:0.95rem; font-style:italic; color:var(--text-dim); letter-spacing:0.1em; }
+  .ornament { color:var(--gold-dim); font-size:1.2rem; margin:0 0.5rem; }
+  .toolbar { display:flex; justify-content:center; padding:1.5rem 2rem; gap:1rem; flex-wrap:wrap; position:relative; z-index:1; }
+  .btn { font-family:'Cinzel',serif; font-size:0.75rem; letter-spacing:0.12em; padding:0.65rem 1.6rem; border:1px solid var(--gold-dim); background:transparent; color:var(--text); cursor:pointer; transition:all 0.2s; text-transform:uppercase; position:relative; overflow:hidden; }
+  .btn::before { content:''; position:absolute; inset:0; background:var(--gold); opacity:0; transition:opacity 0.2s; }
+  .btn:hover { border-color:var(--gold); color:var(--ink); }
+  .btn:hover::before { opacity:1; }
+  .btn span { position:relative; z-index:1; }
+  .btn-primary { border-color:var(--gold); background:rgba(201,168,76,0.08); }
+  .party-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:1.5rem; padding:1rem 2rem 3rem; max-width:1400px; margin:0 auto; position:relative; z-index:1; }
+  .empty-state { grid-column:1/-1; text-align:center; padding:4rem 2rem; color:var(--text-faint); font-style:italic; font-size:1.2rem; }
+  .empty-state .empty-icon { font-size:3rem; margin-bottom:1rem; display:block; filter:grayscale(1) opacity(0.3); }
+  .char-card { background:var(--bg2); border:1px solid var(--border); position:relative; overflow:hidden; animation:fadeIn 0.4s ease forwards; opacity:0; transition:border-color 0.25s,box-shadow 0.25s; }
+  .char-card:hover { border-color:var(--gold-dim); box-shadow:0 0 30px rgba(155,77,255,0.06); }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(12px);} to{opacity:1;transform:translateY(0);} }
+  .char-card::before { content:''; position:absolute; inset:0; background:linear-gradient(135deg,rgba(201,168,76,0.03) 0%,transparent 60%); pointer-events:none; }
+  .char-card::after { content:''; position:absolute; top:0; left:0; width:20px; height:20px; border-top:1px solid var(--gold-dim); border-left:1px solid var(--gold-dim); }
+  .card-corner-br { position:absolute; bottom:0; right:0; width:20px; height:20px; border-bottom:1px solid var(--gold-dim); border-right:1px solid var(--gold-dim); }
+  .card-portrait-wrap { width:100%; aspect-ratio:3/4; overflow:hidden; border-bottom:1px solid var(--border); }
+  .card-portrait { width:100%; height:100%; object-fit:cover; object-position:top center; display:block; filter:sepia(20%) contrast(1.05); }
+  .card-portrait-placeholder { width:100%; aspect-ratio:3/4; background:var(--bg3); display:flex; align-items:center; justify-content:center; border-bottom:1px solid var(--border); font-size:3rem; color:var(--text-faint); }
+  .card-body { padding:1.2rem 1.4rem 2.5rem; }
+  .card-name { font-family:'Cinzel',serif; font-size:1.15rem; font-weight:600; color:var(--gold-light); letter-spacing:0.05em; margin-bottom:0.25rem; }
+  .card-meta { font-size:0.9rem; font-style:italic; color:var(--text-dim); margin-bottom:0.9rem; padding-bottom:0.9rem; border-bottom:1px solid var(--border); }
+  .card-paths { margin-bottom:1rem; padding:0.6rem 0.8rem; background:var(--bg3); border:1px solid var(--border); font-size:0.85rem; }
+  .path-label { color:var(--gold-dim); font-family:'Cinzel',serif; font-size:0.65rem; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:0.2rem; }
+  .path-value { color:var(--text-dim); font-style:italic; }
+  .card-skills { border-top:1px solid var(--border); padding-top:0.8rem; }
+  .skills-label { font-family:'Cinzel',serif; font-size:0.65rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--gold-dim); margin-bottom:0.5rem; }
+  .skill-name { color:var(--text-dim); font-style:italic; }
+  .stars { color:var(--gold); font-size:0.75rem; }
+  .stars .empty-star { color:var(--text-faint); }
+  .card-edit-btn { font-family:'Cinzel',serif; font-size:0.6rem; letter-spacing:0.1em; text-transform:uppercase; background:none; border:1px solid var(--border); color:var(--text-faint); padding:0.3rem 0.7rem; cursor:pointer; transition:all 0.15s; }
+  .card-edit-btn:hover { border-color:var(--gold-dim); color:var(--gold); }
+  .modal-backdrop { position:fixed; inset:0; background:rgba(8,6,4,0.85); z-index:100; display:flex; align-items:center; justify-content:center; padding:1rem; backdrop-filter:blur(2px); opacity:0; pointer-events:none; transition:opacity 0.2s; }
+  .modal-backdrop.open { opacity:1; pointer-events:all; }
+  .modal { background:var(--bg2); border:1px solid var(--border); width:100%; max-width:560px; max-height:90vh; overflow-y:auto; position:relative; transform:translateY(20px); transition:transform 0.25s; }
+  .modal-backdrop.open .modal { transform:translateY(0); }
+  .modal-header { padding:1.5rem 1.8rem 1rem; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; background:var(--bg2); z-index:1; }
+  .modal-title { font-family:'Cinzel',serif; font-size:1rem; font-weight:600; color:var(--gold); letter-spacing:0.1em; text-transform:uppercase; }
+  .modal-close { background:none; border:1px solid var(--border); color:var(--text-dim); width:28px; height:28px; cursor:pointer; font-size:1rem; display:flex; align-items:center; justify-content:center; transition:all 0.15s; }
+  .modal-close:hover { border-color:var(--red-light); color:var(--red-light); }
+  .modal-body { padding:1.5rem 1.8rem; }
+  .form-section { margin-bottom:1.4rem; }
+  .form-section-title { font-family:'Cinzel',serif; font-size:0.65rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--gold-dim); margin-bottom:0.8rem; padding-bottom:0.4rem; border-bottom:1px solid var(--border); }
+  .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:0.8rem; }
+  .form-group { display:flex; flex-direction:column; gap:0.3rem; }
+  .form-group.full { grid-column:1/-1; }
+  label { font-family:'Cinzel',serif; font-size:0.65rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-dim); }
+  input[type="text"],input[type="number"],input[type="file"],select,textarea { background:var(--bg3); border:1px solid var(--border); color:var(--text); padding:0.5rem 0.7rem; font-family:'Crimson Pro',serif; font-size:0.95rem; width:100%; outline:none; transition:border-color 0.15s; }
+  input:focus,select:focus,textarea:focus { border-color:var(--gold-dim); }
+  input[type="file"] { font-size:0.8rem; color:var(--text-dim); cursor:pointer; padding:0.4rem; }
+  textarea { resize:vertical; }
+  .skills-builder { display:flex; flex-direction:column; gap:0.6rem; }
+  .skill-input-row { display:grid; grid-template-columns:1fr auto auto; gap:0.5rem; align-items:center; }
+  .stars-input { display:flex; gap:2px; }
+  .star-btn { background:none; border:none; cursor:pointer; font-size:1.1rem; color:var(--text-faint); transition:color 0.1s; padding:0 1px; line-height:1; }
+  .star-btn.active { color:var(--gold); }
+  .remove-skill { background:none; border:1px solid var(--border); color:var(--text-faint); width:26px; height:26px; cursor:pointer; font-size:0.8rem; display:flex; align-items:center; justify-content:center; transition:all 0.15s; flex-shrink:0; }
+  .remove-skill:hover { border-color:var(--red-light); color:var(--red-light); }
+  .add-skill-btn { align-self:flex-start; font-family:'Cinzel',serif; font-size:0.65rem; letter-spacing:0.1em; text-transform:uppercase; background:none; border:1px dashed var(--border); color:var(--text-faint); padding:0.4rem 0.8rem; cursor:pointer; transition:all 0.15s; }
+  .add-skill-btn:hover { border-color:var(--gold-dim); color:var(--gold-dim); }
+  .form-actions { display:flex; gap:0.8rem; justify-content:flex-end; padding-top:1rem; border-top:1px solid var(--border); margin-top:0.5rem; }
+  .btn-cancel { font-family:'Cinzel',serif; font-size:0.7rem; letter-spacing:0.1em; padding:0.6rem 1.2rem; border:1px solid var(--border); background:none; color:var(--text-dim); cursor:pointer; text-transform:uppercase; transition:all 0.15s; }
+  .btn-cancel:hover { border-color:var(--red-light); color:var(--red-light); }
+  .btn-submit { font-family:'Cinzel',serif; font-size:0.7rem; letter-spacing:0.1em; padding:0.6rem 1.6rem; border:1px solid var(--gold); background:rgba(201,168,76,0.1); color:var(--text); cursor:pointer; text-transform:uppercase; transition:all 0.15s; }
+  .btn-submit:hover { background:var(--gold); color:var(--ink); }
+  .btn-submit:disabled { opacity:0.4; cursor:not-allowed; }
+  .toast { position:fixed; bottom:2rem; left:50%; transform:translateX(-50%) translateY(20px); background:var(--bg3); border:1px solid var(--gold-dim); color:var(--text); padding:0.7rem 1.5rem; font-family:'Cinzel',serif; font-size:0.75rem; letter-spacing:0.1em; z-index:200; opacity:0; transition:all 0.3s; pointer-events:none; }
+  .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+  .toast.error { border-color:var(--red-light); color:var(--red-light); }
+  .loading-bar { position:fixed; top:0; left:0; height:2px; background:linear-gradient(90deg,var(--gold-dim),var(--purple),var(--gold-dim)); width:0%; transition:width 0.4s; z-index:300; }
+  .map-backdrop { position:fixed; inset:0; background:rgba(8,6,4,0.92); z-index:100; display:flex; align-items:center; justify-content:center; padding:1rem; backdrop-filter:blur(3px); opacity:0; pointer-events:none; transition:opacity 0.25s; }
+  .map-backdrop.open { opacity:1; pointer-events:all; }
+  .map-container { position:relative; max-width:95vw; max-height:90vh; border:1px solid var(--border); transform:scale(0.97); transition:transform 0.25s; }
+  .map-backdrop.open .map-container { transform:scale(1); }
+  .map-container img { display:block; max-width:95vw; max-height:88vh; object-fit:contain; }
+  .map-close { position:absolute; top:0.6rem; right:0.6rem; background:var(--bg2); border:1px solid var(--border); color:var(--text-dim); width:32px; height:32px; cursor:pointer; font-size:1rem; display:flex; align-items:center; justify-content:center; transition:all 0.15s; }
+  .map-close:hover { border-color:var(--red-light); color:var(--red-light); }
+  .detail-page { position:fixed; inset:0; background:var(--bg); z-index:50; overflow-y:auto; opacity:0; pointer-events:none; transition:opacity 0.25s; }
+  .detail-page.open { opacity:1; pointer-events:all; }
+  .detail-inner { max-width:900px; margin:0 auto; padding:2rem; }
+  .detail-back { font-family:'Cinzel',serif; font-size:0.7rem; letter-spacing:0.12em; text-transform:uppercase; background:none; border:1px solid var(--border); color:var(--text-dim); padding:0.5rem 1.1rem; cursor:pointer; margin-bottom:2rem; transition:all 0.15s; display:inline-flex; align-items:center; gap:0.5rem; }
+  .detail-back:hover { border-color:var(--gold-dim); color:var(--gold); }
+  .detail-hero { display:grid; grid-template-columns:240px 1fr; gap:2rem; margin-bottom:2rem; padding-bottom:2rem; border-bottom:1px solid var(--border); }
+  @media(max-width:600px){.detail-hero{grid-template-columns:1fr;}}
+  .detail-portrait-wrap { width:100%; aspect-ratio:3/4; overflow:hidden; border:1px solid var(--border); }
+  .detail-portrait { width:100%; height:100%; object-fit:cover; object-position:top center; filter:sepia(20%) contrast(1.05); }
+  .detail-portrait-placeholder { width:100%; aspect-ratio:3/4; background:var(--bg3); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:4rem; color:var(--text-faint); }
+  .detail-info { display:flex; flex-direction:column; gap:1rem; }
+  .detail-name { font-family:'Cinzel',serif; font-size:2rem; font-weight:900; color:var(--gold-light); letter-spacing:0.05em; text-shadow:0 0 30px rgba(201,168,76,0.2); }
+  .detail-meta { font-size:1rem; font-style:italic; color:var(--text-dim); padding-bottom:0.8rem; border-bottom:1px solid var(--border); }
+  .detail-stats { display:grid; grid-template-columns:repeat(auto-fill,minmax(120px,1fr)); gap:0.6rem; }
+  .detail-stat { background:var(--bg3); border:1px solid var(--border); padding:0.5rem 0.8rem; }
+  .detail-stat-label { font-family:'Cinzel',serif; font-size:0.6rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--gold-dim); margin-bottom:0.2rem; }
+  .detail-stat-value { font-size:1rem; color:var(--text); }
+  .detail-paths { background:var(--bg3); border:1px solid var(--border); padding:0.7rem 1rem; }
+  .detail-paths-label { font-family:'Cinzel',serif; font-size:0.6rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--gold-dim); margin-bottom:0.3rem; }
+  .detail-paths-value { font-style:italic; color:var(--text-dim); }
+  .detail-skill-row { display:flex; justify-content:space-between; align-items:center; padding:0.3rem 0; border-bottom:1px solid var(--border); font-size:0.95rem; }
+  .detail-skill-row:last-child { border-bottom:none; }
+  .detail-section-title { font-family:'Cinzel',serif; font-size:0.75rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--purple); margin-bottom:1rem; padding-bottom:0.5rem; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+  .path-skills-section { margin-bottom:1.5rem; }
+  .path-skills-header { font-family:'Cinzel',serif; font-size:0.7rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--gold-dim); margin-bottom:0.6rem; display:flex; align-items:center; gap:0.5rem; }
+  .path-skills-header::after { content:''; flex:1; height:1px; background:var(--border); }
+  .path-skill-item { background:var(--bg3); border:1px solid var(--border); padding:0.6rem 0.9rem; margin-bottom:0.4rem; display:flex; align-items:flex-start; justify-content:space-between; gap:0.8rem; }
+  .path-skill-item.dismissed { opacity:0.35; border-style:dashed; }
+  .path-skill-item-body { flex:1; }
+  .path-skill-level { font-family:'Cinzel',serif; font-size:0.58rem; color:var(--gold-dim); letter-spacing:0.08em; margin-bottom:0.15rem; }
+  .path-skill-name { font-size:0.9rem; color:var(--text); margin-bottom:0.2rem; }
+  .path-skill-desc { font-size:0.78rem; color:var(--text-dim); font-style:italic; line-height:1.4; }
+  .path-skill-dismiss { background:none; border:1px solid var(--border); color:var(--text-faint); font-size:0.6rem; font-family:'Cinzel',serif; letter-spacing:0.08em; padding:0.2rem 0.5rem; cursor:pointer; transition:all 0.15s; white-space:nowrap; flex-shrink:0; margin-top:2px; text-transform:uppercase; }
+  .path-skill-dismiss:hover { border-color:var(--red-light); color:var(--red-light); }
+  .path-skill-item.dismissed .path-skill-dismiss { color:var(--gold-dim); border-color:var(--gold-dim); }
+  .path-skills-empty { font-style:italic; color:var(--text-faint); font-size:0.85rem; padding:0.3rem 0; }
+  .inventory-list { display:flex; flex-direction:column; gap:0.6rem; margin-bottom:1.2rem; }
+  .inventory-item { background:var(--bg2); border:1px solid var(--border); padding:0.7rem 1rem; display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; animation:fadeIn 0.2s ease forwards; }
+  .inventory-item-info { flex:1; }
+  .inventory-item-name { font-family:'Cinzel',serif; font-size:0.85rem; color:var(--gold-light); margin-bottom:0.2rem; }
+  .inventory-item-desc { font-size:0.85rem; color:var(--text-dim); font-style:italic; }
+  .inventory-delete { background:none; border:1px solid var(--border); color:var(--text-faint); width:24px; height:24px; cursor:pointer; font-size:0.7rem; display:flex; align-items:center; justify-content:center; transition:all 0.15s; flex-shrink:0; margin-top:2px; }
+  .inventory-delete:hover { border-color:var(--red-light); color:var(--red-light); }
+  .inventory-empty { font-style:italic; color:var(--text-faint); font-size:0.9rem; padding:0.5rem 0; }
+  .inventory-add-form { display:grid; grid-template-columns:1fr 2fr auto; gap:0.6rem; align-items:start; }
+  @media(max-width:600px){.inventory-add-form{grid-template-columns:1fr;}}
+  .inventory-add-btn { font-family:'Cinzel',serif; font-size:0.65rem; letter-spacing:0.1em; text-transform:uppercase; padding:0.55rem 1rem; border:1px solid var(--gold-dim); background:rgba(201,168,76,0.08); color:var(--text); cursor:pointer; transition:all 0.15s; white-space:nowrap; }
+  .inventory-add-btn:hover { background:var(--gold); color:var(--ink); }
+  ::-webkit-scrollbar{width:6px;} ::-webkit-scrollbar-track{background:var(--bg);} ::-webkit-scrollbar-thumb{background:var(--border);} ::-webkit-scrollbar-thumb:hover{background:var(--gold-dim);}
 
-  .modal-body {
-    padding: 1.5rem 1.8rem;
-  }
-
-  /* ── FORM ── */
-  .form-section {
-    margin-bottom: 1.4rem;
-  }
-
-  .form-section-title {
-    font-family: 'Cinzel', serif;
-    font-size: 0.65rem;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--gold-dim);
-    margin-bottom: 0.8rem;
-    padding-bottom: 0.4rem;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .form-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.8rem;
-  }
-
-  .form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.3rem;
-  }
-
-  .form-group.full { grid-column: 1 / -1; }
-
-  label {
-    font-family: 'Cinzel', serif;
-    font-size: 0.65rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--text-dim);
-  }
-
-  input[type="text"],
-  input[type="number"],
-  input[type="file"] {
-    background: rgba(255,245,220,0.5);
-    border: 1px solid var(--border);
-    border-bottom: 1px solid var(--border-dark);
-    color: var(--text);
-    padding: 0.5rem 0.7rem;
-    font-family: 'Crimson Pro', serif;
-    font-size: 0.95rem;
-    width: 100%;
-    outline: none;
-    transition: border-color 0.15s;
-  }
-
-  input:focus { border-color: var(--border-dark); background: rgba(255,248,228,0.7); }
-
-  input[type="file"] {
-    font-size: 0.8rem;
-    color: var(--text-dim);
-    cursor: pointer;
-    padding: 0.4rem;
-  }
-
-  /* Skills builder */
-  .skills-builder {
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
-  }
-
-  .skill-input-row {
-    display: grid;
-    grid-template-columns: 1fr auto auto;
-    gap: 0.5rem;
-    align-items: center;
-  }
-
-  .stars-input {
-    display: flex;
-    gap: 2px;
-  }
-
-  .star-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 1.1rem;
-    color: var(--text-faint);
-    transition: color 0.1s;
-    padding: 0 1px;
-    line-height: 1;
-  }
-
-  .star-btn.active { color: var(--gold-dim); }
-
-  .remove-skill {
-    background: none;
-    border: 1px solid var(--border);
-    color: var(--text-faint);
-    width: 26px;
-    height: 26px;
-    cursor: pointer;
-    font-size: 0.8rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.15s;
-    flex-shrink: 0;
-  }
-
-  .remove-skill:hover { border-color: var(--red-light); color: var(--red-light); }
-
-  .add-skill-btn {
-    align-self: flex-start;
-    font-family: 'Cinzel', serif;
-    font-size: 0.65rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    background: none;
-    border: 1px dashed var(--border);
-    color: var(--text-faint);
-    padding: 0.4rem 0.8rem;
-    cursor: pointer;
-    transition: all 0.15s;
-  }
-
-  .add-skill-btn:hover { border-color: var(--gold-dim); color: var(--gold-dim); }
-
-  /* Submit */
-  .form-actions {
-    display: flex;
-    gap: 0.8rem;
-    justify-content: flex-end;
-    padding-top: 1rem;
-    border-top: 1px solid var(--border);
-    margin-top: 0.5rem;
-  }
-
-  .btn-cancel {
-    font-family: 'Cinzel', serif;
-    font-size: 0.7rem;
-    letter-spacing: 0.1em;
-    padding: 0.6rem 1.2rem;
-    border: 1px solid var(--border);
-    background: none;
-    color: var(--text-dim);
-    cursor: pointer;
-    text-transform: uppercase;
-    transition: all 0.15s;
-  }
-
-  .btn-cancel:hover { border-color: var(--red-light); color: var(--red-light); }
-
-  .btn-submit {
-    font-family: 'Cinzel', serif;
-    font-size: 0.7rem;
-    letter-spacing: 0.1em;
-    padding: 0.6rem 1.6rem;
-    border: 1px solid var(--border-dark);
-    background: rgba(90,62,32,0.15);
-    color: var(--gold-light);
-    cursor: pointer;
-    text-transform: uppercase;
-    transition: all 0.15s;
-  }
-
-  .btn-submit:hover { background: var(--border-dark); color: var(--bg); }
-  .btn-submit:disabled { opacity: 0.4; cursor: not-allowed; }
-
-  /* Toast */
-  .toast {
-    position: fixed;
-    bottom: 2rem;
-    left: 50%;
-    transform: translateX(-50%) translateY(20px);
-    background: var(--bg2);
-    border: 1px solid var(--border-dark);
-    color: var(--text);
-    padding: 0.7rem 1.5rem;
-    font-family: 'Cinzel', serif;
-    font-size: 0.75rem;
-    letter-spacing: 0.1em;
-    z-index: 200;
-    opacity: 0;
-    transition: all 0.3s;
-    pointer-events: none;
-    box-shadow: 2px 3px 10px var(--parchment-shadow);
-  }
-
-  .toast.show {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-  }
-
-  .toast.error { border-color: var(--red-light); color: var(--red-light); }
-
-
-  .card-edit-btn {
-    position: absolute;
-    bottom: 0.7rem;
-    right: 0.7rem;
-    font-family: 'Cinzel', serif;
-    font-size: 0.6rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    background: none;
-    border: 1px solid var(--border);
-    color: var(--text-faint);
-    padding: 0.3rem 0.7rem;
-    cursor: pointer;
-    transition: all 0.15s;
-    z-index: 2;
-  }
-  .card-edit-btn:hover {
-    border-color: var(--gold-dim);
-    color: var(--gold);
-  }
-  .card-body { padding-bottom: 2.5rem; }
-
-  /* ── DETAIL PAGE ── */
-  .detail-page {
-    position: fixed;
-    inset: 0;
-    background: var(--bg);
-    z-index: 50;
-    overflow-y: auto;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.25s;
-  }
-  .detail-page.open {
-    opacity: 1;
-    pointer-events: all;
-  }
-  .detail-inner {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 2rem;
-  }
-  .detail-back {
-    font-family: 'Cinzel', serif;
-    font-size: 0.7rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    background: none;
-    border: 1px solid var(--border);
-    color: var(--text-dim);
-    padding: 0.5rem 1.1rem;
-    cursor: pointer;
-    margin-bottom: 2rem;
-    transition: all 0.15s;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-  .detail-back:hover { border-color: var(--gold-dim); color: var(--gold); }
-
-  .detail-hero {
-    display: grid;
-    grid-template-columns: 240px 1fr;
-    gap: 2rem;
-    margin-bottom: 2rem;
-    padding-bottom: 2rem;
-    border-bottom: 1px solid var(--border);
-  }
-
-  @media (max-width: 600px) {
-    .detail-hero { grid-template-columns: 1fr; }
-  }
-
-  .detail-portrait-wrap {
-    width: 100%;
-    aspect-ratio: 3 / 4;
-    overflow: hidden;
-    border: 1px solid var(--border);
-  }
-  .detail-portrait {
-    width: 100%; height: 100%;
-    object-fit: cover;
-    object-position: top center;
-    filter: sepia(20%) contrast(1.05);
-  }
-  .detail-portrait-placeholder {
-    width: 100%; aspect-ratio: 3/4;
-    background: var(--bg3);
-    border: 1px solid var(--border);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 4rem; color: var(--text-faint);
-  }
-  .detail-info { display: flex; flex-direction: column; gap: 1rem; }
-  .detail-name {
-    font-family: 'Cinzel', serif;
-    font-size: 2rem;
-    font-weight: 900;
-    color: var(--gold-light);
-    letter-spacing: 0.05em;
-    text-shadow: 0 0 30px rgba(201,168,76,0.2);
-  }
-  .detail-meta {
-    font-size: 1rem;
-    font-style: italic;
-    color: var(--text-dim);
-    padding-bottom: 0.8rem;
-    border-bottom: 1px solid var(--border);
-  }
-  .detail-stats {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: 0.6rem;
-  }
-  .detail-stat {
-    background: var(--bg3);
-    border: 1px solid var(--border);
-    padding: 0.5rem 0.8rem;
-  }
-  .detail-stat-label {
-    font-family: 'Cinzel', serif;
-    font-size: 0.6rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--gold-dim);
-    margin-bottom: 0.2rem;
-  }
-  .detail-stat-value { font-size: 1rem; color: var(--text); }
-  .detail-paths {
-    background: var(--bg3);
-    border: 1px solid var(--border);
-    padding: 0.7rem 1rem;
-  }
-  .detail-paths-label {
-    font-family: 'Cinzel', serif;
-    font-size: 0.6rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--gold-dim);
-    margin-bottom: 0.3rem;
-  }
-  .detail-paths-value { font-style: italic; color: var(--text-dim); }
-  .detail-skills { margin-top: 0.5rem; }
-  .detail-skill-row {
-    display: flex; justify-content: space-between;
-    align-items: center;
-    padding: 0.3rem 0;
-    border-bottom: 1px solid var(--border);
-    font-size: 0.95rem;
-  }
-  .detail-skill-row:last-child { border-bottom: none; }
-
-  /* Inventory */
-  .detail-section-title {
-    font-family: 'Cinzel', serif;
-    font-size: 0.75rem;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 1rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .inventory-list { display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 1.2rem; }
-  .inventory-item {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    padding: 0.7rem 1rem;
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 1rem;
-    animation: fadeIn 0.2s ease forwards;
-  }
-  .inventory-item-info { flex: 1; }
-  .inventory-item-name {
-    font-family: 'Cinzel', serif;
-    font-size: 0.85rem;
-    color: var(--gold-light);
-    margin-bottom: 0.2rem;
-  }
-  .inventory-item-desc { font-size: 0.85rem; color: var(--text-dim); font-style: italic; }
-  .inventory-delete {
-    background: none;
-    border: 1px solid var(--border);
-    color: var(--text-faint);
-    width: 24px; height: 24px;
-    cursor: pointer; font-size: 0.7rem;
-    display: flex; align-items: center; justify-content: center;
-    transition: all 0.15s; flex-shrink: 0; margin-top: 2px;
-  }
-  .inventory-delete:hover { border-color: var(--red-light); color: var(--red-light); }
-  .inventory-empty {
-    font-style: italic; color: var(--text-faint);
-    font-size: 0.9rem; padding: 0.5rem 0;
-  }
-  .inventory-add-form {
-    display: grid;
-    grid-template-columns: 1fr 2fr auto;
-    gap: 0.6rem;
-    align-items: start;
-  }
-  @media (max-width: 600px) {
-    .inventory-add-form { grid-template-columns: 1fr; }
-  }
-  .inventory-add-form input {
-    background: var(--bg3);
-    border: 1px solid var(--border);
-    color: var(--text);
-    padding: 0.5rem 0.7rem;
-    font-family: 'Crimson Pro', serif;
-    font-size: 0.95rem;
-    outline: none;
-    transition: border-color 0.15s;
-    width: 100%;
-  }
-  .inventory-add-form input:focus { border-color: var(--gold-dim); }
-  .inventory-add-btn {
-    font-family: 'Cinzel', serif;
-    font-size: 0.65rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    padding: 0.55rem 1rem;
-    border: 1px solid var(--gold-dim);
-    background: rgba(201,168,76,0.08);
-    color: var(--gold);
-    cursor: pointer;
-    transition: all 0.15s;
-    white-space: nowrap;
-  }
-  .inventory-add-btn:hover { background: var(--gold); color: var(--ink); }
-
-
-  /* Path Skills */
-  .path-skills-section { margin-bottom: 1.5rem; }
-  .path-skills-header {
-    font-family: 'Cinzel', serif;
-    font-size: 0.7rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--gold-dim);
-    margin-bottom: 0.6rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-  .path-skills-header::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--border);
-  }
-  .path-skill-item {
-    background: var(--bg3);
-    border: 1px solid var(--border);
-    padding: 0.6rem 0.9rem;
-    margin-bottom: 0.4rem;
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 0.8rem;
-    position: relative;
-    transition: border-color 0.15s;
-  }
-  .path-skill-item.dismissed {
-    opacity: 0.35;
-    border-style: dashed;
-  }
-  .path-skill-item-body { flex: 1; }
-  .path-skill-level {
-    font-family: 'Cinzel', serif;
-    font-size: 0.58rem;
-    color: var(--gold-dim);
-    letter-spacing: 0.08em;
-    margin-bottom: 0.15rem;
-  }
-  .path-skill-name {
-    font-size: 0.9rem;
-    color: var(--text);
-    margin-bottom: 0.2rem;
-  }
-  .path-skill-desc {
-    font-size: 0.78rem;
-    color: var(--text-dim);
-    font-style: italic;
-    line-height: 1.4;
-  }
-  .path-skill-dismiss {
-    background: none;
-    border: 1px solid var(--border);
-    color: var(--text-faint);
-    font-size: 0.6rem;
-    font-family: 'Cinzel', serif;
-    letter-spacing: 0.08em;
-    padding: 0.2rem 0.5rem;
-    cursor: pointer;
-    transition: all 0.15s;
-    white-space: nowrap;
-    flex-shrink: 0;
-    margin-top: 2px;
-    text-transform: uppercase;
-  }
-  .path-skill-dismiss:hover { border-color: var(--red-light); color: var(--red-light); }
-  .path-skill-item.dismissed .path-skill-dismiss {
-    color: var(--gold-dim);
-    border-color: var(--gold-dim);
-  }
-  .path-skills-empty {
-    font-style: italic;
-    color: var(--text-faint);
-    font-size: 0.85rem;
-    padding: 0.3rem 0;
-  }
-
-
-  /* ── MAP MODAL ── */
-  .map-backdrop {
-    position: fixed;
-    inset: 0;
-    background: rgba(8,6,4,0.92);
-    z-index: 100;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 1rem;
-    backdrop-filter: blur(3px);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.25s;
-  }
-  .map-backdrop.open {
-    opacity: 1;
-    pointer-events: all;
-  }
-  .map-container {
-    position: relative;
-    max-width: 95vw;
-    max-height: 90vh;
-    border: 1px solid var(--border);
-    transform: scale(0.97);
-    transition: transform 0.25s;
-  }
-  .map-backdrop.open .map-container { transform: scale(1); }
-  .map-container img {
-    display: block;
-    max-width: 95vw;
-    max-height: 88vh;
-    object-fit: contain;
-  }
-  .map-close {
-    position: absolute;
-    top: 0.6rem;
-    right: 0.6rem;
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    color: var(--text-dim);
-    width: 32px;
-    height: 32px;
-    cursor: pointer;
-    font-size: 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.15s;
-  }
-  .map-close:hover { border-color: var(--red-light); color: var(--red-light); }
-
-  /* Scrollbar */
-  ::-webkit-scrollbar { width: 6px; }
-  ::-webkit-scrollbar-track { background: var(--bg3); }
-  ::-webkit-scrollbar-thumb { background: var(--border); }
-  ::-webkit-scrollbar-thumb:hover { background: var(--border-dark); }
-
-  .loading-bar {
-    position: fixed;
-    top: 0; left: 0;
-    height: 3px;
-    background: linear-gradient(90deg, var(--border-dark), var(--gold-dim), var(--border-dark));
-    width: 0%;
-    transition: width 0.4s;
-    z-index: 300;
-  }
 </style>
 </head>
 <body>
@@ -1054,171 +164,111 @@
   <div class="guild-name">Adventurers Guild Registry</div>
   <div class="records-title">Echoes Divide</div>
   <div class="header-rule"></div>
-  <div class="records-subtitle">
-    <img src="https://aakfivejocyemgsfxkvw.supabase.co/storage/v1/object/public/assets/162862e5-ed4b-4641-8393-b217737801fd.jpg" alt="" style="height:24px;object-fit:contain;vertical-align:middle;filter:drop-shadow(0 0 6px rgba(201,168,76,0.4));">
-    Official Roll of Registered Adventurers
-    <img src="https://aakfivejocyemgsfxkvw.supabase.co/storage/v1/object/public/assets/162862e5-ed4b-4641-8393-b217737801fd.jpg" alt="" style="height:24px;object-fit:contain;vertical-align:middle;filter:drop-shadow(0 0 6px rgba(201,168,76,0.4));">
-  </div>
+  <div class="records-subtitle"><span class="ornament">✦</span> Official Roll of Registered Adventurers <span class="ornament">✦</span></div>
 </header>
 
 <div class="toolbar">
   <button class="btn btn-primary" onclick="openModal()"><span>+ Enroll Character</span></button>
+  <button class="btn" onclick="window.location.href='lore.html'"><span>📖 World Codex</span></button>
   <button class="btn" onclick="openMap()"><span>🗺 World Map</span></button>
 </div>
 
 <div class="party-grid" id="partyGrid">
-  <div class="empty-state">
-    <span class="empty-icon">📜</span>
-    The registry awaits its first adventurer…
-  </div>
+  <div class="empty-state"><span class="empty-icon">📜</span>The registry awaits its first adventurer…</div>
 </div>
 
+<!-- ENROLL MODAL -->
 <div class="modal-backdrop" id="modalBackdrop" onclick="handleBackdropClick(event)">
   <div class="modal">
-    <div class="modal-header">
-      <span class="modal-title">Register Adventurer</span>
-      <button class="modal-close" onclick="closeModal()">✕</button>
-    </div>
+    <div class="modal-header"><span class="modal-title">Register Adventurer</span><button class="modal-close" onclick="closeModal()">✕</button></div>
     <div class="modal-body">
-      <!-- Identity -->
-      <div class="form-section">
-        <div class="form-section-title">Identity</div>
-        <div class="form-grid">
-          <div class="form-group full">
-            <label>Character Name</label>
-            <input type="text" id="f-name" placeholder="e.g. Varek Ashborn">
-          </div>
-          <div class="form-group full">
-            <label>Backstory</label>
-            <textarea id="f-backstory" placeholder="Who are they? Where do they come from?" rows="3" style="background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:0.5rem 0.7rem;font-family:'Crimson Pro',serif;font-size:0.95rem;width:100%;outline:none;resize:vertical;transition:border-color 0.15s;"></textarea>
-          </div>
-          <div class="form-group">
-            <label>Race</label>
-            <input type="text" id="f-race" placeholder="e.g. Half-Elf">
-          </div>
-          <div class="form-group">
-            <label>Level</label>
-            <input type="number" id="f-level" placeholder="1" min="1">
-          </div>
-          <div class="form-group">
-            <label>Constellation Level</label>
-            <input type="number" id="f-conlevel" placeholder="1" min="1">
-          </div>
-          <div class="form-group">
-            <label>XP</label>
-            <input type="number" id="f-xp" placeholder="0" min="0">
-          </div>
-        </div>
-      </div>
-
-      <!-- Paths -->
-      <div class="form-section">
-        <div class="form-section-title">Skill Paths</div>
-        <div class="form-grid">
-          <div class="form-group">
-            <label>Path 1</label>
-            <select id="f-path1" style="background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:0.5rem 0.7rem;font-family:'Crimson Pro',serif;font-size:0.95rem;width:100%;outline:none;">
-              <option value="">— Select Path —</option>
-            <option value="Elementomancy - Primordial Path">Elementomancy - Primordial Path</option>
-            <option value="Elementomancy - Hybrid Path">Elementomancy - Hybrid Path</option>
-            <option value="Aegimancy - Guardian Path">Aegimancy - Guardian Path</option>
-            <option value="Aegimancy - Tactician Path">Aegimancy - Tactician Path</option>
-            <option value="Dynamancy - Overcharger Path">Dynamancy - Overcharger Path</option>
-            <option value="Dynamancy - Arcane Reactor Path">Dynamancy - Arcane Reactor Path</option>
-            <option value="Fascinomancy - Silver Tongue Path">Fascinomancy - Silver Tongue Path</option>
-            <option value="Fascinomancy - Glamour Path">Fascinomancy - Glamour Path</option>
-            <option value="Hagiomancy - Saint's Path">Hagiomancy - Saint's Path</option>
-            <option value="Hagiomancy - Judgement Path">Hagiomancy - Judgement Path</option>
-            <option value="Nyxomancy - Voidlord Path">Nyxomancy - Voidlord Path</option>
-            <option value="Nyxomancy - Whispered Path">Nyxomancy - Whispered Path</option>
-            <option value="Xiphoturgy - Duelist Path">Xiphoturgy - Duelist Path</option>
-            <option value="Xiphoturgy - Warrior's Path">Xiphoturgy - Warrior's Path</option>
-            <option value="Klepoturgy - Shadow Thief Path">Klepoturgy - Shadow Thief Path</option>
-            <option value="Klepoturgy - Con Artist Path">Klepoturgy - Con Artist Path</option>
-            <option value="Technoturgy - Gadgeteer Path">Technoturgy - Gadgeteer Path</option>
-            <option value="Technoturgy - Machinist Path">Technoturgy - Machinist Path</option>
-            <option value="Pugiloturgy - Crusher Path">Pugiloturgy - Crusher Path</option>
-            <option value="Pugiloturgy - Brawler Path">Pugiloturgy - Brawler Path</option>
-            <option value="Hastoturgy - Vanguard Path">Hastoturgy - Vanguard Path</option>
-            <option value="Hastoturgy - Whirlwind Path">Hastoturgy - Whirlwind Path</option>
-            <option value="Druidomancy - Verdant Path">Druidomancy - Verdant Path</option>
-            <option value="Druidomancy - Circle Path">Druidomancy - Circle Path</option>
-            <option value="Ballistoturgy - Gunslinger Path">Ballistoturgy - Gunslinger Path</option>
-            <option value="Ballistoturgy - Artillery Path">Ballistoturgy - Artillery Path</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Path 2</label>
-            <select id="f-path2" style="background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:0.5rem 0.7rem;font-family:'Crimson Pro',serif;font-size:0.95rem;width:100%;outline:none;">
-              <option value="">— Select Path —</option>
-            <option value="Elementomancy - Primordial Path">Elementomancy - Primordial Path</option>
-            <option value="Elementomancy - Hybrid Path">Elementomancy - Hybrid Path</option>
-            <option value="Aegimancy - Guardian Path">Aegimancy - Guardian Path</option>
-            <option value="Aegimancy - Tactician Path">Aegimancy - Tactician Path</option>
-            <option value="Dynamancy - Overcharger Path">Dynamancy - Overcharger Path</option>
-            <option value="Dynamancy - Arcane Reactor Path">Dynamancy - Arcane Reactor Path</option>
-            <option value="Fascinomancy - Silver Tongue Path">Fascinomancy - Silver Tongue Path</option>
-            <option value="Fascinomancy - Glamour Path">Fascinomancy - Glamour Path</option>
-            <option value="Hagiomancy - Saint's Path">Hagiomancy - Saint's Path</option>
-            <option value="Hagiomancy - Judgement Path">Hagiomancy - Judgement Path</option>
-            <option value="Nyxomancy - Voidlord Path">Nyxomancy - Voidlord Path</option>
-            <option value="Nyxomancy - Whispered Path">Nyxomancy - Whispered Path</option>
-            <option value="Xiphoturgy - Duelist Path">Xiphoturgy - Duelist Path</option>
-            <option value="Xiphoturgy - Warrior's Path">Xiphoturgy - Warrior's Path</option>
-            <option value="Klepoturgy - Shadow Thief Path">Klepoturgy - Shadow Thief Path</option>
-            <option value="Klepoturgy - Con Artist Path">Klepoturgy - Con Artist Path</option>
-            <option value="Technoturgy - Gadgeteer Path">Technoturgy - Gadgeteer Path</option>
-            <option value="Technoturgy - Machinist Path">Technoturgy - Machinist Path</option>
-            <option value="Pugiloturgy - Crusher Path">Pugiloturgy - Crusher Path</option>
-            <option value="Pugiloturgy - Brawler Path">Pugiloturgy - Brawler Path</option>
-            <option value="Hastoturgy - Vanguard Path">Hastoturgy - Vanguard Path</option>
-            <option value="Hastoturgy - Whirlwind Path">Hastoturgy - Whirlwind Path</option>
-            <option value="Druidomancy - Verdant Path">Druidomancy - Verdant Path</option>
-            <option value="Druidomancy - Circle Path">Druidomancy - Circle Path</option>
-            <option value="Ballistoturgy - Gunslinger Path">Ballistoturgy - Gunslinger Path</option>
-            <option value="Ballistoturgy - Artillery Path">Ballistoturgy - Artillery Path</option>
-            </select>
-          </div>
-          <div class="form-group full">
-            <label>Constellation Name</label>
-            <select id="f-conname" style="background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:0.5rem 0.7rem;font-family:'Crimson Pro',serif;font-size:0.95rem;width:100%;outline:none;">
-              <option value="">— Select Constellation —</option>
-            <option value="War - Bastion">War - Bastion</option>
-            <option value="War - Knight">War - Knight</option>
-            <option value="War - Vanguard">War - Vanguard</option>
-            <option value="War - Guide">War - Guide</option>
-            <option value="War - Assassin">War - Assassin</option>
-            <option value="War - Brute">War - Brute</option>
-            <option value="War - Feral">War - Feral</option>
-            <option value="War - Shaman">War - Shaman</option>
-            <option value="War - Thaumaturge">War - Thaumaturge</option>
-            <option value="War - Kiluna">War - Kiluna</option>
-            <option value="Magic - Arcanist">Magic - Arcanist</option>
-            <option value="Magic - Ritualist">Magic - Ritualist</option>
-            <option value="Magic - Weaver">Magic - Weaver</option>
-            <option value="Magic - Holy Warrior">Magic - Holy Warrior</option>
-            <option value="Magic - Hierophant">Magic - Hierophant</option>
-            </select>
-          </div>
-        </div>
-      </div>
-
-      <!-- Skill Stars -->
-      <div class="form-section">
-        <div class="form-section-title">Skill Stars</div>
+      <div class="form-section"><div class="form-section-title">Identity</div><div class="form-grid">
+        <div class="form-group full"><label>Character Name</label><input type="text" id="f-name" placeholder="e.g. Varek Ashborn"></div>
+        <div class="form-group full"><label>Backstory</label><textarea id="f-backstory" rows="3" placeholder="Who are they?"></textarea></div>
+        <div class="form-group"><label>Race</label><input type="text" id="f-race" placeholder="e.g. Half-Elf"></div>
+        <div class="form-group"><label>Level</label><input type="number" id="f-level" placeholder="1" min="1"></div>
+        <div class="form-group"><label>Constellation Level</label><input type="number" id="f-conlevel" placeholder="1" min="1"></div>
+        <div class="form-group"><label>XP</label><input type="number" id="f-xp" placeholder="0" min="0"></div>
+      </div></div>
+      <div class="form-section"><div class="form-section-title">Paths &amp; Constellation</div><div class="form-grid">
+        <div class="form-group"><label>Path 1</label><select id="f-path1"><option value="">— Select Path —</option>
+              <option value="Elementomancy - Primordial Path">Elementomancy - Primordial Path</option>
+              <option value="Elementomancy - Hybrid Path">Elementomancy - Hybrid Path</option>
+              <option value="Aegimancy - Guardian Path">Aegimancy - Guardian Path</option>
+              <option value="Aegimancy - Tactician Path">Aegimancy - Tactician Path</option>
+              <option value="Dynamancy - Overcharger Path">Dynamancy - Overcharger Path</option>
+              <option value="Dynamancy - Arcane Reactor Path">Dynamancy - Arcane Reactor Path</option>
+              <option value="Fascinomancy - Silver Tongue Path">Fascinomancy - Silver Tongue Path</option>
+              <option value="Fascinomancy - Glamour Path">Fascinomancy - Glamour Path</option>
+              <option value="Hagiomancy - Saint's Path">Hagiomancy - Saint's Path</option>
+              <option value="Hagiomancy - Judgement Path">Hagiomancy - Judgement Path</option>
+              <option value="Nyxomancy - Voidlord Path">Nyxomancy - Voidlord Path</option>
+              <option value="Nyxomancy - Whispered Path">Nyxomancy - Whispered Path</option>
+              <option value="Xiphoturgy - Duelist Path">Xiphoturgy - Duelist Path</option>
+              <option value="Xiphoturgy - Warrior's Path">Xiphoturgy - Warrior's Path</option>
+              <option value="Klepoturgy - Shadow Thief Path">Klepoturgy - Shadow Thief Path</option>
+              <option value="Klepoturgy - Con Artist Path">Klepoturgy - Con Artist Path</option>
+              <option value="Technoturgy - Gadgeteer Path">Technoturgy - Gadgeteer Path</option>
+              <option value="Technoturgy - Machinist Path">Technoturgy - Machinist Path</option>
+              <option value="Pugiloturgy - Crusher Path">Pugiloturgy - Crusher Path</option>
+              <option value="Pugiloturgy - Brawler Path">Pugiloturgy - Brawler Path</option>
+              <option value="Hastoturgy - Vanguard Path">Hastoturgy - Vanguard Path</option>
+              <option value="Hastoturgy - Whirlwind Path">Hastoturgy - Whirlwind Path</option>
+              <option value="Druidomancy - Verdant Path">Druidomancy - Verdant Path</option>
+              <option value="Druidomancy - Circle Path">Druidomancy - Circle Path</option>
+              <option value="Ballistoturgy - Gunslinger Path">Ballistoturgy - Gunslinger Path</option>
+              <option value="Ballistoturgy - Artillery Path">Ballistoturgy - Artillery Path</option></select></div>
+        <div class="form-group"><label>Path 2</label><select id="f-path2"><option value="">— Select Path —</option>
+              <option value="Elementomancy - Primordial Path">Elementomancy - Primordial Path</option>
+              <option value="Elementomancy - Hybrid Path">Elementomancy - Hybrid Path</option>
+              <option value="Aegimancy - Guardian Path">Aegimancy - Guardian Path</option>
+              <option value="Aegimancy - Tactician Path">Aegimancy - Tactician Path</option>
+              <option value="Dynamancy - Overcharger Path">Dynamancy - Overcharger Path</option>
+              <option value="Dynamancy - Arcane Reactor Path">Dynamancy - Arcane Reactor Path</option>
+              <option value="Fascinomancy - Silver Tongue Path">Fascinomancy - Silver Tongue Path</option>
+              <option value="Fascinomancy - Glamour Path">Fascinomancy - Glamour Path</option>
+              <option value="Hagiomancy - Saint's Path">Hagiomancy - Saint's Path</option>
+              <option value="Hagiomancy - Judgement Path">Hagiomancy - Judgement Path</option>
+              <option value="Nyxomancy - Voidlord Path">Nyxomancy - Voidlord Path</option>
+              <option value="Nyxomancy - Whispered Path">Nyxomancy - Whispered Path</option>
+              <option value="Xiphoturgy - Duelist Path">Xiphoturgy - Duelist Path</option>
+              <option value="Xiphoturgy - Warrior's Path">Xiphoturgy - Warrior's Path</option>
+              <option value="Klepoturgy - Shadow Thief Path">Klepoturgy - Shadow Thief Path</option>
+              <option value="Klepoturgy - Con Artist Path">Klepoturgy - Con Artist Path</option>
+              <option value="Technoturgy - Gadgeteer Path">Technoturgy - Gadgeteer Path</option>
+              <option value="Technoturgy - Machinist Path">Technoturgy - Machinist Path</option>
+              <option value="Pugiloturgy - Crusher Path">Pugiloturgy - Crusher Path</option>
+              <option value="Pugiloturgy - Brawler Path">Pugiloturgy - Brawler Path</option>
+              <option value="Hastoturgy - Vanguard Path">Hastoturgy - Vanguard Path</option>
+              <option value="Hastoturgy - Whirlwind Path">Hastoturgy - Whirlwind Path</option>
+              <option value="Druidomancy - Verdant Path">Druidomancy - Verdant Path</option>
+              <option value="Druidomancy - Circle Path">Druidomancy - Circle Path</option>
+              <option value="Ballistoturgy - Gunslinger Path">Ballistoturgy - Gunslinger Path</option>
+              <option value="Ballistoturgy - Artillery Path">Ballistoturgy - Artillery Path</option></select></div>
+        <div class="form-group full"><label>Constellation Name</label><select id="f-conname"><option value="">— Select Constellation —</option>
+              <option value="War - Bastion">War - Bastion</option>
+              <option value="War - Knight">War - Knight</option>
+              <option value="War - Vanguard">War - Vanguard</option>
+              <option value="War - Guide">War - Guide</option>
+              <option value="War - Assassin">War - Assassin</option>
+              <option value="War - Brute">War - Brute</option>
+              <option value="War - Feral">War - Feral</option>
+              <option value="War - Shaman">War - Shaman</option>
+              <option value="War - Thaumaturge">War - Thaumaturge</option>
+              <option value="War - Kiluna">War - Kiluna</option>
+              <option value="Magic - Arcanist">Magic - Arcanist</option>
+              <option value="Magic - Ritualist">Magic - Ritualist</option>
+              <option value="Magic - Weaver">Magic - Weaver</option>
+              <option value="Magic - Holy Warrior">Magic - Holy Warrior</option>
+              <option value="Magic - Hierophant">Magic - Hierophant</option></select></div>
+      </div></div>
+      <div class="form-section"><div class="form-section-title">Skill Stars</div>
         <div class="skills-builder" id="skillsBuilder"></div>
         <button class="add-skill-btn" onclick="addSkillRow()">+ Add Skill</button>
       </div>
-
-      <!-- Portrait -->
-      <div class="form-section">
-        <div class="form-section-title">Portrait</div>
-        <div class="form-group">
-          <label>Upload Image (PNG / JPG)</label>
-          <input type="file" id="f-portrait" accept="image/png,image/jpeg,image/webp">
-        </div>
+      <div class="form-section"><div class="form-section-title">Portrait</div>
+        <div class="form-group"><label>Upload Image</label><input type="file" id="f-portrait" accept="image/png,image/jpeg,image/webp"></div>
       </div>
-
       <div class="form-actions">
         <button class="btn-cancel" onclick="closeModal()">Cancel</button>
         <button class="btn-submit" id="submitBtn" onclick="submitCharacter()">Register Adventurer</button>
@@ -1227,7 +277,106 @@
   </div>
 </div>
 
-
+<!-- EDIT MODAL -->
+<div class="modal-backdrop" id="editModalBackdrop" onclick="handleEditBackdropClick(event)">
+  <div class="modal">
+    <div class="modal-header"><span class="modal-title">Edit Character</span><button class="modal-close" onclick="closeEditModal()">✕</button></div>
+    <div class="modal-body">
+      <input type="hidden" id="ef-id">
+      <div class="form-section"><div class="form-section-title">Identity</div><div class="form-grid">
+        <div class="form-group full"><label>Character Name</label><input type="text" id="ef-name"></div>
+        <div class="form-group full"><label>Backstory</label><textarea id="ef-backstory" rows="3"></textarea></div>
+        <div class="form-group"><label>Race</label><input type="text" id="ef-race"></div>
+        <div class="form-group"><label>Level</label><input type="number" id="ef-level" min="1"></div>
+        <div class="form-group"><label>Constellation Level</label><input type="number" id="ef-conlevel" min="1"></div>
+        <div class="form-group"><label>XP</label><input type="number" id="ef-xp" min="0"></div>
+      </div></div>
+      <div class="form-section"><div class="form-section-title">Paths &amp; Constellation</div><div class="form-grid">
+        <div class="form-group"><label>Path 1</label><select id="ef-path1"><option value="">— Select Path —</option>
+              <option value="Elementomancy - Primordial Path">Elementomancy - Primordial Path</option>
+              <option value="Elementomancy - Hybrid Path">Elementomancy - Hybrid Path</option>
+              <option value="Aegimancy - Guardian Path">Aegimancy - Guardian Path</option>
+              <option value="Aegimancy - Tactician Path">Aegimancy - Tactician Path</option>
+              <option value="Dynamancy - Overcharger Path">Dynamancy - Overcharger Path</option>
+              <option value="Dynamancy - Arcane Reactor Path">Dynamancy - Arcane Reactor Path</option>
+              <option value="Fascinomancy - Silver Tongue Path">Fascinomancy - Silver Tongue Path</option>
+              <option value="Fascinomancy - Glamour Path">Fascinomancy - Glamour Path</option>
+              <option value="Hagiomancy - Saint's Path">Hagiomancy - Saint's Path</option>
+              <option value="Hagiomancy - Judgement Path">Hagiomancy - Judgement Path</option>
+              <option value="Nyxomancy - Voidlord Path">Nyxomancy - Voidlord Path</option>
+              <option value="Nyxomancy - Whispered Path">Nyxomancy - Whispered Path</option>
+              <option value="Xiphoturgy - Duelist Path">Xiphoturgy - Duelist Path</option>
+              <option value="Xiphoturgy - Warrior's Path">Xiphoturgy - Warrior's Path</option>
+              <option value="Klepoturgy - Shadow Thief Path">Klepoturgy - Shadow Thief Path</option>
+              <option value="Klepoturgy - Con Artist Path">Klepoturgy - Con Artist Path</option>
+              <option value="Technoturgy - Gadgeteer Path">Technoturgy - Gadgeteer Path</option>
+              <option value="Technoturgy - Machinist Path">Technoturgy - Machinist Path</option>
+              <option value="Pugiloturgy - Crusher Path">Pugiloturgy - Crusher Path</option>
+              <option value="Pugiloturgy - Brawler Path">Pugiloturgy - Brawler Path</option>
+              <option value="Hastoturgy - Vanguard Path">Hastoturgy - Vanguard Path</option>
+              <option value="Hastoturgy - Whirlwind Path">Hastoturgy - Whirlwind Path</option>
+              <option value="Druidomancy - Verdant Path">Druidomancy - Verdant Path</option>
+              <option value="Druidomancy - Circle Path">Druidomancy - Circle Path</option>
+              <option value="Ballistoturgy - Gunslinger Path">Ballistoturgy - Gunslinger Path</option>
+              <option value="Ballistoturgy - Artillery Path">Ballistoturgy - Artillery Path</option></select></div>
+        <div class="form-group"><label>Path 2</label><select id="ef-path2"><option value="">— Select Path —</option>
+              <option value="Elementomancy - Primordial Path">Elementomancy - Primordial Path</option>
+              <option value="Elementomancy - Hybrid Path">Elementomancy - Hybrid Path</option>
+              <option value="Aegimancy - Guardian Path">Aegimancy - Guardian Path</option>
+              <option value="Aegimancy - Tactician Path">Aegimancy - Tactician Path</option>
+              <option value="Dynamancy - Overcharger Path">Dynamancy - Overcharger Path</option>
+              <option value="Dynamancy - Arcane Reactor Path">Dynamancy - Arcane Reactor Path</option>
+              <option value="Fascinomancy - Silver Tongue Path">Fascinomancy - Silver Tongue Path</option>
+              <option value="Fascinomancy - Glamour Path">Fascinomancy - Glamour Path</option>
+              <option value="Hagiomancy - Saint's Path">Hagiomancy - Saint's Path</option>
+              <option value="Hagiomancy - Judgement Path">Hagiomancy - Judgement Path</option>
+              <option value="Nyxomancy - Voidlord Path">Nyxomancy - Voidlord Path</option>
+              <option value="Nyxomancy - Whispered Path">Nyxomancy - Whispered Path</option>
+              <option value="Xiphoturgy - Duelist Path">Xiphoturgy - Duelist Path</option>
+              <option value="Xiphoturgy - Warrior's Path">Xiphoturgy - Warrior's Path</option>
+              <option value="Klepoturgy - Shadow Thief Path">Klepoturgy - Shadow Thief Path</option>
+              <option value="Klepoturgy - Con Artist Path">Klepoturgy - Con Artist Path</option>
+              <option value="Technoturgy - Gadgeteer Path">Technoturgy - Gadgeteer Path</option>
+              <option value="Technoturgy - Machinist Path">Technoturgy - Machinist Path</option>
+              <option value="Pugiloturgy - Crusher Path">Pugiloturgy - Crusher Path</option>
+              <option value="Pugiloturgy - Brawler Path">Pugiloturgy - Brawler Path</option>
+              <option value="Hastoturgy - Vanguard Path">Hastoturgy - Vanguard Path</option>
+              <option value="Hastoturgy - Whirlwind Path">Hastoturgy - Whirlwind Path</option>
+              <option value="Druidomancy - Verdant Path">Druidomancy - Verdant Path</option>
+              <option value="Druidomancy - Circle Path">Druidomancy - Circle Path</option>
+              <option value="Ballistoturgy - Gunslinger Path">Ballistoturgy - Gunslinger Path</option>
+              <option value="Ballistoturgy - Artillery Path">Ballistoturgy - Artillery Path</option></select></div>
+        <div class="form-group full"><label>Constellation Name</label><select id="ef-conname"><option value="">— Select Constellation —</option>
+              <option value="War - Bastion">War - Bastion</option>
+              <option value="War - Knight">War - Knight</option>
+              <option value="War - Vanguard">War - Vanguard</option>
+              <option value="War - Guide">War - Guide</option>
+              <option value="War - Assassin">War - Assassin</option>
+              <option value="War - Brute">War - Brute</option>
+              <option value="War - Feral">War - Feral</option>
+              <option value="War - Shaman">War - Shaman</option>
+              <option value="War - Thaumaturge">War - Thaumaturge</option>
+              <option value="War - Kiluna">War - Kiluna</option>
+              <option value="Magic - Arcanist">Magic - Arcanist</option>
+              <option value="Magic - Ritualist">Magic - Ritualist</option>
+              <option value="Magic - Weaver">Magic - Weaver</option>
+              <option value="Magic - Holy Warrior">Magic - Holy Warrior</option>
+              <option value="Magic - Hierophant">Magic - Hierophant</option></select></div>
+      </div></div>
+      <div class="form-section"><div class="form-section-title">Skill Stars</div>
+        <div class="skills-builder" id="editSkillsBuilder"></div>
+        <button class="add-skill-btn" onclick="addEditSkillRow()">+ Add Skill</button>
+      </div>
+      <div class="form-section"><div class="form-section-title">Portrait</div>
+        <div class="form-group"><label>Replace Portrait (optional)</label><input type="file" id="ef-portrait" accept="image/png,image/jpeg,image/webp"></div>
+      </div>
+      <div class="form-actions">
+        <button class="btn-cancel" onclick="closeEditModal()">Cancel</button>
+        <button class="btn-submit" id="editSubmitBtn" onclick="submitEdit()">Save Changes</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- MAP MODAL -->
 <div class="map-backdrop" id="mapBackdrop" onclick="handleMapBackdropClick(event)">
@@ -1252,443 +401,139 @@
         <div id="detail-skills-wrap"></div>
       </div>
     </div>
-    <!-- Path Skills -->
     <div style="margin-bottom:2rem;">
       <div class="detail-section-title"><span>⚡ Path Skills</span></div>
       <div id="detail-path-skills"></div>
     </div>
-    <!-- Constellation Skills -->
     <div style="margin-bottom:2rem;">
       <div class="detail-section-title"><span>✦ Constellation Skills</span></div>
       <div id="detail-constellation-skills"></div>
     </div>
-    <!-- Inventory -->
     <div>
-      <div class="detail-section-title">
-        <span>✦ Inventory</span>
-      </div>
+      <div class="detail-section-title"><span>✦ Inventory</span></div>
       <div class="inventory-list" id="inventoryList"></div>
       <div class="inventory-add-form">
         <input type="text" id="inv-name" placeholder="Item name…">
-        <input type="text" id="inv-desc" placeholder="Description…">
-        <button class="inventory-add-btn" onclick="addInventoryItem()">+ Add Item</button>
+        <input type="text" id="inv-desc" placeholder="Description (optional)…">
+        <button class="inventory-add-btn" onclick="addInventoryItem()">+ Add</button>
       </div>
     </div>
   </div>
 </div>
 
-<div class="modal-backdrop" id="editModalBackdrop" onclick="handleEditBackdropClick(event)">
-  <div class="modal">
-    <div class="modal-header">
-      <span class="modal-title">Edit Character</span>
-      <button class="modal-close" onclick="closeEditModal()">✕</button>
-    </div>
-    <div class="modal-body">
-      <input type="hidden" id="ef-id">
-      <div class="form-section">
-        <div class="form-section-title">Identity</div>
-        <div class="form-grid">
-          <div class="form-group full">
-            <label>Character Name</label>
-            <input type="text" id="ef-name" placeholder="e.g. Varek Ashborn">
-          </div>
-          <div class="form-group full">
-            <label>Backstory</label>
-            <textarea id="ef-backstory" placeholder="Who are they? Where do they come from?" rows="3" style="background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:0.5rem 0.7rem;font-family:'Crimson Pro',serif;font-size:0.95rem;width:100%;outline:none;resize:vertical;transition:border-color 0.15s;"></textarea>
-          </div>
-          <div class="form-group">
-            <label>Race</label>
-            <input type="text" id="ef-race" placeholder="e.g. Half-Elf">
-          </div>
-          <div class="form-group">
-            <label>Level</label>
-            <input type="number" id="ef-level" placeholder="1" min="1">
-          </div>
-          <div class="form-group">
-            <label>Constellation Level</label>
-            <input type="number" id="ef-conlevel" placeholder="1" min="1">
-          </div>
-          <div class="form-group">
-            <label>XP</label>
-            <input type="number" id="ef-xp" placeholder="0" min="0">
-          </div>
-        </div>
-      </div>
-      <div class="form-section">
-        <div class="form-section-title">Skill Paths</div>
-        <div class="form-grid">
-          <div class="form-group">
-            <label>Path 1</label>
-            <select id="ef-path1" style="background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:0.5rem 0.7rem;font-family:'Crimson Pro',serif;font-size:0.95rem;width:100%;outline:none;">
-              <option value="">— Select Path —</option>
-            <option value="Elementomancy - Primordial Path">Elementomancy - Primordial Path</option>
-            <option value="Elementomancy - Hybrid Path">Elementomancy - Hybrid Path</option>
-            <option value="Aegimancy - Guardian Path">Aegimancy - Guardian Path</option>
-            <option value="Aegimancy - Tactician Path">Aegimancy - Tactician Path</option>
-            <option value="Dynamancy - Overcharger Path">Dynamancy - Overcharger Path</option>
-            <option value="Dynamancy - Arcane Reactor Path">Dynamancy - Arcane Reactor Path</option>
-            <option value="Fascinomancy - Silver Tongue Path">Fascinomancy - Silver Tongue Path</option>
-            <option value="Fascinomancy - Glamour Path">Fascinomancy - Glamour Path</option>
-            <option value="Hagiomancy - Saint's Path">Hagiomancy - Saint's Path</option>
-            <option value="Hagiomancy - Judgement Path">Hagiomancy - Judgement Path</option>
-            <option value="Nyxomancy - Voidlord Path">Nyxomancy - Voidlord Path</option>
-            <option value="Nyxomancy - Whispered Path">Nyxomancy - Whispered Path</option>
-            <option value="Xiphoturgy - Duelist Path">Xiphoturgy - Duelist Path</option>
-            <option value="Xiphoturgy - Warrior's Path">Xiphoturgy - Warrior's Path</option>
-            <option value="Klepoturgy - Shadow Thief Path">Klepoturgy - Shadow Thief Path</option>
-            <option value="Klepoturgy - Con Artist Path">Klepoturgy - Con Artist Path</option>
-            <option value="Technoturgy - Gadgeteer Path">Technoturgy - Gadgeteer Path</option>
-            <option value="Technoturgy - Machinist Path">Technoturgy - Machinist Path</option>
-            <option value="Pugiloturgy - Crusher Path">Pugiloturgy - Crusher Path</option>
-            <option value="Pugiloturgy - Brawler Path">Pugiloturgy - Brawler Path</option>
-            <option value="Hastoturgy - Vanguard Path">Hastoturgy - Vanguard Path</option>
-            <option value="Hastoturgy - Whirlwind Path">Hastoturgy - Whirlwind Path</option>
-            <option value="Druidomancy - Verdant Path">Druidomancy - Verdant Path</option>
-            <option value="Druidomancy - Circle Path">Druidomancy - Circle Path</option>
-            <option value="Ballistoturgy - Gunslinger Path">Ballistoturgy - Gunslinger Path</option>
-            <option value="Ballistoturgy - Artillery Path">Ballistoturgy - Artillery Path</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Path 2</label>
-            <select id="ef-path2" style="background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:0.5rem 0.7rem;font-family:'Crimson Pro',serif;font-size:0.95rem;width:100%;outline:none;">
-              <option value="">— Select Path —</option>
-            <option value="Elementomancy - Primordial Path">Elementomancy - Primordial Path</option>
-            <option value="Elementomancy - Hybrid Path">Elementomancy - Hybrid Path</option>
-            <option value="Aegimancy - Guardian Path">Aegimancy - Guardian Path</option>
-            <option value="Aegimancy - Tactician Path">Aegimancy - Tactician Path</option>
-            <option value="Dynamancy - Overcharger Path">Dynamancy - Overcharger Path</option>
-            <option value="Dynamancy - Arcane Reactor Path">Dynamancy - Arcane Reactor Path</option>
-            <option value="Fascinomancy - Silver Tongue Path">Fascinomancy - Silver Tongue Path</option>
-            <option value="Fascinomancy - Glamour Path">Fascinomancy - Glamour Path</option>
-            <option value="Hagiomancy - Saint's Path">Hagiomancy - Saint's Path</option>
-            <option value="Hagiomancy - Judgement Path">Hagiomancy - Judgement Path</option>
-            <option value="Nyxomancy - Voidlord Path">Nyxomancy - Voidlord Path</option>
-            <option value="Nyxomancy - Whispered Path">Nyxomancy - Whispered Path</option>
-            <option value="Xiphoturgy - Duelist Path">Xiphoturgy - Duelist Path</option>
-            <option value="Xiphoturgy - Warrior's Path">Xiphoturgy - Warrior's Path</option>
-            <option value="Klepoturgy - Shadow Thief Path">Klepoturgy - Shadow Thief Path</option>
-            <option value="Klepoturgy - Con Artist Path">Klepoturgy - Con Artist Path</option>
-            <option value="Technoturgy - Gadgeteer Path">Technoturgy - Gadgeteer Path</option>
-            <option value="Technoturgy - Machinist Path">Technoturgy - Machinist Path</option>
-            <option value="Pugiloturgy - Crusher Path">Pugiloturgy - Crusher Path</option>
-            <option value="Pugiloturgy - Brawler Path">Pugiloturgy - Brawler Path</option>
-            <option value="Hastoturgy - Vanguard Path">Hastoturgy - Vanguard Path</option>
-            <option value="Hastoturgy - Whirlwind Path">Hastoturgy - Whirlwind Path</option>
-            <option value="Druidomancy - Verdant Path">Druidomancy - Verdant Path</option>
-            <option value="Druidomancy - Circle Path">Druidomancy - Circle Path</option>
-            <option value="Ballistoturgy - Gunslinger Path">Ballistoturgy - Gunslinger Path</option>
-            <option value="Ballistoturgy - Artillery Path">Ballistoturgy - Artillery Path</option>
-            </select>
-          </div>
-          <div class="form-group full">
-            <label>Constellation Name</label>
-            <select id="ef-conname" style="background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:0.5rem 0.7rem;font-family:'Crimson Pro',serif;font-size:0.95rem;width:100%;outline:none;">
-              <option value="">— Select Constellation —</option>
-            <option value="War - Bastion">War - Bastion</option>
-            <option value="War - Knight">War - Knight</option>
-            <option value="War - Vanguard">War - Vanguard</option>
-            <option value="War - Guide">War - Guide</option>
-            <option value="War - Assassin">War - Assassin</option>
-            <option value="War - Brute">War - Brute</option>
-            <option value="War - Feral">War - Feral</option>
-            <option value="War - Shaman">War - Shaman</option>
-            <option value="War - Thaumaturge">War - Thaumaturge</option>
-            <option value="War - Kiluna">War - Kiluna</option>
-            <option value="Magic - Arcanist">Magic - Arcanist</option>
-            <option value="Magic - Ritualist">Magic - Ritualist</option>
-            <option value="Magic - Weaver">Magic - Weaver</option>
-            <option value="Magic - Holy Warrior">Magic - Holy Warrior</option>
-            <option value="Magic - Hierophant">Magic - Hierophant</option>
-            </select>
-          </div>
-        </div>
-      </div>
-      <div class="form-section">
-        <div class="form-section-title">Skill Stars</div>
-        <div class="skills-builder" id="editSkillsBuilder"></div>
-        <button class="add-skill-btn" onclick="addEditSkillRow()">+ Add Skill</button>
-      </div>
-      <div class="form-section">
-        <div class="form-section-title">Portrait</div>
-        <div class="form-group">
-          <label>Replace Image (PNG / JPG)</label>
-          <input type="file" id="ef-portrait" accept="image/png,image/jpeg,image/webp">
-        </div>
-      </div>
-      <div class="form-actions">
-        <button class="btn-cancel" onclick="closeEditModal()">Cancel</button>
-        <button class="btn-submit" id="editSubmitBtn" onclick="submitEdit()">Save Changes</button>
-      </div>
-    </div>
-  </div>
-</div>
 <div class="toast" id="toast"></div>
 
 <script>
-  // ── CONFIG ──────────────────────────────────────────────
-  // IMPORTANT: Replace SUPABASE_ANON_KEY with your actual key.
-  // Do NOT commit this file to a public GitHub repo with the real key.
-  // Consider using Netlify environment variables for production.
-  const SUPABASE_URL = 'https://aakfivejocyemgsfxkvw.supabase.co';
-  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFha2ZpdmVqb2N5ZW1nc2Z4a3Z3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzOTU4MDQsImV4cCI6MjA4ODk3MTgwNH0.pbGpbDWYQHUZwQL90k8lszZVCEn0e8EjCxV5m9ppAqw';
+  const SUPABASE_URL =  + SB_URL + ;
+  const SUPABASE_KEY =  + SB_KEY + ;
 
-  // ── SUPABASE HELPERS ─────────────────────────────────────
   async function sbFetch(path, opts = {}) {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1${path}`, {
-      headers: {
-        'apikey': SUPABASE_KEY,
-        'Authorization': `Bearer ${SUPABASE_KEY}`,
-        'Content-Type': 'application/json',
-        'Prefer': 'return=representation',
-        ...opts.headers
-      },
-      ...opts
-    });
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      throw new Error(err.message || res.statusText);
-    }
-    return res.status === 204 ? null : res.json();
+    const headers = {
+      'apikey': SUPABASE_KEY,
+      'Authorization': 'Bearer ' + SUPABASE_KEY,
+      'Content-Type': 'application/json',
+    };
+    if (opts.method === 'POST' || opts.method === 'PATCH') headers['Prefer'] = 'return=representation';
+    const res = await fetch(SUPABASE_URL + '/rest/v1' + path, { headers, ...opts });
+    if (!res.ok) { const e = await res.text(); throw new Error(e); }
+    const txt = await res.text();
+    return txt ? JSON.parse(txt) : [];
   }
 
   async function uploadPortrait(file, charId) {
     const ext = file.name.split('.').pop();
-    const path = `${charId}.${ext}`;
-    const res = await fetch(`${SUPABASE_URL}/storage/v1/object/portraits/${path}`, {
+    const path = 'char-' + charId + '-' + Date.now() + '.' + ext;
+    const res = await fetch(SUPABASE_URL + '/storage/v1/object/portraits/' + path, {
       method: 'POST',
-      headers: {
-        'apikey': SUPABASE_KEY,
-        'Authorization': `Bearer ${SUPABASE_KEY}`,
-        'Content-Type': file.type,
-        'Cache-Control': '3600',
-        'x-upsert': 'true'
-      },
+      headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': file.type },
       body: file
     });
     if (!res.ok) throw new Error('Portrait upload failed');
-    return `${SUPABASE_URL}/storage/v1/object/public/portraits/${path}`;
+    return SUPABASE_URL + '/storage/v1/object/public/portraits/' + path;
   }
 
-  // ── SKILLS INPUT ─────────────────────────────────────────
+  // ── SKILL INPUT ROWS ──
   let skillRows = [];
-
-  function addSkillRow(name = '', stars = 1) {
-    const id = Date.now() + Math.random();
-    skillRows.push({ id, name, stars });
-    renderSkillRows();
-  }
-
-  function removeSkillRow(id) {
-    skillRows = skillRows.filter(s => s.id !== id);
-    renderSkillRows();
-  }
-
-  function setStars(id, n) {
-    skillRows = skillRows.map(s => s.id === id ? { ...s, stars: n } : s);
-    renderSkillRows();
-  }
-
+  function addSkillRow(name='', stars=1) { skillRows.push({id: Date.now()+Math.random(), name, stars}); renderSkillRows(); }
+  function removeSkillRow(id) { skillRows = skillRows.filter(s => s.id !== id); renderSkillRows(); }
+  function setStars(id, n) { skillRows = skillRows.map(s => s.id===id ? {...s, stars:n} : s); renderSkillRows(); }
   function renderSkillRows() {
-    const builder = document.getElementById('skillsBuilder');
-    builder.innerHTML = '';
+    const b = document.getElementById('skillsBuilder'); b.innerHTML = '';
     skillRows.forEach(skill => {
-      const row = document.createElement('div');
-      row.className = 'skill-input-row';
-
-      const inp = document.createElement('input');
-      inp.type = 'text';
-      inp.placeholder = 'Skill name…';
-      inp.value = skill.name;
-      inp.style.height = '32px';
-      inp.oninput = e => { skill.name = e.target.value; };
-
-      const starsDiv = document.createElement('div');
-      starsDiv.className = 'stars-input';
-      for (let i = 1; i <= 5; i++) {
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = 'star-btn' + (i <= skill.stars ? ' active' : '');
-        btn.textContent = '★';
-        btn.onclick = () => setStars(skill.id, i);
-        starsDiv.appendChild(btn);
-      }
-
-      const del = document.createElement('button');
-      del.className = 'remove-skill';
-      del.textContent = '✕';
-      del.onclick = () => removeSkillRow(skill.id);
-
-      row.appendChild(inp);
-      row.appendChild(starsDiv);
-      row.appendChild(del);
-      builder.appendChild(row);
+      const row = document.createElement('div'); row.className='skill-input-row';
+      const inp = document.createElement('input'); inp.type='text'; inp.placeholder='Skill name…'; inp.value=skill.name; inp.style.height='32px'; inp.oninput = e => { skill.name=e.target.value; };
+      const sd = document.createElement('div'); sd.className='stars-input';
+      for (let i=1;i<=5;i++) { const btn=document.createElement('button'); btn.type='button'; btn.className='star-btn'+(i<=skill.stars?' active':''); btn.textContent='★'; btn.onclick=()=>setStars(skill.id,i); sd.appendChild(btn); }
+      const del=document.createElement('button'); del.className='remove-skill'; del.textContent='✕'; del.onclick=()=>removeSkillRow(skill.id);
+      row.appendChild(inp); row.appendChild(sd); row.appendChild(del); b.appendChild(row);
     });
   }
 
-  // ── MODAL ───────────────────────────────────────────────
-  function openModal() {
-    skillRows = [];
-    renderSkillRows();
-    document.getElementById('modalBackdrop').classList.add('open');
-    document.getElementById('f-name').focus();
-  }
-
+  // ── MODAL ──
+  function openModal() { skillRows=[]; renderSkillRows(); document.getElementById('modalBackdrop').classList.add('open'); document.getElementById('f-name').focus(); }
   function closeModal() {
     document.getElementById('modalBackdrop').classList.remove('open');
-    ['f-name','f-race','f-level','f-conlevel','f-xp'].forEach(id => {
-      document.getElementById(id).value = '';
-    });
-    document.getElementById('f-portrait').value = '';
-    document.getElementById('f-backstory').value = '';
-    skillRows = [];
-    renderSkillRows();
+    ['f-name','f-race','f-level','f-conlevel','f-xp'].forEach(id => document.getElementById(id).value='');
+    ['f-backstory','f-portrait'].forEach(id => document.getElementById(id).value='');
+    ['f-path1','f-path2','f-conname'].forEach(id => document.getElementById(id).value='');
+    skillRows=[]; renderSkillRows();
   }
+  function handleBackdropClick(e) { if(e.target===document.getElementById('modalBackdrop')) closeModal(); }
 
-  function handleBackdropClick(e) {
-    if (e.target === document.getElementById('modalBackdrop')) closeModal();
+  function showToast(msg, isError=false) {
+    const t=document.getElementById('toast'); t.textContent=msg; t.className='toast show'+(isError?' error':'');
+    setTimeout(()=>t.className='toast', 3000);
   }
+  function setLoading(on) { document.getElementById('loadingBar').style.width = on ? '80%' : '0%'; }
 
-  // ── TOAST ────────────────────────────────────────────────
-  function showToast(msg, isError = false) {
-    const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.className = 'toast show' + (isError ? ' error' : '');
-    setTimeout(() => t.className = 'toast', 3000);
-  }
-
-  // ── SUBMIT CHARACTER ────────────────────────────────────
   async function submitCharacter() {
     const name = document.getElementById('f-name').value.trim();
     if (!name) { showToast('A name is required', true); return; }
-
-    const btn = document.getElementById('submitBtn');
-    btn.disabled = true;
-    btn.textContent = 'Registering…';
-    setLoading(true);
-
+    const btn=document.getElementById('submitBtn'); btn.disabled=true; btn.textContent='Registering…'; setLoading(true);
     try {
-      // 1. Insert character row
       const charData = {
-        name,
-        race: document.getElementById('f-race').value.trim() || null,
-        level: parseInt(document.getElementById('f-level').value) || 1,
-        xp: parseInt(document.getElementById('f-xp').value) || 0,
-        'Path 1': document.getElementById('f-path1').value.trim() || null,
-        'Path 2': document.getElementById('f-path2').value.trim() || null,
-        constellationame: document.getElementById('f-conname').value.trim() || null,
-        constellationlevel: parseInt(document.getElementById('f-conlevel').value) || null,
-        backstory: document.getElementById('f-backstory').value.trim() || null,
+        name, race: document.getElementById('f-race').value.trim()||null,
+        level: parseInt(document.getElementById('f-level').value)||1,
+        xp: parseInt(document.getElementById('f-xp').value)||0,
+        'Path 1': document.getElementById('f-path1').value||null,
+        'Path 2': document.getElementById('f-path2').value||null,
+        constellationame: document.getElementById('f-conname').value||null,
+        constellationlevel: parseInt(document.getElementById('f-conlevel').value)||null,
+        backstory: document.getElementById('f-backstory').value.trim()||null,
         portrait_url: null
       };
-
-      const [char] = await sbFetch('/EchoesDivideChar', {
-        method: 'POST',
-        body: JSON.stringify(charData)
-      });
-
-      // 2. Upload portrait if provided
-      const portraitFile = document.getElementById('f-portrait').files[0];
-      if (portraitFile) {
-        const url = await uploadPortrait(portraitFile, char.id);
-        await sbFetch(`/EchoesDivideChar?id=eq.${char.id}`, {
-          method: 'PATCH',
-          body: JSON.stringify({ portrait_url: url })
-        });
-        char.portrait_url = url;
-      }
-
-      // 3. Insert skills
-      const validSkills = skillRows.filter(s => s.name.trim());
-      if (validSkills.length > 0) {
-        const skillPayload = validSkills.map(s => ({
-          character_id: char.id,
-          skill_name: s.name.trim(),
-          stars: s.stars
-        }));
-        await sbFetch('/skills', {
-          method: 'POST',
-          body: JSON.stringify(skillPayload)
-        });
-        char.skills = validSkills;
-      } else {
-        char.skills = [];
-      }
-
-      closeModal();
-      addCardToGrid(char);
-      showToast(`${char.name} has been registered with the Guild.`);
-    } catch (err) {
-      showToast('Error: ' + err.message, true);
-      console.error(err);
-    } finally {
-      btn.disabled = false;
-      btn.textContent = 'Register Adventurer';
-      setLoading(false);
-    }
-  }
-
-  // ── RENDER CARD ──────────────────────────────────────────
-  function renderStars(n) {
-    let s = '';
-    for (let i = 1; i <= 5; i++) {
-      s += `<span class="${i <= n ? '' : 'empty-star'}">★</span>`;
-    }
-    return `<span class="stars">${s}</span>`;
+      const [char] = await sbFetch('/EchoesDivideChar', {method:'POST', body:JSON.stringify(charData)});
+      const pf = document.getElementById('f-portrait').files[0];
+      if (pf) { const url=await uploadPortrait(pf, char.id); await sbFetch('/EchoesDivideChar?id=eq.'+char.id, {method:'PATCH', body:JSON.stringify({portrait_url:url})}); char.portrait_url=url; }
+      const vs = skillRows.filter(s=>s.name.trim());
+      if (vs.length) { await sbFetch('/skills', {method:'POST', body:JSON.stringify(vs.map(s=>({character_id:char.id, skill_name:s.name.trim(), stars:s.stars})))}); char.skills=vs; } else { char.skills=[]; }
+      closeModal(); addCardToGrid(char); showToast(char.name + ' has been registered with the Guild.');
+    } catch(err) { showToast('Error: '+err.message, true); console.error(err); }
+    finally { btn.disabled=false; btn.textContent='Register Adventurer'; setLoading(false); }
   }
 
   function addCardToGrid(char) {
-    const grid = document.getElementById('partyGrid');
-    const empty = grid.querySelector('.empty-state');
-    if (empty) empty.remove();
-
-    const card = document.createElement('div');
-    card.className = 'char-card';
-    card.style.animationDelay = '0.05s';
-
-    const paths = [char['Path 1'], char['Path 2']].filter(Boolean);
-    const skills = char.skills || [];
-
-    card.innerHTML = `
-      ${char.portrait_url
-        ? `<img class="card-portrait" src="${char.portrait_url}" alt="${char.name}">`
-        : `<div class="card-portrait-placeholder">⚔</div>`}
-      <div class="card-body">
-        <div class="card-name">${char.name}</div>
-        <div class="card-meta">${char.race || '—'} &nbsp;·&nbsp; Level ${char.level || 1}${char.constellationlevel ? ' &nbsp;·&nbsp; ✦ Constellation ' + char.constellationlevel : ''}</div>
-        <div class="card-stats">
-          <div class="stat-row">
-            <span class="stat-label">XP</span>
-            <span class="stat-value">${char.xp || 0}</span>
-          </div>
-        </div>
-        ${paths.length ? `
-          <div class="card-paths">
-            <div class="path-label">Skill Paths${char.constellationame ? ' &nbsp;·&nbsp; <span style=\'color:var(--gold-dim)\'>✦ ' + char.constellationame + '</span>' : ''}</div>
-            <div class="path-value">${paths.join(' · ')}</div>
-          </div>
-        ` : ''}
-        ${char.backstory ? `
-          <div class="card-skills">
-            <div class="skills-label">Backstory</div>
-            <div class="skill-name" style="font-style:italic;line-height:1.5;">${char.backstory.length > 120 ? char.backstory.slice(0, 120).trim() + '…' : char.backstory}</div>
-          </div>
-        ` : ''}
-      </div>
-      <div class="card-corner-br"></div>
-      <div style="position:absolute;bottom:0.7rem;right:0.7rem;display:flex;gap:0.4rem;">
-        <button class="card-edit-btn" style="position:static" onclick="openDetailPage(${char.id})">↗ View</button>
-        <button class="card-edit-btn" style="position:static" onclick="openEditModal(${char.id})">✎ Edit</button>
-      </div>
-    `;
-
+    const grid=document.getElementById('partyGrid');
+    const empty=grid.querySelector('.empty-state'); if(empty) empty.remove();
+    const card=document.createElement('div'); card.className='char-card'; card.style.animationDelay='0.05s';
+    const paths=[char['Path 1'],char['Path 2']].filter(Boolean);
+    card.innerHTML =
+      (char.portrait_url
+        ? '<div class="card-portrait-wrap"><img class="card-portrait" src="'+char.portrait_url+'" alt="'+char.name+'"></div>'
+        : '<div class="card-portrait-placeholder">✦</div>') +
+      '<div class="card-body">' +
+        '<div class="card-name">'+char.name+'</div>' +
+        '<div class="card-meta">'+(char.race||'—')+' &nbsp;·&nbsp; Level '+(char.level||1)+(char.constellationlevel?' &nbsp;·&nbsp; ✦ Constellation '+char.constellationlevel:'')+'</div>' +
+        (paths.length ? '<div class="card-paths"><div class="path-label">Skill Paths'+(char.constellationame?' &nbsp;·&nbsp; <span style="color:var(--gold-dim)">✦ '+char.constellationame+'</span>':'')+'</div><div class="path-value">'+paths.join(' · ')+'</div></div>' : '') +
+        (char.backstory ? '<div class="card-skills"><div class="skills-label">Backstory</div><div class="skill-name" style="font-style:italic;line-height:1.5;">'+(char.backstory.length>120?char.backstory.slice(0,120).trim()+'…':char.backstory)+'</div></div>' : '') +
+      '</div>' +
+      '<div class="card-corner-br"></div>' +
+      '<div style="position:absolute;bottom:0.7rem;right:0.7rem;display:flex;gap:0.4rem;">' +
+        '<button class="card-edit-btn" onclick="openDetailPage('+char.id+')">↗ View</button>' +
+        '<button class="card-edit-btn" onclick="openEditModal('+char.id+')">✎ Edit</button>' +
+      '</div>';
     card.dataset.id = char.id;
     grid.appendChild(card);
-  }
-
-  // ── LOAD EXISTING CHARACTERS ────────────────────────────
-  function setLoading(on) {
-    document.getElementById('loadingBar').style.width = on ? '80%' : '0%';
   }
 
   async function loadParty() {
@@ -1696,189 +541,213 @@
     try {
       const chars = await sbFetch('/EchoesDivideChar?select=*&order=created_at.asc');
       const skills = await sbFetch('/skills?select=*');
-
       if (!chars.length) return;
-
-      const skillsByChar = {};
-      skills.forEach(s => {
-        if (!skillsByChar[s.character_id]) skillsByChar[s.character_id] = [];
-        skillsByChar[s.character_id].push(s);
-      });
-
-      chars.forEach((c, i) => {
-        c.skills = skillsByChar[c.id] || [];
-        setTimeout(() => addCardToGrid(c), i * 80);
-      });
-    } catch (err) {
-      showToast('Could not load characters — check your API key.', true);
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
+      const byChar = {};
+      skills.forEach(s => { if(!byChar[s.character_id]) byChar[s.character_id]=[]; byChar[s.character_id].push(s); });
+      chars.forEach((c,i) => { c.skills=byChar[c.id]||[]; setTimeout(()=>addCardToGrid(c), i*80); });
+    } catch(err) { showToast('Could not load characters.', true); console.error(err); }
+    finally { setLoading(false); }
   }
 
-
-  // ── EDIT MODAL ───────────────────────────────────────────
-  let editSkillRows = [];
-  let editCharId = null;
-
-  function addEditSkillRow(name = '', stars = 1) {
-    const id = Date.now() + Math.random();
-    editSkillRows.push({ id, name, stars, isNew: true });
-    renderEditSkillRows();
-  }
-
-  function removeEditSkillRow(id) {
-    editSkillRows = editSkillRows.filter(s => s.id !== id);
-    renderEditSkillRows();
-  }
-
-  function setEditStars(id, n) {
-    editSkillRows = editSkillRows.map(s => s.id === id ? { ...s, stars: n } : s);
-    renderEditSkillRows();
-  }
-
+  // ── EDIT MODAL ──
+  let editSkillRows=[], editCharId=null;
+  function addEditSkillRow(name='', stars=1) { editSkillRows.push({id:Date.now()+Math.random(), name, stars}); renderEditSkillRows(); }
+  function removeEditSkillRow(id) { editSkillRows=editSkillRows.filter(s=>s.id!==id); renderEditSkillRows(); }
+  function setEditStars(id, n) { editSkillRows=editSkillRows.map(s=>s.id===id?{...s,stars:n}:s); renderEditSkillRows(); }
   function renderEditSkillRows() {
-    const builder = document.getElementById('editSkillsBuilder');
-    builder.innerHTML = '';
-    editSkillRows.forEach(skill => {
-      const row = document.createElement('div');
-      row.className = 'skill-input-row';
-      const inp = document.createElement('input');
-      inp.type = 'text';
-      inp.placeholder = 'Skill name…';
-      inp.value = skill.name;
-      inp.style.height = '32px';
-      inp.oninput = e => { skill.name = e.target.value; };
-      const starsDiv = document.createElement('div');
-      starsDiv.className = 'stars-input';
-      for (let i = 1; i <= 5; i++) {
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = 'star-btn' + (i <= skill.stars ? ' active' : '');
-        btn.textContent = '★';
-        btn.onclick = () => setEditStars(skill.id, i);
-        starsDiv.appendChild(btn);
-      }
-      const del = document.createElement('button');
-      del.className = 'remove-skill';
-      del.textContent = '✕';
-      del.onclick = () => removeEditSkillRow(skill.id);
-      row.appendChild(inp);
-      row.appendChild(starsDiv);
-      row.appendChild(del);
-      builder.appendChild(row);
+    const b=document.getElementById('editSkillsBuilder'); b.innerHTML='';
+    editSkillRows.forEach(skill=>{
+      const row=document.createElement('div'); row.className='skill-input-row';
+      const inp=document.createElement('input'); inp.type='text'; inp.placeholder='Skill name…'; inp.value=skill.name; inp.style.height='32px'; inp.oninput=e=>{skill.name=e.target.value;};
+      const sd=document.createElement('div'); sd.className='stars-input';
+      for(let i=1;i<=5;i++){const btn=document.createElement('button');btn.type='button';btn.className='star-btn'+(i<=skill.stars?' active':'');btn.textContent='★';btn.onclick=()=>setEditStars(skill.id,i);sd.appendChild(btn);}
+      const del=document.createElement('button');del.className='remove-skill';del.textContent='✕';del.onclick=()=>removeEditSkillRow(skill.id);
+      row.appendChild(inp);row.appendChild(sd);row.appendChild(del);b.appendChild(row);
     });
   }
 
   async function openEditModal(charId) {
-    editCharId = charId;
-    setLoading(true);
+    editCharId=charId; setLoading(true);
     try {
-      const [char] = await sbFetch(`/EchoesDivideChar?id=eq.${charId}`);
-      const skills = await sbFetch(`/skills?character_id=eq.${charId}`);
-
-      document.getElementById('ef-id').value = char.id;
-      document.getElementById('ef-name').value = char.name || '';
-      document.getElementById('ef-race').value = char.race || '';
-      document.getElementById('ef-level').value = char.level || '';
-      document.getElementById('ef-conlevel').value = char.constellationlevel || '';
-      document.getElementById('ef-xp').value = char.xp || '';
-      const p1sel = document.getElementById('ef-path1'); p1sel.value = char['Path 1'] || '';
-      const p2sel = document.getElementById('ef-path2'); p2sel.value = char['Path 2'] || '';
-      const cnsel = document.getElementById('ef-conname'); cnsel.value = char.constellationame || '';
-      document.getElementById('ef-backstory').value = char.backstory || '';
-
-      editSkillRows = skills.map(s => ({ id: s.id, dbId: s.id, name: s.skill_name, stars: s.stars, isNew: false }));
+      const [char]=await sbFetch('/EchoesDivideChar?id=eq.'+charId);
+      const skills=await sbFetch('/skills?character_id=eq.'+charId);
+      document.getElementById('ef-name').value=char.name||'';
+      document.getElementById('ef-race').value=char.race||'';
+      document.getElementById('ef-level').value=char.level||'';
+      document.getElementById('ef-conlevel').value=char.constellationlevel||'';
+      document.getElementById('ef-xp').value=char.xp||'';
+      document.getElementById('ef-path1').value=char['Path 1']||'';
+      document.getElementById('ef-path2').value=char['Path 2']||'';
+      document.getElementById('ef-conname').value=char.constellationame||'';
+      document.getElementById('ef-backstory').value=char.backstory||'';
+      editSkillRows=skills.map(s=>({id:s.id, name:s.skill_name, stars:s.stars}));
       renderEditSkillRows();
-
       document.getElementById('editModalBackdrop').classList.add('open');
-    } catch(err) {
-      showToast('Could not load character: ' + err.message, true);
-    } finally {
-      setLoading(false);
-    }
+    } catch(err){ showToast('Could not load: '+err.message, true); }
+    finally { setLoading(false); }
   }
 
-  function closeEditModal() {
-    document.getElementById('editModalBackdrop').classList.remove('open');
-    editSkillRows = [];
-    editCharId = null;
-  }
-
-  function handleEditBackdropClick(e) {
-    if (e.target === document.getElementById('editModalBackdrop')) closeEditModal();
-  }
+  function closeEditModal() { document.getElementById('editModalBackdrop').classList.remove('open'); editSkillRows=[]; editCharId=null; }
+  function handleEditBackdropClick(e) { if(e.target===document.getElementById('editModalBackdrop')) closeEditModal(); }
 
   async function submitEdit() {
-    const name = document.getElementById('ef-name').value.trim();
-    if (!name) { showToast('A name is required', true); return; }
-
-    const btn = document.getElementById('editSubmitBtn');
-    btn.disabled = true;
-    btn.textContent = 'Saving…';
-    setLoading(true);
-
+    const name=document.getElementById('ef-name').value.trim();
+    if(!name){showToast('A name is required',true);return;}
+    const btn=document.getElementById('editSubmitBtn');btn.disabled=true;btn.textContent='Saving…';setLoading(true);
     try {
-      const charData = {
-        name,
-        race: document.getElementById('ef-race').value.trim() || null,
-        level: parseInt(document.getElementById('ef-level').value) || 1,
-        constellationlevel: parseInt(document.getElementById('ef-conlevel').value) || null,
-        xp: parseInt(document.getElementById('ef-xp').value) || 0,
-        'Path 1': document.getElementById('ef-path1').value.trim() || null,
-        'Path 2': document.getElementById('ef-path2').value.trim() || null,
-        constellationame: document.getElementById('ef-conname').value.trim() || null,
-        backstory: document.getElementById('ef-backstory').value.trim() || null,
+      const charData={
+        name, race:document.getElementById('ef-race').value.trim()||null,
+        level:parseInt(document.getElementById('ef-level').value)||1,
+        constellationlevel:parseInt(document.getElementById('ef-conlevel').value)||null,
+        xp:parseInt(document.getElementById('ef-xp').value)||0,
+        'Path 1':document.getElementById('ef-path1').value||null,
+        'Path 2':document.getElementById('ef-path2').value||null,
+        constellationame:document.getElementById('ef-conname').value||null,
+        backstory:document.getElementById('ef-backstory').value.trim()||null,
       };
+      const pf=document.getElementById('ef-portrait').files[0];
+      if(pf){const url=await uploadPortrait(pf,editCharId);charData.portrait_url=url;}
+      await sbFetch('/EchoesDivideChar?id=eq.'+editCharId,{method:'PATCH',body:JSON.stringify(charData)});
+      await sbFetch('/skills?character_id=eq.'+editCharId,{method:'DELETE'});
+      const vs=editSkillRows.filter(s=>s.name.trim());
+      if(vs.length) await sbFetch('/skills',{method:'POST',body:JSON.stringify(vs.map(s=>({character_id:editCharId,skill_name:s.name.trim(),stars:s.stars})))});
+      const updated={...charData,id:editCharId,skills:vs};
+      const old=document.querySelector('.char-card[data-id="'+editCharId+'"]'); if(old) old.remove();
+      addCardToGrid(updated); closeEditModal(); showToast(name+' has been updated.');
+    } catch(err){showToast('Error: '+err.message,true);console.error(err);}
+    finally{btn.disabled=false;btn.textContent='Save Changes';setLoading(false);}
+  }
 
-      // Upload new portrait if provided
-      const portraitFile = document.getElementById('ef-portrait').files[0];
-      if (portraitFile) {
-        const url = await uploadPortrait(portraitFile, editCharId);
-        charData.portrait_url = url;
+  // ── MAP ──
+  function openMap() { document.getElementById('mapBackdrop').classList.add('open'); }
+  function closeMap() { document.getElementById('mapBackdrop').classList.remove('open'); }
+  function handleMapBackdropClick(e) { if(e.target===document.getElementById('mapBackdrop')) closeMap(); }
+
+  // ── DETAIL PAGE ──
+  let detailCharId=null;
+
+  async function openDetailPage(charId) {
+    detailCharId=charId; setLoading(true);
+    try {
+      const [char]=await sbFetch('/EchoesDivideChar?id=eq.'+charId);
+      const skills=await sbFetch('/skills?character_id=eq.'+charId);
+      document.getElementById('detail-portrait-col').innerHTML=char.portrait_url
+        ?'<div class="detail-portrait-wrap"><img class="detail-portrait" src="'+char.portrait_url+'" alt="'+char.name+'"></div>'
+        :'<div class="detail-portrait-placeholder">⚔</div>';
+      document.getElementById('detail-name').textContent=char.name;
+      document.getElementById('detail-meta').innerHTML=(char.race||'—')+' &nbsp;·&nbsp; Level '+(char.level||1)+(char.constellationlevel?' &nbsp;·&nbsp; ✦ Constellation '+char.constellationlevel:'');
+      document.getElementById('detail-backstory').innerHTML=char.backstory
+        ?'<div style="margin-top:0.5rem;padding:0.8rem 1rem;background:var(--bg3);border:1px solid var(--border);border-left:2px solid var(--gold-dim);font-style:italic;color:var(--text-dim);font-size:0.95rem;line-height:1.6;">'+char.backstory+'</div>':'';
+      document.getElementById('detail-stats').innerHTML=
+        '<div class="detail-stat"><div class="detail-stat-label">XP</div><div class="detail-stat-value">'+(char.xp||0)+'</div></div>'+
+        '<div class="detail-stat"><div class="detail-stat-label">Level</div><div class="detail-stat-value">'+(char.level||1)+'</div></div>'+
+        (char.constellationlevel?'<div class="detail-stat"><div class="detail-stat-label">Constellation Lv.</div><div class="detail-stat-value">'+char.constellationlevel+'</div></div>':'');
+      const paths=[char['Path 1'],char['Path 2']].filter(Boolean);
+      document.getElementById('detail-paths').innerHTML=paths.length
+        ?'<div class="detail-paths"><div class="detail-paths-label">Skill Paths'+(char.constellationame?' &nbsp;·&nbsp; ✦ '+char.constellationame:'')+'</div><div class="detail-paths-value">'+paths.join(' · ')+'</div></div>':'';
+      document.getElementById('detail-skills-wrap').innerHTML=skills.length
+        ?'<div><div class="detail-paths-label" style="margin-bottom:0.4rem;font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold-dim);">Skill Stars</div>'+skills.map(s=>'<div class="detail-skill-row"><span style="font-style:italic;color:var(--text-dim)">'+s.skill_name+'</span><span class="stars">'+'★'.repeat(s.stars)+'<span class="empty-star">'+'★'.repeat(5-s.stars)+'</span></span></div>').join('')+'</div>':'';
+      loadConstellationSkills(char);
+      await loadPathSkills(char);
+      await loadInventory(charId);
+      document.getElementById('detailPage').classList.add('open');
+      window.scrollTo(0,0);
+    } catch(err){ showToast('Could not load character: '+err.message, true); }
+    finally { setLoading(false); }
+  }
+
+  function getUnlockedSkills(path1, path2, level) {
+    const unlocked=[];
+    [path1,path2].forEach(pathEntry=>{
+      if(!pathEntry) return;
+      for(const [discipline,paths] of Object.entries(SKILL_TREE)){
+        for(const [subpath,skills] of Object.entries(paths)){
+          const fullPath=discipline+' - '+subpath;
+          if(pathEntry===fullPath||pathEntry===discipline||pathEntry===subpath){
+            const up=skills.filter(s=>s.level<=level);
+            if(up.length) unlocked.push({label:fullPath, skills:up});
+          }
+        }
       }
+    });
+    return unlocked;
+  }
 
-      await sbFetch(`/EchoesDivideChar?id=eq.${editCharId}`, {
-        method: 'PATCH',
-        body: JSON.stringify(charData)
-      });
+  function getUnlockedConstellationSkills(conName, conLevel) {
+    if(!conName||!conLevel) return [];
+    const skills=CONSTELLATION_TREE[conName]; if(!skills) return [];
+    return skills.filter(s=>s.level<=conLevel);
+  }
 
-      // Delete all existing skills and reinsert
-      await sbFetch(`/skills?character_id=eq.${editCharId}`, { method: 'DELETE' });
-      const validSkills = editSkillRows.filter(s => s.name.trim());
-      if (validSkills.length > 0) {
-        await sbFetch('/skills', {
-          method: 'POST',
-          body: JSON.stringify(validSkills.map(s => ({
-            character_id: editCharId,
-            skill_name: s.name.trim(),
-            stars: s.stars
-          })))
-        });
+  async function loadPathSkills(char) {
+    const wrap=document.getElementById('detail-path-skills'); if(!wrap) return;
+    const unlocked=getUnlockedSkills(char['Path 1'],char['Path 2'],char.level||1);
+    let dismissed=[];
+    try { const rows=await sbFetch('/dismissed_path_skills?character_id=eq.'+char.id); dismissed=rows.map(r=>r.skill_name); } catch(e){}
+    if(!unlocked.length){wrap.innerHTML='<div class="path-skills-empty">No path skills unlocked yet.</div>';return;}
+    wrap.innerHTML=unlocked.map(group=>'<div class="path-skills-section"><div class="path-skills-header">'+group.label+'</div>'+
+      group.skills.map(skill=>{
+        const id='psk-'+char.id+'-'+skill.name.replace(/\s+/g,'-');
+        const dis=dismissed.includes(skill.name);
+        return '<div class="path-skill-item'+(dis?' dismissed':'')+'" id="'+id+'">'+
+          '<div class="path-skill-item-body">'+
+            '<div class="path-skill-level">Level '+skill.level+' Unlock</div>'+
+            '<div class="path-skill-name">'+skill.name+'</div>'+
+            '<div class="path-skill-desc">'+skill.desc+'</div>'+
+          '</div>'+
+          '<button class="path-skill-dismiss" onclick="toggleDismissSkill('+char.id+',''+skill.name.replace(/'/g,"\'")+''  ,this)">'+(dis?'↺ Restore':'✕ Remove')+'</button>'+
+        '</div>';
+      }).join('')+'</div>').join('');
+  }
+
+  async function toggleDismissSkill(charId, skillName, btn) {
+    const item=btn.closest('.path-skill-item');
+    const isDismissed=item.classList.contains('dismissed');
+    try {
+      if(isDismissed){
+        await sbFetch('/dismissed_path_skills?character_id=eq.'+charId+'&skill_name=eq.'+encodeURIComponent(skillName),{method:'DELETE'});
+        item.classList.remove('dismissed'); btn.textContent='✕ Remove';
+      } else {
+        await sbFetch('/dismissed_path_skills',{method:'POST',body:JSON.stringify({character_id:charId,skill_name:skillName})});
+        item.classList.add('dismissed'); btn.textContent='↺ Restore';
       }
+    } catch(err){showToast('Error: '+err.message,true);}
+  }
 
-      // Refresh the card on the page
-      const updatedChar = { ...charData, id: editCharId, skills: validSkills };
-      const oldCard = document.querySelector(`.char-card[data-id="${editCharId}"]`);
-      if (oldCard) oldCard.remove();
-      addCardToGrid(updatedChar);
+  function loadConstellationSkills(char) {
+    const wrap=document.getElementById('detail-constellation-skills'); if(!wrap) return;
+    const unlocked=getUnlockedConstellationSkills(char.constellationame,char.constellationlevel);
+    if(!unlocked.length){wrap.innerHTML='<div class="path-skills-empty">No constellation skills unlocked yet.</div>';return;}
+    wrap.innerHTML='<div class="path-skills-section"><div class="path-skills-header">'+char.constellationame+'</div>'+
+      unlocked.map(s=>'<div class="path-skill-item"><div class="path-skill-item-body"><div class="path-skill-level">Level '+s.level+'</div><div class="path-skill-name">'+s.name+'</div><div class="path-skill-desc">'+s.desc+'</div></div></div>').join('')+'</div>';
+  }
 
-      closeEditModal();
-      showToast(`${name} has been updated.`);
-    } catch(err) {
-      showToast('Error: ' + err.message, true);
-      console.error(err);
-    } finally {
-      btn.disabled = false;
-      btn.textContent = 'Save Changes';
-      setLoading(false);
-    }
+  function closeDetailPage() { document.getElementById('detailPage').classList.remove('open'); detailCharId=null; }
+
+  async function loadInventory(charId) {
+    const list=document.getElementById('inventoryList');
+    try {
+      const items=await sbFetch('/inventory?character_id=eq.'+charId+'&order=created_at.asc');
+      if(!items.length){list.innerHTML='<div class="inventory-empty">No items yet — add one below.</div>';return;}
+      list.innerHTML=items.map(item=>'<div class="inventory-item" data-item-id="'+item.id+'"><div class="inventory-item-info"><div class="inventory-item-name">'+item.item_name+'</div>'+(item.item_description?'<div class="inventory-item-desc">'+item.item_description+'</div>':'')+'</div><button class="inventory-delete" onclick="deleteInventoryItem('+item.id+')">✕</button></div>').join('');
+    }catch(err){list.innerHTML='<div class="inventory-empty">Could not load inventory.</div>';}
+  }
+
+  async function addInventoryItem() {
+    const nameEl=document.getElementById('inv-name');const descEl=document.getElementById('inv-desc');
+    const name=nameEl.value.trim();if(!name){showToast('Item name is required',true);return;}
+    try{
+      await sbFetch('/inventory',{method:'POST',body:JSON.stringify({character_id:detailCharId,item_name:name,item_description:descEl.value.trim()||null})});
+      nameEl.value='';descEl.value='';await loadInventory(detailCharId);
+    }catch(err){showToast('Error: '+err.message,true);}
+  }
+
+  async function deleteInventoryItem(itemId) {
+    try{await sbFetch('/inventory?id=eq.'+itemId,{method:'DELETE'});await loadInventory(detailCharId);}
+    catch(err){showToast('Error: '+err.message,true);}
   }
 
 
-
-  // ── CONSTELLATION SKILL TREE ────────────────────────────
   const CONSTELLATION_TREE = {
     "War - Bastion": [
       { level: 1, name: "1 Extra HP", desc: "+1 maximum HP." },
@@ -2062,14 +931,7 @@
     ]
   };
 
-  function getUnlockedConstellationSkills(conName, conLevel) {
-    if (!conName || !conLevel) return [];
-    const skills = CONSTELLATION_TREE[conName];
-    if (!skills) return [];
-    return skills.filter(s => s.level <= conLevel);
-  }
 
-  // ── PREDEFINED SKILL TREE ────────────────────────────────
   const SKILL_TREE = {
     "Elementomancy": {
       "Primordial Path": [
@@ -2281,257 +1143,8 @@
     }
   };
 
-  function getUnlockedSkills(path1, path2, level) {
-    const unlocked = [];
-    [path1, path2].forEach(pathEntry => {
-      if (!pathEntry) return;
-      // pathEntry might be "Elementomancy - Primordial Path" or just "Elementomancy"
-      // Try to match discipline + subpath
-      for (const [discipline, paths] of Object.entries(SKILL_TREE)) {
-        for (const [subpath, skills] of Object.entries(paths)) {
-          const fullPath = discipline + ' - ' + subpath;
-          if (pathEntry === fullPath || pathEntry === discipline || pathEntry === subpath) {
-            const unlockedForPath = skills.filter(s => s.level <= level);
-            if (unlockedForPath.length) {
-              unlocked.push({ label: fullPath, skills: unlockedForPath });
-            }
-          }
-        }
-      }
-    });
-    return unlocked;
-  }
-
-  // ── DETAIL PAGE ─────────────────────────────────────────
-  let detailCharId = null;
-
-  async function openDetailPage(charId) {
-    detailCharId = charId;
-    setLoading(true);
-    try {
-      const [char] = await sbFetch(`/EchoesDivideChar?id=eq.${charId}`);
-      const skills = await sbFetch(`/skills?character_id=eq.${charId}`);
-
-      // Portrait
-      const portraitCol = document.getElementById('detail-portrait-col');
-      portraitCol.innerHTML = char.portrait_url
-        ? `<div class="detail-portrait-wrap"><img class="detail-portrait" src="${char.portrait_url}" alt="${char.name}"></div>`
-        : `<div class="detail-portrait-placeholder">⚔</div>`;
-
-      // Name & meta
-      document.getElementById('detail-name').textContent = char.name;
-      document.getElementById('detail-meta').innerHTML =
-        `${char.race || '—'} &nbsp;·&nbsp; Level ${char.level || 1}${char.constellationlevel ? ' &nbsp;·&nbsp; ✦ Constellation ' + char.constellationlevel : ''}`;
-
-      // Backstory
-      document.getElementById('detail-backstory').innerHTML = char.backstory
-        ? `<div style="margin-top:0.5rem;padding:0.8rem 1rem;background:var(--bg3);border:1px solid var(--border);border-left:2px solid var(--gold-dim);font-style:italic;color:var(--text-dim);font-size:0.95rem;line-height:1.6;">${char.backstory}</div>`
-        : '';
-
-      // Stats
-      document.getElementById('detail-stats').innerHTML = `
-        <div class="detail-stat"><div class="detail-stat-label">XP</div><div class="detail-stat-value">${char.xp || 0}</div></div>
-        <div class="detail-stat"><div class="detail-stat-label">Level</div><div class="detail-stat-value">${char.level || 1}</div></div>
-        ${char.constellationlevel ? `<div class="detail-stat"><div class="detail-stat-label">Constellation Lv.</div><div class="detail-stat-value">${char.constellationlevel}</div></div>` : ''}
-      `;
-
-      // Paths
-      const paths = [char['Path 1'], char['Path 2']].filter(Boolean);
-      document.getElementById('detail-paths').innerHTML = paths.length ? `
-        <div class="detail-paths">
-          <div class="detail-paths-label">Skill Paths${char.constellationame ? ' &nbsp;·&nbsp; ✦ ' + char.constellationame : ''}</div>
-          <div class="detail-paths-value">${paths.join(' · ')}</div>
-        </div>` : '';
-
-      // Skills
-      document.getElementById('detail-skills-wrap').innerHTML = skills.length ? `
-        <div>
-          <div class="detail-paths-label" style="margin-bottom:0.4rem;font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold-dim);">Skill Stars</div>
-          ${skills.map(s => `
-            <div class="detail-skill-row">
-              <span style="font-style:italic;color:var(--text-dim)">${s.skill_name}</span>
-              <span class="stars">${'★'.repeat(s.stars)}<span class="empty-star">${'★'.repeat(5 - s.stars)}</span></span>
-            </div>`).join('')}
-        </div>` : '';
-
-      // Constellation Skills
-      loadConstellationSkills(char);
-
-      // Path Skills
-      await loadPathSkills(char);
-
-      // Inventory
-      await loadInventory(charId);
-
-      document.getElementById('detailPage').classList.add('open');
-      window.scrollTo(0, 0);
-    } catch(err) {
-      showToast('Could not load character: ' + err.message, true);
-    } finally {
-      setLoading(false);
-    }
-  }
 
 
-  async function loadPathSkills(char) {
-    const wrap = document.getElementById('detail-path-skills');
-    if (!wrap) return;
-    const level = char.level || 1;
-    const path1 = char['Path 1'];
-    const path2 = char['Path 2'];
-    const unlocked = getUnlockedSkills(path1, path2, level);
-
-    // Load dismissed list from Supabase (stored as a JSON array in a dismissed_skills table or fallback to localStorage key per char)
-    let dismissed = [];
-    try {
-      const rows = await sbFetch(`/dismissed_path_skills?character_id=eq.${char.id}`);
-      dismissed = rows.map(r => r.skill_name);
-    } catch(e) { dismissed = []; }
-
-    if (!unlocked.length) {
-      wrap.innerHTML = '<div class="path-skills-empty">No path skills unlocked yet — level up or set your paths.</div>';
-      return;
-    }
-
-    wrap.innerHTML = unlocked.map(group => `
-      <div class="path-skills-section">
-        <div class="path-skills-header">${group.label}</div>
-        ${group.skills.map(skill => {
-          const isDismissed = dismissed.includes(skill.name);
-          return `<div class="path-skill-item${isDismissed ? ' dismissed' : ''}" id="psk-${char.id}-${skill.name.replace(/\s+/g,'-')}">
-            <div class="path-skill-item-body">
-              <div class="path-skill-level">Level ${skill.level} Unlock</div>
-              <div class="path-skill-name">${skill.name}</div>
-              <div class="path-skill-desc">${skill.desc}</div>
-            </div>
-            <button class="path-skill-dismiss" onclick="toggleDismissSkill(${char.id}, '${skill.name.replace(/'/g,"\\'")}', this)">
-              ${isDismissed ? '↺ Restore' : '✕ Remove'}
-            </button>
-          </div>`;
-        }).join('')}
-      </div>`).join('');
-  }
-
-  async function toggleDismissSkill(charId, skillName, btn) {
-    const item = btn.closest('.path-skill-item');
-    const isDismissed = item.classList.contains('dismissed');
-    try {
-      if (isDismissed) {
-        await sbFetch(`/dismissed_path_skills?character_id=eq.${charId}&skill_name=eq.${encodeURIComponent(skillName)}`, { method: 'DELETE' });
-        item.classList.remove('dismissed');
-        btn.textContent = '✕ Remove';
-      } else {
-        await sbFetch('/dismissed_path_skills', {
-          method: 'POST',
-          body: JSON.stringify({ character_id: charId, skill_name: skillName })
-        });
-        item.classList.add('dismissed');
-        btn.textContent = '↺ Restore';
-      }
-    } catch(err) {
-      showToast('Error: ' + err.message, true);
-    }
-  }
-
-
-  function loadConstellationSkills(char) {
-    const wrap = document.getElementById('detail-constellation-skills');
-    if (!wrap) return;
-    const unlocked = getUnlockedConstellationSkills(char.constellationame, char.constellationlevel);
-    if (!unlocked.length) {
-      wrap.innerHTML = '<div class="path-skills-empty">No constellation skills unlocked yet.</div>';
-      return;
-    }
-    wrap.innerHTML = `
-      <div class="path-skills-section">
-        <div class="path-skills-header">${char.constellationame}</div>
-        ${unlocked.map(skill => `
-          <div class="path-skill-item">
-            <div class="path-skill-item-body">
-              <div class="path-skill-level">Level ${skill.level}</div>
-              <div class="path-skill-name">${skill.name}</div>
-              <div class="path-skill-desc">${skill.desc}</div>
-            </div>
-          </div>`).join('')}
-      </div>`;
-  }
-
-  function closeDetailPage() {
-    document.getElementById('detailPage').classList.remove('open');
-    detailCharId = null;
-  }
-
-  async function loadInventory(charId) {
-    const list = document.getElementById('inventoryList');
-    try {
-      const items = await sbFetch(`/inventory?character_id=eq.${charId}&order=created_at.asc`);
-      renderInventory(items);
-    } catch(err) {
-      list.innerHTML = '<div class="inventory-empty">Could not load inventory.</div>';
-    }
-  }
-
-  function renderInventory(items) {
-    const list = document.getElementById('inventoryList');
-    if (!items.length) {
-      list.innerHTML = '<div class="inventory-empty">No items yet — add one below.</div>';
-      return;
-    }
-    list.innerHTML = items.map(item => `
-      <div class="inventory-item" data-item-id="${item.id}">
-        <div class="inventory-item-info">
-          <div class="inventory-item-name">${item.item_name}</div>
-          ${item.item_description ? `<div class="inventory-item-desc">${item.item_description}</div>` : ''}
-        </div>
-        <button class="inventory-delete" onclick="deleteInventoryItem(${item.id})">✕</button>
-      </div>`).join('');
-  }
-
-  async function addInventoryItem() {
-    const nameEl = document.getElementById('inv-name');
-    const descEl = document.getElementById('inv-desc');
-    const name = nameEl.value.trim();
-    if (!name) { showToast('Item name is required', true); return; }
-
-    try {
-      await sbFetch('/inventory', {
-        method: 'POST',
-        body: JSON.stringify({
-          character_id: detailCharId,
-          item_name: name,
-          item_description: descEl.value.trim() || null
-        })
-      });
-      nameEl.value = '';
-      descEl.value = '';
-      await loadInventory(detailCharId);
-    } catch(err) {
-      showToast('Error: ' + err.message, true);
-    }
-  }
-
-  async function deleteInventoryItem(itemId) {
-    try {
-      await sbFetch(`/inventory?id=eq.${itemId}`, { method: 'DELETE' });
-      await loadInventory(detailCharId);
-    } catch(err) {
-      showToast('Error: ' + err.message, true);
-    }
-  }
-
-
-  // ── MAP ─────────────────────────────────────────────────
-  function openMap() {
-    document.getElementById('mapBackdrop').classList.add('open');
-  }
-  function closeMap() {
-    document.getElementById('mapBackdrop').classList.remove('open');
-  }
-  function handleMapBackdropClick(e) {
-    if (e.target === document.getElementById('mapBackdrop')) closeMap();
-  }
-
-  // ── INIT ─────────────────────────────────────────────────
   loadParty();
 </script>
 </body>
