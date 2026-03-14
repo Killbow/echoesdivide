@@ -16,8 +16,8 @@
     --gold-light: #e8c97a;
     --gold-dim: #6b5a2a;
     --text: #e8dcc8;
-    --text-dim: #d4c4a0;
-    --text-faint: #a08c6a;
+    --text-dim: #ddd0b0;
+    --text-faint: #b8a07a;
     --red: #8b2020;
     --red-light: #c94444;
     --ink: #1a1208;
@@ -27,34 +27,58 @@
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
+  html { background: #1e1508; }
+
   body {
-    background: var(--bg);
+    background: transparent;
     color: var(--text);
     font-family: 'Crimson Pro', serif;
+    font-size: 17px;
+    line-height: 1.65;
     min-height: 100vh;
     overflow-x: hidden;
   }
 
-  /* Parchment texture layers */
-  body::before {
-    content: '';
+  /* Vignette overlay */
+  #bg-vignette {
     position: fixed;
     inset: 0;
-    background-image:
-      url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.12'/%3E%3C/svg%3E");
+    background: rgba(20,13,4,0.55);
     pointer-events: none;
     z-index: 0;
-    mix-blend-mode: multiply;
   }
 
-  /* Vignette + aged edge effect */
-  body::after {
-    content: '';
+
+  /* ── BACKGROUND IMAGE ── */
+  #bg-layer-a, #bg-layer-b {
+    background-color: #1e1508;
     position: fixed;
     inset: 0;
-    background: radial-gradient(ellipse at center, transparent 55%, rgba(90,62,32,0.35) 100%);
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-color: #1e1508;
     pointer-events: none;
     z-index: 0;
+    transition: opacity 2.5s ease;
+    will-change: opacity;
+    transform: translateZ(0);
+  }
+  #bg-layer-b { opacity: 0; }
+
+
+  /* ── PAGE TRANSITIONS ── */
+  @keyframes pageIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  body.page-ready {
+    animation: pageIn 0.4s ease forwards;
+  }
+  body.page-out {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
   }
 
   /* ── HEADER ── */
@@ -85,6 +109,26 @@
     height: 2px;
     background: linear-gradient(90deg, transparent, var(--gold-dim), var(--border-dark), var(--gold-dim), transparent);
   }
+
+  .header-logo {
+    display: block;
+    height: 72px;
+    width: auto;
+    margin: 0 auto 0.6rem;
+    object-fit: contain;
+    opacity: 0;
+  }
+  @keyframes logoSpin {
+    0%   { opacity: 0; transform: rotate(-120deg) scale(0.6); filter: drop-shadow(0 0 0px rgba(201,168,76,0)); }
+    60%  { opacity: 1; transform: rotate(8deg) scale(1.05); filter: drop-shadow(0 0 24px rgba(201,168,76,0.7)); }
+    80%  { transform: rotate(-3deg) scale(0.98); }
+    100% { opacity: 1; transform: rotate(0deg) scale(1); filter: drop-shadow(0 0 16px rgba(201,168,76,0.5)); }
+  }
+  .header-logo {
+    animation: logoSpin 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    transform-origin: center;
+  }
+
 
   .guild-seal {
     font-size: 2rem;
@@ -221,6 +265,8 @@
     animation: fadeIn 0.4s ease forwards;
     opacity: 0;
     box-shadow: 3px 4px 12px var(--parchment-shadow), inset 0 0 30px rgba(90,62,32,0.05);
+    display: flex;
+    flex-direction: column;
   }
 
   @keyframes fadeIn {
@@ -232,6 +278,7 @@
     content: '';
     position: absolute;
     inset: 0;
+    z-index: 0;
     background:
       linear-gradient(135deg, rgba(255,245,220,0.3) 0%, transparent 50%),
       url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
@@ -269,6 +316,7 @@
   .card-portrait-placeholder {
     width: 100%;
     height: 200px;
+    flex-shrink: 0;
     background: var(--bg3);
     display: flex;
     align-items: center;
@@ -279,20 +327,23 @@
   }
 
   .card-body {
-    padding: 1.2rem 1.4rem 1rem;
+    padding: 1.2rem 1.4rem 0.8rem;
+    position: relative;
+    z-index: 1;
+    flex: 1;
   }
 
   .card-name {
     font-family: 'Cinzel', serif;
-    font-size: 1.15rem;
+    font-size: 1.2rem;
     font-weight: 600;
     color: var(--gold-light);
-    letter-spacing: 0.05em;
+    letter-spacing: 0.04em;
     margin-bottom: 0.25rem;
   }
 
   .card-meta {
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     font-style: italic;
     color: var(--text-dim);
     margin-bottom: 0.9rem;
@@ -301,24 +352,26 @@
   }
 
   .card-stats {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.4rem 1rem;
-    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin-bottom: 0.9rem;
     font-size: 0.85rem;
+    flex-wrap: nowrap;
+    overflow: hidden;
   }
 
   .stat-row {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    gap: 0.3rem;
   }
 
   .stat-label {
     color: var(--text-dim);
     text-transform: uppercase;
-    font-size: 0.7rem;
-    letter-spacing: 0.1em;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
     font-family: 'Cinzel', serif;
   }
 
@@ -328,7 +381,7 @@
   }
 
   .card-paths {
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
     padding: 0.6rem 0.8rem;
     background: rgba(90,62,32,0.08);
     border: 1px solid var(--border);
@@ -380,6 +433,381 @@
   }
 
   .stars .empty-star { color: var(--text-faint); }
+
+
+  /* ── COIN ICONS ── */
+  .coin-badge {
+    display: inline-flex; align-items: center; gap: 0.2rem;
+    font-family: 'Cinzel', serif; font-size: 0.68rem; letter-spacing: 0.03em;
+    padding: 0.12rem 0.38rem; border-radius: 2px; flex-shrink: 0; white-space: nowrap;
+  }
+  .coin-badge.gcoin {
+    background: rgba(201,168,76,0.12); border: 1px solid var(--gold-dim);
+    color: var(--gold-light);
+  }
+  .coin-badge.ccoin {
+    background: rgba(155,77,255,0.1); border: 1px solid rgba(155,77,255,0.4);
+    color: #c084fc;
+  }
+  .coin-badge svg { flex-shrink: 0; }
+
+  /* ── PATHS STACKED ── */
+  .path-value-stack { display: flex; flex-direction: column; gap: 0.18rem; }
+  .path-value-stack span { color: var(--text-dim); font-style: italic; font-size: 0.92rem; }
+
+  /* ── SKILL CALL TAGS ── */
+  .skill-tags { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.45rem; }
+  .skill-tag {
+    font-family: 'Cinzel', serif; font-size: 0.62rem; letter-spacing: 0.06em;
+    text-transform: uppercase; padding: 0.2rem 0.55rem;
+    border: 1px solid var(--border); color: var(--text-dim); background: var(--bg3);
+  }
+  .skill-tag.call  { border-color: #7c5fc0; color: #c084fc; background: rgba(124,95,192,0.1); }
+  .skill-tag.dmg   { border-color: #9a3737; color: #f87171; background: rgba(154,55,55,0.1); }
+  .skill-tag.heal  { border-color: #3a7a54; color: #6ee7a0; background: rgba(58,122,84,0.1); }
+  .skill-tag.cd    { border-color: var(--gold-dim); color: var(--gold); background: rgba(201,168,76,0.08); }
+  .skill-tag.dur   { border-color: #3a6a8a; color: #7dd3fc; background: rgba(58,106,138,0.1); }
+
+  /* ── SEARCH BAR ── */
+  .char-card.hidden { display: none; }
+
+
+  /* ── REWARD MODAL ── */
+  .reward-char-list {
+    display: flex; flex-direction: column; gap: 0.4rem;
+    max-height: 220px; overflow-y: auto;
+    padding: 0.3rem 0; margin-bottom: 0.2rem;
+  }
+  .reward-char-row {
+    display: flex; align-items: center; gap: 0.75rem;
+    padding: 0.5rem 0.75rem; background: var(--bg3);
+    border: 1px solid var(--border); cursor: pointer;
+    transition: border-color 0.15s, background 0.15s; user-select: none;
+  }
+  .reward-char-row:hover { border-color: var(--gold-dim); background: rgba(201,168,76,0.06); }
+  .reward-char-row.selected { border-color: var(--gold); background: rgba(201,168,76,0.12); }
+  .reward-char-row input[type=checkbox] { accent-color: var(--gold); width:14px; height:14px; flex-shrink:0; }
+  .reward-char-thumb {
+    width: 32px; height: 32px; object-fit: cover; object-position: top;
+    border: 1px solid var(--border); flex-shrink: 0;
+  }
+  .reward-char-thumb-placeholder {
+    width: 32px; height: 32px; background: var(--bg2); border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.9rem; flex-shrink: 0;
+  }
+  .reward-char-info { flex: 1; min-width: 0; }
+  .reward-char-name { font-family: 'Cinzel', serif; font-size: 0.8rem; color: var(--text); }
+  .reward-char-sub  { font-size: 0.75rem; color: var(--text-faint); font-style: italic; }
+  .reward-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem 1rem; margin-top: 0.8rem; }
+  .reward-field label {
+    display: block; font-family: 'Cinzel', serif; font-size: 0.6rem;
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold-dim); margin-bottom: 0.25rem;
+  }
+  .reward-field input, .reward-field textarea {
+    width: 100%; background: var(--bg3); border: 1px solid var(--border);
+    color: var(--text); padding: 0.5rem 0.7rem;
+    font-family: 'Crimson Pro', serif; font-size: 0.95rem; outline: none;
+    transition: border-color 0.15s;
+  }
+  .reward-field input:focus, .reward-field textarea:focus { border-color: var(--gold-dim); }
+  .reward-field.full { grid-column: 1 / -1; }
+  .reward-select-all {
+    font-family: 'Cinzel', serif; font-size: 0.6rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text-faint); cursor: pointer;
+    border: none; background: none; padding: 0 0 0.4rem; text-align: left;
+    transition: color 0.15s;
+  }
+  .reward-select-all:hover { color: var(--gold); }
+  .reward-divider {
+    display: flex; align-items: center; gap: 0.8rem; margin: 1rem 0 0.8rem;
+  }
+  .reward-divider::before, .reward-divider::after {
+    content: ''; flex: 1; height: 1px; background: var(--border);
+  }
+  .reward-divider span {
+    font-family: 'Cinzel', serif; font-size: 0.6rem; letter-spacing: 0.15em;
+    text-transform: uppercase; color: var(--text-faint); white-space: nowrap;
+  }
+
+
+
+  /* ── CARD HOVER LIFT ── */
+  .char-card {
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .char-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 4px 10px 28px rgba(0,0,0,0.55), inset 0 0 30px rgba(90,62,32,0.08);
+  }
+
+  /* ── PORTRAIT SHIMMER on hover ── */
+  .card-portrait-wrap { position: relative; overflow: hidden; flex-shrink: 0; }
+  .card-portrait-wrap::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -75%;
+    width: 50%; height: 100%;
+    background: linear-gradient(120deg, transparent 0%, rgba(255,245,220,0.18) 50%, transparent 100%);
+    transform: skewX(-20deg);
+    opacity: 0;
+    transition: none;
+  }
+  .char-card:hover .card-portrait-wrap::after {
+    animation: shimmer 0.7s ease forwards;
+  }
+  @keyframes shimmer {
+    0%   { left: -75%; opacity: 1; }
+    100% { left: 125%; opacity: 0; }
+  }
+
+
+  /* ── CARD ACTIONS ── */
+  .card-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.4rem;
+    padding: 0.5rem 0.7rem;
+    border-top: 1px solid var(--border);
+    background: var(--bg3);
+    position: relative;
+    z-index: 1;
+    flex-shrink: 0;
+    margin-top: auto;
+  }
+
+  /* ── BACKSTORY VERTICAL SCROLL ── */
+  .card-backstory {
+    border-top: 1px solid var(--border);
+    height: 5rem;
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+    flex-shrink: 0;
+  }
+  .card-backstory::before,
+  .card-backstory::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0;
+    height: 0.7rem;
+    z-index: 2;
+    pointer-events: none;
+  }
+  .card-backstory::before {
+    top: 0;
+    background: linear-gradient(to bottom, var(--bg2), transparent);
+  }
+  .card-backstory::after {
+    bottom: 0;
+    background: linear-gradient(to top, var(--bg2), transparent);
+  }
+  .card-backstory-inner {
+    padding: 0.5rem 1rem;
+    font-style: italic;
+    font-size: 0.9rem;
+    line-height: 1.65;
+    color: var(--text-faint);
+  }
+  /* Only animate when card is hovered and backstory overflows */
+  .card-backstory-inner.scrolling {
+    animation: backstoryScroll var(--scroll-dur, 8s) linear 0.6s infinite alternate;
+  }
+  .char-card:hover .card-backstory-inner.scrolling {
+    animation-play-state: running;
+  }
+  .card-backstory-inner.scrolling {
+    animation-play-state: paused;
+  }
+  @keyframes backstoryScroll {
+    0%   { transform: translateY(0); }
+    100% { transform: translateY(var(--scroll-dist, 0px)); }
+  }
+
+
+  /* ── DETAIL PAGE ENTRANCE ── */
+  @keyframes detailHeroIn {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes panelReveal {
+    from { opacity: 0; transform: translateY(14px) scaleY(0.97); }
+    to   { opacity: 1; transform: translateY(0) scaleY(1); }
+  }
+  .detail-page.open .detail-hero {
+    animation: detailHeroIn 0.45s cubic-bezier(0.22,1,0.36,1) forwards;
+  }
+
+  /* ── SECTION TOGGLE BUTTONS ── */
+  .detail-section-btns {
+    display: flex; flex-wrap: wrap; gap: 0.4rem;
+    margin-top: 0.8rem;
+    padding-top: 0;
+    border-top: none;
+    border-bottom: none;
+  }
+  .detail-sec-btn {
+    font-family: 'Cinzel', serif; font-size: 0.65rem; letter-spacing: 0.12em;
+    text-transform: uppercase; padding: 0.55rem 1rem;
+    border: 1px solid var(--border);
+    background: transparent; color: var(--text-faint);
+    cursor: pointer; transition: all 0.18s;
+    display: flex; align-items: center; gap: 0.4rem;
+    flex: 1; justify-content: center; min-width: 120px;
+  }
+  .detail-sec-btn:hover { color: var(--text-dim); border-color: var(--gold-dim); background: rgba(201,168,76,0.04); }
+  .detail-sec-btn.active {
+    color: var(--gold-light); border-color: var(--gold-dim);
+    background: var(--bg3);
+  }
+  .detail-sec-btn .dsb-icon { font-size: 0.9rem; }
+
+  /* ── SECTION PANELS ── */
+  .detail-section-panel {
+    display: none;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-top: 2px solid var(--gold-dim);
+    padding: 1.2rem 1.4rem;
+    margin-top: 0.8rem;
+    transform-origin: top center;
+  }
+  .detail-section-panel.active {
+    display: block;
+    animation: panelReveal 0.32s cubic-bezier(0.22,1,0.36,1) forwards;
+  }
+
+
+  /* ── ATTUNEMENT CARD GLOWS ── */
+  .char-card[data-att="fire"]    { border-color: #9a3a10; box-shadow: 0 0 14px rgba(251,146,60,0.25), 3px 4px 12px var(--parchment-shadow); }
+  .char-card[data-att="water"]   { border-color: #1e4d8a; box-shadow: 0 0 14px rgba(96,165,250,0.25), 3px 4px 12px var(--parchment-shadow); }
+  .char-card[data-att="thunder"] { border-color: #8a6a00; box-shadow: 0 0 14px rgba(250,204,21,0.25), 3px 4px 12px var(--parchment-shadow); }
+  .char-card[data-att="natural"] { border-color: #1a5c2a; box-shadow: 0 0 14px rgba(134,239,172,0.25), 3px 4px 12px var(--parchment-shadow); }
+  .char-card[data-att="light"]   { border-color: #8a6a00; box-shadow: 0 0 18px rgba(253,230,138,0.35), 3px 4px 12px var(--parchment-shadow); }
+  .char-card[data-att="shadow"]  { border-color: #5b21b6; box-shadow: 0 0 16px rgba(192,132,252,0.3), 3px 4px 12px var(--parchment-shadow); }
+  .char-card[data-att="fire"]:hover    { box-shadow: 0 0 24px rgba(251,146,60,0.45), 4px 10px 28px rgba(0,0,0,0.55); }
+  .char-card[data-att="water"]:hover   { box-shadow: 0 0 24px rgba(96,165,250,0.45), 4px 10px 28px rgba(0,0,0,0.55); }
+  .char-card[data-att="thunder"]:hover { box-shadow: 0 0 24px rgba(250,204,21,0.45), 4px 10px 28px rgba(0,0,0,0.55); }
+  .char-card[data-att="natural"]:hover { box-shadow: 0 0 24px rgba(134,239,172,0.45), 4px 10px 28px rgba(0,0,0,0.55); }
+  .char-card[data-att="light"]:hover   { box-shadow: 0 0 30px rgba(253,230,138,0.55), 4px 10px 28px rgba(0,0,0,0.55); }
+  .char-card[data-att="shadow"]:hover  { box-shadow: 0 0 28px rgba(192,132,252,0.5), 4px 10px 28px rgba(0,0,0,0.55); }
+
+
+  /* ── SKILL TIER HIERARCHY ── */
+  .path-skill-item[data-tier="5"] {
+    border-color: var(--gold);
+    background: linear-gradient(135deg, rgba(201,168,76,0.08) 0%, var(--bg3) 100%);
+    box-shadow: 0 0 12px rgba(201,168,76,0.2), inset 0 0 20px rgba(201,168,76,0.04);
+  }
+  .path-skill-item[data-tier="4"] { border-color: var(--gold-dim); }
+  .path-skill-item[data-tier="3"] { border-color: rgba(110,85,48,0.8); }
+  .path-skill-item[data-tier="2"] { border-color: var(--border); }
+  .path-skill-item[data-tier="1"] { opacity: 0.7; }
+
+  .skill-tier-pip {
+    display: inline-flex; gap: 2px; align-items: center; margin-left: 0.4rem; vertical-align: middle;
+  }
+  .skill-tier-pip span {
+    width: 5px; height: 5px; border-radius: 50%; border: 1px solid var(--border);
+    background: transparent; display: inline-block; transition: all 0.15s;
+  }
+  .skill-tier-pip span.lit { background: var(--gold-dim); border-color: var(--gold); }
+  .path-skill-item[data-tier="5"] .skill-tier-pip span.lit {
+    background: var(--gold); border-color: var(--gold-light);
+    box-shadow: 0 0 4px rgba(201,168,76,0.8);
+  }
+  .path-skill-item[data-tier="5"] .path-skill-name {
+    color: var(--gold-light);
+    text-shadow: 0 0 12px rgba(201,168,76,0.4);
+  }
+  .path-skill-item[data-tier="5"] .path-skill-level {
+    color: var(--gold);
+  }
+
+  /* ── SEARCH TOGGLE ── */
+  .search-wrap {
+    display: none;
+    max-width: 480px; margin: 0 auto 1.5rem;
+    align-items: center; gap: 0.6rem; padding: 0 1rem;
+  }
+  .search-wrap.open { display: flex; }
+  .search-wrap input {
+    flex: 1; background: var(--bg2); border: 1px solid var(--border);
+    color: var(--text); padding: 0.55rem 0.9rem;
+    font-family: 'Crimson Pro', serif; font-size: 0.95rem;
+    outline: none; transition: border-color 0.15s;
+  }
+  .search-wrap input:focus { border-color: var(--gold-dim); }
+  .search-wrap input::placeholder { color: var(--text-faint); }
+  .search-wrap label {
+    font-family: 'Cinzel', serif; font-size: 0.62rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--text-faint); white-space: nowrap;
+  }
+
+  /* ── MODE TABS ── */
+  .mode-tabs {
+    display: flex; justify-content: center; gap: 0;
+    padding: 1rem 2rem 0; position: relative; z-index: 1;
+    max-width: 1200px; margin: 0 auto;
+  }
+  .mode-tab {
+    font-family: 'Cinzel', serif; font-size: 0.72rem; letter-spacing: 0.14em;
+    text-transform: uppercase; padding: 0.6rem 2.4rem;
+    border: 1px solid var(--border); background: transparent;
+    color: var(--text-faint); cursor: pointer; transition: all 0.2s; border-right: none;
+  }
+  .mode-tab:last-child { border-right: 1px solid var(--border); }
+  .mode-tab.active {
+    background: var(--bg2); color: var(--gold-light);
+    border-color: var(--gold-dim); border-bottom: 1px solid var(--bg2);
+    position: relative; top: 1px;
+  }
+  .mode-tab:not(.active):hover { color: var(--text-dim); background: rgba(255,255,255,0.02); }
+  .mode-underline {
+    height: 1px; background: var(--border);
+    max-width: 1200px; margin: 0 auto; position: relative; z-index: 1;
+  }
+  .grid-panel { display: none; }
+  .grid-panel.active { display: block; }
+
+
+  /* ── ATTUNEMENT ── */
+  .att-row { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.4rem; }
+  .att-badge {
+    display: inline-flex; align-items: center; gap: 0.2rem;
+    font-family: 'Cinzel', serif; font-size: 0.65rem; letter-spacing: 0.04em;
+    padding: 0.12rem 0.38rem; border-radius: 2px; border: 1px solid;
+    font-weight: 600; flex-shrink: 0; white-space: nowrap;
+  }
+  .att-fire    { color: #fb923c; border-color: #9a3a10; background: rgba(251,146,60,0.1); }
+  .att-water   { color: #60a5fa; border-color: #1e4d8a; background: rgba(96,165,250,0.1); }
+  .att-thunder { color: #facc15; border-color: #8a6a00; background: rgba(250,204,21,0.1); }
+  .att-natural { color: #86efac; border-color: #1a5c2a; background: rgba(134,239,172,0.1); }
+  .att-light   { color: #fde68a; border-color: #8a6a00; background: rgba(253,230,138,0.1); }
+  .att-shadow  { color: #c084fc; border-color: #5b21b6; background: rgba(192,132,252,0.1); }
+
+  /* attunement picker in form */
+  .att-picker { display: flex; flex-direction: column; gap: 0.5rem; }
+  .att-picker-row {
+    display: flex; align-items: center; gap: 0.6rem;
+    padding: 0.4rem 0.6rem; background: var(--bg3); border: 1px solid var(--border);
+  }
+  .att-picker-row label {
+    font-family: 'Cinzel', serif; font-size: 0.62rem; letter-spacing: 0.08em;
+    text-transform: uppercase; min-width: 70px; cursor: pointer;
+  }
+  .att-lvl-btn {
+    width: 22px; height: 22px; border: 1px solid var(--border); background: var(--bg2);
+    color: var(--text-dim); font-size: 0.8rem; cursor: pointer; display: flex;
+    align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.15s;
+    font-family: monospace;
+  }
+  .att-lvl-btn:hover { border-color: var(--gold-dim); color: var(--gold); }
+  .att-lvl-val {
+    font-family: 'Cinzel', serif; font-size: 0.8rem; color: var(--gold);
+    min-width: 14px; text-align: center;
+  }
+  .att-picker-row.disabled { opacity: 0.35; pointer-events: none; }
 
   /* ── MODAL BACKDROP ── */
   .modal-backdrop {
@@ -661,9 +1089,6 @@
 
 
   .card-edit-btn {
-    position: absolute;
-    bottom: 0.7rem;
-    right: 0.7rem;
     font-family: 'Cinzel', serif;
     font-size: 0.6rem;
     letter-spacing: 0.1em;
@@ -674,13 +1099,12 @@
     padding: 0.3rem 0.7rem;
     cursor: pointer;
     transition: all 0.15s;
-    z-index: 2;
   }
   .card-edit-btn:hover {
     border-color: var(--gold-dim);
     color: var(--gold);
   }
-  .card-body { padding-bottom: 2.5rem; }
+  .card-body { padding-bottom: 0; }
 
   /* ── DETAIL PAGE ── */
   .detail-page {
@@ -693,123 +1117,147 @@
     pointer-events: none;
     transition: opacity 0.25s;
   }
-  .detail-page.open {
-    opacity: 1;
-    pointer-events: all;
-  }
+  .detail-page.open { opacity: 1; pointer-events: all; }
+
   .detail-inner {
-    max-width: 900px;
+    max-width: 1100px;
     margin: 0 auto;
-    padding: 2rem;
+    padding: 1.2rem 2rem 3rem;
   }
+
+  /* ── BACK BUTTON ── */
   .detail-back {
-    font-family: 'Cinzel', serif;
-    font-size: 0.7rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    background: none;
-    border: 1px solid var(--border);
-    color: var(--text-dim);
-    padding: 0.5rem 1.1rem;
-    cursor: pointer;
-    margin-bottom: 2rem;
-    transition: all 0.15s;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
+    font-family: 'Cinzel', serif; font-size: 0.7rem; letter-spacing: 0.12em;
+    text-transform: uppercase; background: none; border: 1px solid var(--border);
+    color: var(--text-dim); padding: 0.5rem 1.1rem; cursor: pointer;
+    margin-bottom: 1.5rem; transition: all 0.15s;
+    display: inline-flex; align-items: center; gap: 0.5rem;
   }
   .detail-back:hover { border-color: var(--gold-dim); color: var(--gold); }
 
+  /* ── MAIN LAYOUT: portrait | right panel ── */
   .detail-hero {
     display: grid;
-    grid-template-columns: 240px 1fr;
-    gap: 2rem;
-    margin-bottom: 2rem;
-    padding-bottom: 2rem;
-    border-bottom: 1px solid var(--border);
+    grid-template-columns: 200px 1fr;
+    gap: 1.5rem;
+    margin-bottom: 0;
+    align-items: start;
   }
+  @media (max-width: 700px) { .detail-hero { grid-template-columns: 1fr; } }
 
-  @media (max-width: 600px) {
-    .detail-hero { grid-template-columns: 1fr; }
-  }
-
+  /* ── LEFT COLUMN ── */
+  .detail-left { display: flex; flex-direction: column; gap: 0.5rem; }
   .detail-portrait-wrap {
-    width: 100%;
-    aspect-ratio: 3 / 4;
-    overflow: hidden;
-    border: 1px solid var(--border);
+    width: 100%; aspect-ratio: 3/4; overflow: hidden; border: 1px solid var(--border);
+    flex-shrink: 0; position: relative;
   }
   .detail-portrait {
-    width: 100%; height: 100%;
-    object-fit: cover;
-    object-position: top center;
+    width: 100%; height: 100%; object-fit: cover; object-position: top center;
     filter: sepia(20%) contrast(1.05);
   }
   .detail-portrait-placeholder {
-    width: 100%; aspect-ratio: 3/4;
-    background: var(--bg3);
-    border: 1px solid var(--border);
+    width: 100%; aspect-ratio: 3/4; background: var(--bg3); border: 1px solid var(--border);
     display: flex; align-items: center; justify-content: center;
     font-size: 4rem; color: var(--text-faint);
   }
-  .detail-info { display: flex; flex-direction: column; gap: 1rem; }
-  .detail-name {
-    font-family: 'Cinzel', serif;
-    font-size: 2rem;
-    font-weight: 900;
-    color: var(--gold-light);
-    letter-spacing: 0.05em;
-    text-shadow: 0 0 30px rgba(201,168,76,0.2);
-  }
-  .detail-meta {
-    font-size: 1rem;
-    font-style: italic;
-    color: var(--text-dim);
-    padding-bottom: 0.8rem;
-    border-bottom: 1px solid var(--border);
-  }
+
+  /* stat tiles in left col */
   .detail-stats {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: 0.6rem;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 0.4rem;
   }
   .detail-stat {
-    background: var(--bg3);
-    border: 1px solid var(--border);
-    padding: 0.5rem 0.8rem;
+    background: var(--bg3); border: 1px solid var(--border); padding: 0.4rem 0.6rem;
   }
   .detail-stat-label {
-    font-family: 'Cinzel', serif;
-    font-size: 0.6rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--gold-dim);
-    margin-bottom: 0.2rem;
+    font-family: 'Cinzel', serif; font-size: 0.62rem; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--gold-dim); margin-bottom: 0.15rem;
   }
-  .detail-stat-value { font-size: 1rem; color: var(--text); }
+  .detail-stat-value { font-size: 1rem; color: var(--text); font-weight: 500; }
+
+
+  /* paths overlay on portrait */
+  .detail-portrait-paths {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: linear-gradient(0deg, rgba(10,6,2,0.92) 0%, rgba(10,6,2,0.6) 70%, transparent 100%);
+    padding: 1.2rem 0.8rem 0.7rem;
+    display: flex; flex-direction: column; gap: 0.2rem;
+  }
+  .detail-portrait-paths .dp-label {
+    font-family: 'Cinzel', serif; font-size: 0.55rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--gold-dim); margin-bottom: 0.15rem;
+  }
+  .detail-portrait-paths .dp-path {
+    font-size: 0.92rem; color: var(--text-dim); font-style: italic; line-height: 1.55;
+  }
+  .detail-portrait-paths .dp-con {
+    font-family: 'Cinzel', serif; font-size: 0.62rem; color: var(--gold); margin-top: 0.2rem;
+  }
+
+  /* compact inline stats strip */
+  .detail-stats-strip {
+    display: flex; gap: 0; border: 1px solid var(--border); overflow: hidden;
+  }
+  .detail-stats-strip .ds-item {
+    flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 0.4rem 0.3rem; background: var(--bg3); border-right: 1px solid var(--border);
+    min-width: 0;
+  }
+  .detail-stats-strip .ds-item:last-child { border-right: none; }
+  .detail-stats-strip .ds-label {
+    font-family: 'Cinzel', serif; font-size: 0.5rem; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--gold-dim); white-space: nowrap;
+  }
+  .detail-stats-strip .ds-val {
+    font-family: 'Cinzel', serif; font-size: 1.1rem; font-weight: 600; color: var(--text);
+    line-height: 1.1;
+  }
+  /* currencies row below strip */
+  .detail-currencies {
+    display: flex; gap: 0.4rem; flex-wrap: wrap;
+    padding: 0.4rem 0.5rem; background: var(--bg3);
+    border: 1px solid var(--border); border-top: none;
+    justify-content: center;
+  }
+
+  /* ── RIGHT COLUMN ── */
+  .detail-info { display: flex; flex-direction: column; gap: 0.5rem; min-width: 0; align-items: flex-start; }
+  .detail-name {
+    font-family: 'Cinzel', serif; font-size: clamp(1.6rem,3vw,2.4rem); font-weight: 900;
+    color: var(--gold-light); letter-spacing: 0.05em;
+    text-shadow: 0 0 30px rgba(201,168,76,0.2);
+    border-bottom: 1px solid var(--border); padding-bottom: 0.6rem;
+  }
+  .detail-meta { font-size: 1rem; font-style: italic; color: var(--text-dim); line-height: 1.5; }
+
+  /* right col 2-column sub-grid for paths + skills side by side */
+
+
   .detail-paths {
-    background: var(--bg3);
-    border: 1px solid var(--border);
-    padding: 0.7rem 1rem;
+    background: var(--bg3); border: 1px solid var(--border); padding: 0.65rem 0.9rem;
   }
   .detail-paths-label {
-    font-family: 'Cinzel', serif;
-    font-size: 0.6rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--gold-dim);
-    margin-bottom: 0.3rem;
+    font-family: 'Cinzel', serif; font-size: 0.65rem; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--gold-dim); margin-bottom: 0.3rem;
   }
-  .detail-paths-value { font-style: italic; color: var(--text-dim); }
-  .detail-skills { margin-top: 0.5rem; }
+  .detail-paths-value { font-style: italic; color: var(--text-dim); font-size: 1rem; }
+  .detail-skills { margin-top: 0; }
   .detail-skill-row {
     display: flex; justify-content: space-between;
     align-items: center;
-    padding: 0.3rem 0;
+    padding: 0.4rem 0.6rem;
     border-bottom: 1px solid var(--border);
     font-size: 0.95rem;
+    transition: background 0.15s;
   }
   .detail-skill-row:last-child { border-bottom: none; }
+  .detail-skill-row.star5 {
+    background: linear-gradient(90deg, rgba(201,168,76,0.07) 0%, transparent 100%);
+    border-bottom-color: var(--gold-dim);
+  }
+  .detail-skill-row.star5 .skill-tier-pip span.lit {
+    background: var(--gold); border-color: var(--gold-light);
+    box-shadow: 0 0 4px rgba(201,168,76,0.8);
+  }
 
   /* Inventory */
   .detail-section-title {
@@ -843,7 +1291,7 @@
     color: var(--gold-light);
     margin-bottom: 0.2rem;
   }
-  .inventory-item-desc { font-size: 0.85rem; color: var(--text-dim); font-style: italic; }
+  .inventory-item-desc { font-size: 0.92rem; color: var(--text-dim); font-style: italic; line-height: 1.55; }
   .inventory-delete {
     background: none;
     border: 1px solid var(--border);
@@ -933,21 +1381,23 @@
   .path-skill-item-body { flex: 1; }
   .path-skill-level {
     font-family: 'Cinzel', serif;
-    font-size: 0.58rem;
+    font-size: 0.65rem;
     color: var(--gold-dim);
-    letter-spacing: 0.08em;
-    margin-bottom: 0.15rem;
-  }
-  .path-skill-name {
-    font-size: 0.9rem;
-    color: var(--text);
+    letter-spacing: 0.06em;
     margin-bottom: 0.2rem;
   }
+  .path-skill-name {
+    font-size: 1rem;
+    color: var(--text);
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+  }
+  .path-skill-desc-text { margin-bottom: 0.1rem; }
   .path-skill-desc {
-    font-size: 0.78rem;
+    font-size: 0.88rem;
     color: var(--text-dim);
     font-style: italic;
-    line-height: 1.4;
+    line-height: 1.6;
   }
   .path-skill-dismiss {
     background: none;
@@ -1047,31 +1497,53 @@
 </style>
 </head>
 <body>
+<div id="bg-layer-a"></div>
+<div id="bg-layer-b"></div>
+<div id="bg-vignette"></div>
 
 <div class="loading-bar" id="loadingBar"></div>
 
 <header>
-  <span class="guild-seal">⚜</span>
+  <img src="https://aakfivejocyemgsfxkvw.supabase.co/storage/v1/object/public/assets/logo.png" alt="Echoes Divide" class="header-logo">
   <div class="guild-name">Adventurers Guild Registry</div>
   <div class="records-title">Echoes Divide</div>
   <div class="header-rule"></div>
   <div class="records-subtitle">
-    <img src="https://aakfivejocyemgsfxkvw.supabase.co/storage/v1/object/public/assets/162862e5-ed4b-4641-8393-b217737801fd.jpg" alt="" style="height:24px;object-fit:contain;vertical-align:middle;filter:drop-shadow(0 0 6px rgba(201,168,76,0.4));">
-    Official Roll of Registered Adventurers
-    <img src="https://aakfivejocyemgsfxkvw.supabase.co/storage/v1/object/public/assets/162862e5-ed4b-4641-8393-b217737801fd.jpg" alt="" style="height:24px;object-fit:contain;vertical-align:middle;filter:drop-shadow(0 0 6px rgba(201,168,76,0.4));">
+    ✦ Official Roll of Registered Adventurers ✦
   </div>
 </header>
 
 <div class="toolbar">
-  <button class="btn btn-primary" onclick="openModal()"><span>+ Enroll Character</span></button>
+  <button class="btn btn-primary" id="enrollBtn" onclick="openModal()"><span id="enrollBtnLabel">+ Enroll Character</span></button>
+  <button class="btn" onclick="openRewardModal()"><span>⚡ Quest Reward</span></button>
+  <button class="btn" onclick="toggleSearch()" id="searchToggleBtn"><span>🔍 Search</span></button>
   <button class="btn" onclick="window.location.href='lore.html'"><span>📖 World Codex</span></button>
   <button class="btn" onclick="openMap()"><span>🗺 World Map</span></button>
 </div>
 
-<div class="party-grid" id="partyGrid">
-  <div class="empty-state">
-    <span class="empty-icon">📜</span>
-    The registry awaits its first adventurer…
+<div class="search-wrap" id="searchWrap"><label>Search</label><input type="text" id="charSearch" placeholder="Search…" oninput="filterChars(event)"></div>
+
+<div class="mode-tabs">
+  <button class="mode-tab active" id="tab-chars" onclick="switchMode('chars')">⚔ Adventurers</button>
+  <button class="mode-tab" id="tab-npcs" onclick="switchMode('npcs')">👤 NPCs</button>
+</div>
+<div class="mode-underline"></div>
+
+<div class="grid-panel active" id="panel-chars">
+  <div class="party-grid" id="partyGrid">
+    <div class="empty-state">
+      <span class="empty-icon">📜</span>
+      The registry awaits its first adventurer…
+    </div>
+  </div>
+</div>
+
+<div class="grid-panel" id="panel-npcs">
+  <div class="party-grid" id="npcGrid">
+    <div class="empty-state">
+      <span class="empty-icon">👤</span>
+      No NPCs registered yet…
+    </div>
   </div>
 </div>
 
@@ -1120,6 +1592,13 @@
           </div>
         </div>
       </div>
+
+      <!-- Attunement -->
+      <div class="form-section">
+        <div class="form-section-title">Attunement</div>
+        <div id="f-att-wrap"></div>
+      </div>
+
 
       <!-- Paths -->
       <div class="form-section">
@@ -1257,38 +1736,60 @@
   <div class="detail-inner">
     <button class="detail-back" onclick="closeDetailPage()">← Back to Guild</button>
     <div class="detail-hero">
-      <div id="detail-portrait-col"></div>
+      <!-- LEFT: portrait → stats strip → paths → attunement -->
+      <div class="detail-left">
+        <div id="detail-portrait-col"></div>
+        <div id="detail-stats"></div>
+        <div id="detail-paths"></div>
+        <div id="detail-attunement"></div>
+      </div>
+      <!-- RIGHT: name → meta → section buttons -->
       <div class="detail-info">
         <div class="detail-name" id="detail-name"></div>
         <div class="detail-meta" id="detail-meta"></div>
-        <div class="detail-stats" id="detail-stats"></div>
-        <div id="detail-backstory"></div>
-        <div id="detail-paths"></div>
-        <div id="detail-skills-wrap"></div>
+        <div class="detail-section-btns">
+          <button class="detail-sec-btn" id="dsb-skillstars" onclick="toggleSection('skillstars')">
+            <span class="dsb-icon">★</span> Skill Stars
+          </button>
+          <button class="detail-sec-btn" id="dsb-pathskills" onclick="toggleSection('pathskills')">
+            <span class="dsb-icon">⚡</span> Path Skills
+          </button>
+          <button class="detail-sec-btn" id="dsb-constellation" onclick="toggleSection('constellation')">
+            <span class="dsb-icon">✦</span> Constellation
+          </button>
+          <button class="detail-sec-btn" id="dsb-backstory" onclick="toggleSection('backstory')">
+            <span class="dsb-icon">📖</span> Backstory
+          </button>
+          <button class="detail-sec-btn" id="dsb-inventory" onclick="toggleSection('inventory')">
+            <span class="dsb-icon">🎒</span> Inventory
+          </button>
+        </div>
+
+        <!-- SECTION PANELS — inside right col, directly under buttons -->
+        <div class="detail-section-panel" id="panel-skillstars">
+          <div id="detail-skills-wrap"></div>
+        </div>
+        <div class="detail-section-panel" id="panel-pathskills">
+          <div id="detail-path-skills"></div>
+        </div>
+        <div class="detail-section-panel" id="panel-constellation">
+          <div id="detail-constellation-skills"></div>
+        </div>
+        <div class="detail-section-panel" id="panel-backstory">
+          <div id="detail-backstory-full"></div>
+        </div>
+        <div class="detail-section-panel" id="panel-inventory">
+          <div class="inventory-list" id="inventoryList"></div>
+          <div class="inventory-add-form">
+            <input type="text" id="inv-name" placeholder="Item name…">
+            <input type="text" id="inv-desc" placeholder="Description…">
+            <button class="inventory-add-btn" onclick="addInventoryItem()">+ Add Item</button>
+          </div>
+        </div>
+
       </div>
     </div>
-    <!-- Path Skills -->
-    <div style="margin-bottom:2rem;">
-      <div class="detail-section-title"><span>⚡ Path Skills</span></div>
-      <div id="detail-path-skills"></div>
-    </div>
-    <!-- Constellation Skills -->
-    <div style="margin-bottom:2rem;">
-      <div class="detail-section-title"><span>✦ Constellation Skills</span></div>
-      <div id="detail-constellation-skills"></div>
-    </div>
-    <!-- Inventory -->
-    <div>
-      <div class="detail-section-title">
-        <span>✦ Inventory</span>
-      </div>
-      <div class="inventory-list" id="inventoryList"></div>
-      <div class="inventory-add-form">
-        <input type="text" id="inv-name" placeholder="Item name…">
-        <input type="text" id="inv-desc" placeholder="Description…">
-        <button class="inventory-add-btn" onclick="addInventoryItem()">+ Add Item</button>
-      </div>
-    </div>
+
   </div>
 </div>
 
@@ -1336,6 +1837,10 @@
             <input type="number" id="ef-ccoin" placeholder="0" min="0">
           </div>
         </div>
+      </div>
+      <div class="form-section">
+        <div class="form-section-title">Attunement</div>
+        <div id="ef-att-wrap"></div>
       </div>
       <div class="form-section">
         <div class="form-section-title">Skill Paths</div>
@@ -1448,9 +1953,56 @@
         <button class="btn-cancel" onclick="closeEditModal()">Cancel</button>
         <button class="btn-submit" id="editSubmitBtn" onclick="submitEdit()">Save Changes</button>
       </div>
+      </div>
     </div>
   </div>
 </div>
+
+<!-- ── REWARD MODAL ── -->
+<div class="modal-backdrop" id="rewardModalBackdrop" onclick="handleRewardBackdropClick(event)">
+  <div class="modal" style="max-width:560px;">
+    <div class="modal-header">
+      <span class="modal-title">⚡ Quest Reward</span>
+      <button class="modal-close" onclick="closeRewardModal()">✕</button>
+    </div>
+    <div class="modal-body">
+
+      <div class="form-section-title" style="margin-bottom:0.5rem;">Select Characters</div>
+      <button class="reward-select-all" onclick="toggleSelectAllReward()">Select / Deselect All</button>
+      <div class="reward-char-list" id="rewardCharList"></div>
+
+      <div class="reward-divider"><span>Rewards</span></div>
+
+      <div class="reward-fields">
+        <div class="reward-field">
+          <label>⭐ XP</label>
+          <input type="number" id="rw-xp" placeholder="0" min="0">
+        </div>
+        <div class="reward-field" style="display:flex;flex-direction:column;gap:0.4rem;">
+          <label>Currencies</label>
+          <div style="display:flex;gap:0.5rem;">
+            <input type="number" id="rw-gcoin" placeholder="G 0" min="0" style="flex:1;">
+            <input type="number" id="rw-ccoin" placeholder="C 0" min="0" style="flex:1;">
+          </div>
+        </div>
+        <div class="reward-field full">
+          <label>🎒 Item Name (added to each selected character's inventory)</label>
+          <input type="text" id="rw-item" placeholder="e.g. Elixir of Resilience">
+        </div>
+        <div class="reward-field full">
+          <label>📜 Quest Note (optional, stored with item)</label>
+          <input type="text" id="rw-note" placeholder="e.g. Reward for clearing the Memoria ruins">
+        </div>
+      </div>
+
+      <div class="form-actions" style="margin-top:1.2rem;">
+        <button class="btn-cancel" onclick="closeRewardModal()">Cancel</button>
+        <button class="btn-submit" id="rewardSubmitBtn" onclick="submitReward()">Grant Rewards</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -1483,8 +2035,9 @@
   async function uploadPortrait(file, charId) {
     const ext = file.name.split('.').pop();
     const path = `${charId}.${ext}`;
+    // Use PUT with x-upsert so it works for both new uploads and replacements
     const res = await fetch(`${SUPABASE_URL}/storage/v1/object/portraits/${path}`, {
-      method: 'POST',
+      method: 'PUT',
       headers: {
         'apikey': SUPABASE_KEY,
         'Authorization': `Bearer ${SUPABASE_KEY}`,
@@ -1494,8 +2047,12 @@
       },
       body: file
     });
-    if (!res.ok) throw new Error('Portrait upload failed');
-    return `${SUPABASE_URL}/storage/v1/object/public/portraits/${path}`;
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error('Portrait upload failed: ' + (err.message || res.statusText));
+    }
+    // Bust the CDN cache by appending a timestamp so the new image loads immediately
+    return `${SUPABASE_URL}/storage/v1/object/public/portraits/${path}?t=${Date.now()}`;
   }
 
   // ── SKILLS INPUT ─────────────────────────────────────────
@@ -1558,6 +2115,9 @@
   function openModal() {
     skillRows = [];
     renderSkillRows();
+    // Reset attunement picker
+    ATT_ELEMENTS.forEach(e => { attState['f-'][e.key] = 0; });
+    document.getElementById('f-att-wrap').innerHTML = buildAttPicker('f-');
     document.getElementById('modalBackdrop').classList.add('open');
     document.getElementById('f-name').focus();
   }
@@ -1609,10 +2169,12 @@
         constellationame: document.getElementById('f-conname').value.trim() || null,
         constellationlevel: parseInt(document.getElementById('f-conlevel').value) || null,
         backstory: document.getElementById('f-backstory').value.trim() || null,
+        attunement: getAttValue('f-'),
         portrait_url: null
       };
 
-      const [char] = await sbFetch('/EchoesDivideChar', {
+      const _enrollTable = currentMode === 'npcs' ? '/EchoesDivideNPC' : '/EchoesDivideChar';
+      const [char] = await sbFetch(_enrollTable, {
         method: 'POST',
         body: JSON.stringify(charData)
       });
@@ -1621,7 +2183,7 @@
       const portraitFile = document.getElementById('f-portrait').files[0];
       if (portraitFile) {
         const url = await uploadPortrait(portraitFile, char.id);
-        await sbFetch(`/EchoesDivideChar?id=eq.${char.id}`, {
+        await sbFetch(`${_enrollTable}?id=eq.${char.id}`, {
           method: 'PATCH',
           body: JSON.stringify({ portrait_url: url })
         });
@@ -1646,7 +2208,7 @@
       }
 
       closeModal();
-      addCardToGrid(char);
+      addCardToGrid(char, currentMode === 'npcs' ? 'npcGrid' : 'partyGrid');
       showToast(`${char.name} has been registered with the Guild.`);
     } catch (err) {
       showToast('Error: ' + err.message, true);
@@ -1667,14 +2229,19 @@
     return `<span class="stars">${s}</span>`;
   }
 
-  function addCardToGrid(char) {
-    const grid = document.getElementById('partyGrid');
+  function addCardToGrid(char, gridId) {
+    const grid = document.getElementById(gridId || 'partyGrid');
     const empty = grid.querySelector('.empty-state');
     if (empty) empty.remove();
 
     const card = document.createElement('div');
     card.className = 'char-card';
     card.style.animationDelay = '0.05s';
+    if (char.attunement) {
+      const _attObj = parseAttunement(char.attunement);
+      const _dominant = ATT_ELEMENTS.reduce((a,b) => (_attObj[b.key]||0) > (_attObj[a.key]||0) ? b : a, ATT_ELEMENTS[0]);
+      if (_attObj[_dominant.key] > 0) card.dataset.att = _dominant.key;
+    }
 
     const paths = [char['Path 1'], char['Path 2']].filter(Boolean);
     const skills = char.skills || [];
@@ -1691,51 +2258,423 @@
             <span class="stat-label">XP</span>
             <span class="stat-value">${char.xp || 0}</span>
           </div>
-          <div class="stat-row">
-            <span class="stat-label">★ GCoin</span>
-            <span class="stat-value" style="color:var(--gold)">${char.gcoin || 0}</span>
-          </div>
-          <div class="stat-row">
-            <span class="stat-label">◆ CCoin</span>
-            <span class="stat-value" style="color:var(--gold-light)">${char.ccoin || 0}</span>
-          </div>
+          <span style="color:var(--border);font-size:0.7rem;">|</span>
+          <span class="coin-badge gcoin"><svg width="11" height="11" viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="5.5" cy="5.5" r="4.5" stroke="currentColor" stroke-width="1"/><circle cx="5.5" cy="5.5" r="2.5" fill="currentColor" opacity="0.5"/></svg> ${char.gcoin || 0}</span>
+          <span class="coin-badge ccoin"><svg width="10" height="11" viewBox="0 0 10 11" fill="none" xmlns="http://www.w3.org/2000/svg"><polygon points="5,1 9,4 9,7 5,10 1,7 1,4" stroke="currentColor" stroke-width="1" fill="currentColor" opacity="0.3"/></svg> ${char.ccoin || 0}</span>
+          ${char.attunement ? (() => { const obj=parseAttunement(char.attunement); const dom=ATT_ELEMENTS.reduce((a,b)=>(obj[b.key]||0)>(obj[a.key]||0)?b:a,ATT_ELEMENTS[0]); return obj[dom.key]>0 ? `<span style="color:var(--border);font-size:0.7rem;">|</span><span class="coin-badge att-${dom.key}" style="border-color:currentColor;">${dom.icon} ${dom.label} ${obj[dom.key]}</span>` : ''; })() : ''}
         </div>
         ${paths.length ? `
           <div class="card-paths">
             <div class="path-label">Skill Paths${char.constellationame ? ' &nbsp;·&nbsp; <span style=\'color:var(--gold-dim)\'>✦ ' + char.constellationame + '</span>' : ''}</div>
-            <div class="path-value">${paths.join(' · ')}</div>
-          </div>
-        ` : ''}
-        ${char.backstory ? `
-          <div class="card-skills">
-            <div class="skills-label">Backstory</div>
-            <div class="skill-name" style="font-style:italic;line-height:1.5;">${char.backstory.length > 120 ? char.backstory.slice(0, 120).trim() + '…' : char.backstory}</div>
+            <div class="path-value-stack">${paths.map(p => `<span>${p}</span>`).join('')}</div>
           </div>
         ` : ''}
       </div>
-      <div class="card-corner-br"></div>
-      <div style="position:absolute;bottom:0.7rem;right:0.7rem;display:flex;gap:0.4rem;">
-        <button class="card-edit-btn" style="position:static" onclick="openDetailPage(${char.id})">↗ View</button>
-        <button class="card-edit-btn" style="position:static" onclick="openEditModal(${char.id})">✎ Edit</button>
+      ${char.backstory ? `<div class="card-backstory"><div class="card-backstory-inner" id="cbs-${char.id}">${char.backstory}</div></div>` : ''}
+      <div class="card-actions">
+        <button class="card-edit-btn" onclick="openDetailPage(${char.id})">↗ View</button>
+        <button class="card-edit-btn" onclick="openEditModal(${char.id})">✎ Edit</button>
       </div>
     `;
 
     card.dataset.id = char.id;
     grid.appendChild(card);
+
+    // Measure backstory overflow and enable scroll animation if needed
+    if (char.backstory) {
+      requestAnimationFrame(() => {
+        const inner = card.querySelector(`#cbs-${char.id}`);
+        const container = inner?.parentElement;
+        if (!inner || !container) return;
+        const overflow = inner.scrollHeight - container.clientHeight;
+        if (overflow > 2) {
+          const dur = Math.max(4, overflow / 18); // ~18px per second
+          inner.style.setProperty('--scroll-dist', `-${overflow}px`);
+          inner.style.setProperty('--scroll-dur', `${dur}s`);
+          inner.classList.add('scrolling');
+        }
+      });
+    }
   }
 
   // ── LOAD EXISTING CHARACTERS ────────────────────────────
+
+  let currentMode = 'chars';
+
+  function toggleSearch() {
+    const wrap = document.getElementById('searchWrap');
+    const open = wrap.classList.toggle('open');
+    if (open) {
+      wrap.querySelector('input').focus();
+    } else {
+      wrap.querySelector('input').value = '';
+      filterChars({ target: { value: '' } });
+    }
+  }
+
+  function switchMode(mode) {
+    currentMode = mode;
+    document.getElementById('tab-chars').classList.toggle('active', mode === 'chars');
+    document.getElementById('tab-npcs').classList.toggle('active', mode === 'npcs');
+    document.getElementById('panel-chars').classList.toggle('active', mode === 'chars');
+    document.getElementById('panel-npcs').classList.toggle('active', mode === 'npcs');
+    document.getElementById('enrollBtnLabel').textContent = mode === 'chars' ? '+ Enroll Character' : '+ Enroll NPC';
+    // Clear search
+    const inp = document.getElementById('charSearch');
+    inp.value = '';
+    inp.placeholder = mode === 'chars' ? 'Search adventurers…' : 'Search NPCs…';
+  }
+
+  function filterChars(e) {
+    const q = e.target.value.trim().toLowerCase();
+    const gridId = currentMode === 'chars' ? 'partyGrid' : 'npcGrid';
+    document.querySelectorAll(`#${gridId} .char-card`).forEach(card => {
+      const name = (card.querySelector('.card-name')?.textContent || '').toLowerCase();
+      const meta = (card.querySelector('.card-meta')?.textContent || '').toLowerCase();
+      const paths = (card.querySelector('.path-value-stack')?.textContent || '').toLowerCase();
+      card.classList.toggle('hidden', !!q && !name.includes(q) && !meta.includes(q) && !paths.includes(q));
+    });
+  }
+
+
+  function parseSkillDesc(desc) {
+    // Split on the opening parenthesis of the stat block
+    const parenIdx = desc.indexOf('(Calls:');
+    const hasStats = parenIdx !== -1;
+
+    let flavour = hasStats ? desc.slice(0, parenIdx).trim() : desc;
+    // Also handle descriptions that start with stat block directly
+    const statsText = hasStats ? desc.slice(parenIdx + 1).replace(/\)$/, '').trim() : '';
+
+    const tags = [];
+
+    if (statsText) {
+      // Extract Calls
+      const callsMatch = statsText.match(/Calls:\s*([^–\-]+?)(?:\s*[–\-]|$)/);
+      if (callsMatch) {
+        callsMatch[1].split(/[,+\/]/).map(c => c.trim()).filter(Boolean).forEach(c => {
+          if (c) tags.push({ type: 'call', text: c });
+        });
+      }
+      // Damage
+      const dmgMatch = statsText.match(/Damage:\s*([^\s,]+)/);
+      if (dmgMatch) tags.push({ type: 'dmg', text: '⚔ ' + dmgMatch[1] });
+      // Healing
+      const healMatch = statsText.match(/Healing:\s*([^\s,]+)/);
+      if (healMatch) tags.push({ type: 'heal', text: '♥ ' + healMatch[1] });
+      // Cooldown
+      const cdMatch = statsText.match(/Cooldown:\s*([^,\)]+)/);
+      if (cdMatch) tags.push({ type: 'cd', text: '⏱ ' + cdMatch[1].trim() });
+      // Duration
+      const durMatch = statsText.match(/Duration:\s*([^,\)]+)/);
+      if (durMatch) tags.push({ type: 'dur', text: '⧗ ' + durMatch[1].trim() });
+    }
+
+    let out = `<div class="path-skill-desc-text">${flavour}</div>`;
+    if (tags.length) {
+      out += `<div class="skill-tags">${tags.map(t => `<span class="skill-tag ${t.type}">${t.text}</span>`).join('')}</div>`;
+    }
+    return out;
+  }
+
+
+  // ── ATTUNEMENT HELPERS ───────────────────────────────────
+  const ATT_ELEMENTS = [
+    { key: 'fire',    label: 'Fire',    icon: '🔥', opposite: 'water'   },
+    { key: 'water',   label: 'Water',   icon: '💧', opposite: 'fire'    },
+    { key: 'thunder', label: 'Thunder', icon: '⚡', opposite: 'natural' },
+    { key: 'natural', label: 'Natural', icon: '🌿', opposite: 'thunder' },
+    { key: 'light',   label: 'Light',   icon: '☀', opposite: 'shadow'  },
+    { key: 'shadow',  label: 'Shadow',  icon: '🌑', opposite: 'light'   },
+  ];
+
+  // Parse "2 Shadow" or "1 Fire 1 Shadow" → { fire:0, water:0, thunder:0, natural:0, light:0, shadow:2 }
+  function parseAttunement(str) {
+    const result = {};
+    ATT_ELEMENTS.forEach(e => result[e.key] = 0);
+    if (!str) return result;
+    const tokens = str.trim().split(/\s+/);
+    for (let i = 0; i < tokens.length - 1; i += 2) {
+      const lvl = parseInt(tokens[i]);
+      const el  = tokens[i+1]?.toLowerCase();
+      if (!isNaN(lvl) && result.hasOwnProperty(el)) result[el] = lvl;
+    }
+    return result;
+  }
+
+  // { fire:1, shadow:1 } → "1 Fire 1 Shadow"
+  function serialiseAttunement(obj) {
+    return ATT_ELEMENTS
+      .filter(e => obj[e.key] > 0)
+      .map(e => `${obj[e.key]} ${e.label}`)
+      .join(' ') || null;
+  }
+
+  // Render badge row HTML from attunement string
+  function renderAttunementBadges(str) {
+    if (!str) return '';
+    const obj = parseAttunement(str);
+    const badges = ATT_ELEMENTS
+      .filter(e => obj[e.key] > 0)
+      .map(e => `<span class="att-badge att-${e.key}">${e.icon} ${e.label} ${obj[e.key]}</span>`)
+      .join('');
+    return badges ? `<div class="att-row">${badges}</div>` : '';
+  }
+
+  // Build the picker HTML for a given prefix (f- or ef-)
+  function buildAttPicker(prefix) {
+    return `<div class="att-picker" id="${prefix}att-picker">
+      ${ATT_ELEMENTS.map(e => `
+        <div class="att-picker-row" id="${prefix}att-row-${e.key}">
+          <span class="att-badge att-${e.key}" style="pointer-events:none;">${e.icon} ${e.label}</span>
+          <button type="button" class="att-lvl-btn" onclick="attAdj('${prefix}','${e.key}',-1)">−</button>
+          <span class="att-lvl-val" id="${prefix}att-val-${e.key}">0</span>
+          <button type="button" class="att-lvl-btn" onclick="attAdj('${prefix}','${e.key}',+1)">+</button>
+          <span style="font-size:0.72rem;color:var(--text-faint);margin-left:0.3rem;" id="${prefix}att-note-${e.key}"></span>
+        </div>`).join('')}
+    </div>`;
+  }
+
+  // State stores for each picker
+  const attState = { 'f-': {}, 'ef-': {} };
+  ATT_ELEMENTS.forEach(e => { attState['f-'][e.key] = 0; attState['ef-'][e.key] = 0; });
+
+  function attAdj(prefix, key, delta) {
+    const s = attState[prefix];
+    const el = ATT_ELEMENTS.find(e => e.key === key);
+    const newVal = Math.max(0, (s[key] || 0) + delta);
+    s[key] = newVal;
+    document.getElementById(`${prefix}att-val-${key}`).textContent = newVal;
+    // Disable opposite if this > 0
+    const oppKey = el.opposite;
+    const oppRow = document.getElementById(`${prefix}att-row-${oppKey}`);
+    if (oppRow) {
+      if (newVal > 0) {
+        oppRow.classList.add('disabled');
+        document.getElementById(`${prefix}att-note-${key}`).textContent = `(weak vs ${ATT_ELEMENTS.find(e=>e.key===oppKey).label})`;
+      } else {
+        // only re-enable if nothing else blocks it
+        const otherBlocks = ATT_ELEMENTS.some(e => e.opposite === oppKey && s[e.key] > 0);
+        if (!otherBlocks) oppRow.classList.remove('disabled');
+        document.getElementById(`${prefix}att-note-${key}`).textContent = '';
+      }
+    }
+  }
+
+  function setAttPicker(prefix, str) {
+    const obj = parseAttunement(str);
+    ATT_ELEMENTS.forEach(e => {
+      attState[prefix][e.key] = obj[e.key] || 0;
+    });
+    // Re-render all values and disabled states
+    ATT_ELEMENTS.forEach(e => {
+      const valEl = document.getElementById(`${prefix}att-val-${e.key}`);
+      if (valEl) valEl.textContent = attState[prefix][e.key];
+    });
+    ATT_ELEMENTS.forEach(e => {
+      const val = attState[prefix][e.key];
+      const oppKey = e.opposite;
+      const oppRow = document.getElementById(`${prefix}att-row-${oppKey}`);
+      if (oppRow) {
+        if (val > 0) {
+          oppRow.classList.add('disabled');
+          const noteEl = document.getElementById(`${prefix}att-note-${e.key}`);
+          if (noteEl) noteEl.textContent = `(weak vs ${ATT_ELEMENTS.find(x=>x.key===oppKey).label})`;
+        }
+      }
+    });
+  }
+
+  function getAttValue(prefix) {
+    return serialiseAttunement(attState[prefix]);
+  }
+
+
+  function toggleSection(name) {
+    const panel = document.getElementById('panel-' + name);
+    const btn   = document.getElementById('dsb-' + name);
+    if (!panel || !btn) return;
+    const isActive = panel.classList.contains('active');
+    // Close all panels and deactivate all buttons
+    document.querySelectorAll('.detail-section-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.detail-sec-btn').forEach(b => b.classList.remove('active'));
+    // If it wasn't active, open it
+    if (!isActive) {
+      panel.classList.add('active');
+      btn.classList.add('active');
+      // Force reflow for animation replay
+      panel.style.animation = 'none';
+      panel.offsetHeight;
+      panel.style.animation = '';
+    }
+  }
+
   function setLoading(on) {
     document.getElementById('loadingBar').style.width = on ? '80%' : '0%';
+  }
+
+  let allChars = [];
+  let allNPCs = [];
+
+
+  // ── REWARD MODAL ─────────────────────────────────────────
+  let rewardSelected = new Set();
+
+  function openRewardModal() {
+    rewardSelected = new Set();
+    const list = document.getElementById('rewardCharList');
+    const allPeople = allChars.concat(allNPCs);
+    if (!allPeople.length) {
+      list.innerHTML = '<div style="color:var(--text-faint);font-style:italic;padding:0.5rem;">No characters registered yet.</div>';
+    } else {
+      list.innerHTML = allPeople.map(c => `
+        <div class="reward-char-row" id="rrow-${c.id}" onclick="toggleRewardChar(${c.id})">
+          <input type="checkbox" id="rchk-${c.id}" onclick="event.stopPropagation();toggleRewardChar(${c.id})">
+          ${c.portrait_url
+            ? `<img class="reward-char-thumb" src="${c.portrait_url}" alt="${c.name}">`
+            : `<div class="reward-char-thumb-placeholder">⚔</div>`}
+          <div class="reward-char-info">
+            <div class="reward-char-name">${c.name}</div>
+            <div class="reward-char-sub">${c.race || '—'} · Lv.${c.level || 1}</div>
+          </div>
+        </div>`).join('');
+    }
+    // Clear fields
+    ['rw-xp','rw-gcoin','rw-ccoin','rw-item','rw-note'].forEach(id => {
+      document.getElementById(id).value = '';
+    });
+    document.getElementById('rewardModalBackdrop').classList.add('open');
+  }
+
+  function toggleRewardChar(id) {
+    const row = document.getElementById('rrow-' + id);
+    const chk = document.getElementById('rchk-' + id);
+    if (rewardSelected.has(id)) {
+      rewardSelected.delete(id);
+      row.classList.remove('selected');
+      chk.checked = false;
+    } else {
+      rewardSelected.add(id);
+      row.classList.add('selected');
+      chk.checked = true;
+    }
+  }
+
+  function toggleSelectAllReward() {
+    const _ap = allChars.concat(allNPCs);
+    const allSelected = rewardSelected.size === _ap.length;
+    _ap.forEach(c => {
+      const row = document.getElementById('rrow-' + c.id);
+      const chk = document.getElementById('rchk-' + c.id);
+      if (!row) return;
+      if (allSelected) {
+        rewardSelected.delete(c.id);
+        row.classList.remove('selected');
+        chk.checked = false;
+      } else {
+        rewardSelected.add(c.id);
+        row.classList.add('selected');
+        chk.checked = true;
+      }
+    });
+  }
+
+  function closeRewardModal() {
+    document.getElementById('rewardModalBackdrop').classList.remove('open');
+  }
+
+  function handleRewardBackdropClick(e) {
+    if (e.target === document.getElementById('rewardModalBackdrop')) closeRewardModal();
+  }
+
+  async function submitReward() {
+    if (!rewardSelected.size) { showToast('Select at least one character.', true); return; }
+
+    const xpAdd    = parseInt(document.getElementById('rw-xp').value)    || 0;
+    const gcoinAdd = parseInt(document.getElementById('rw-gcoin').value)  || 0;
+    const ccoinAdd = parseInt(document.getElementById('rw-ccoin').value)  || 0;
+    const itemName = document.getElementById('rw-item').value.trim();
+    const note     = document.getElementById('rw-note').value.trim();
+
+    if (!xpAdd && !gcoinAdd && !ccoinAdd && !itemName) {
+      showToast('Enter at least one reward.', true); return;
+    }
+
+    const btn = document.getElementById('rewardSubmitBtn');
+    btn.disabled = true; btn.textContent = 'Granting…';
+
+    const allPeople2 = allChars.concat(allNPCs);
+    const targets = allPeople2.filter(c => rewardSelected.has(c.id));
+    const errors = [];
+
+    for (const char of targets) {
+      try {
+        // Update numeric fields
+        if (xpAdd || gcoinAdd || ccoinAdd) {
+          const patch = {};
+          if (xpAdd)    patch.xp    = (char.xp    || 0) + xpAdd;
+          if (gcoinAdd) patch.gcoin = (char.gcoin || 0) + gcoinAdd;
+          if (ccoinAdd) patch.ccoin = (char.ccoin || 0) + ccoinAdd;
+          const isNpc = allNPCs.some(n => n.id === char.id);
+          await sbFetch(`/${isNpc ? 'EchoesDivideNPC' : 'EchoesDivideChar'}?id=eq.${char.id}`, {
+            method: 'PATCH',
+            body: JSON.stringify(patch)
+          });
+          // Update in-memory cache
+          Object.assign(char, patch);
+          // Update card on page
+          const card = document.querySelector(`.char-card[data-id="${char.id}"]`);
+          if (card) {
+            const coinWrap = card.querySelector('.stat-row');
+            if (xpAdd) {
+              const xpVal = card.querySelector('.stat-value');
+              if (xpVal) xpVal.textContent = patch.xp ?? char.xp;
+            }
+            const gcoinBadge = card.querySelector('.coin-badge.gcoin');
+            const ccoinBadge = card.querySelector('.coin-badge.ccoin');
+            if (gcoinBadge) gcoinBadge.lastChild.textContent = ' ' + (patch.gcoin ?? char.gcoin);
+            if (ccoinBadge) ccoinBadge.lastChild.textContent = ' ' + (patch.ccoin ?? char.ccoin);
+          }
+        }
+        // Add inventory item
+        if (itemName) {
+          await sbFetch('/inventory', {
+            method: 'POST',
+            body: JSON.stringify({
+              character_id: char.id,
+              item_name: itemName + (note ? ` (${note})` : '')
+            })
+          });
+        }
+      } catch(e) {
+        errors.push(char.name);
+      }
+    }
+
+    btn.disabled = false; btn.textContent = 'Grant Rewards';
+    closeRewardModal();
+
+    if (errors.length) {
+      showToast(`Rewarded with errors on: ${errors.join(', ')}`, true);
+    } else {
+      const parts = [];
+      if (xpAdd)    parts.push(`+${xpAdd} XP`);
+      if (gcoinAdd) parts.push(`+${gcoinAdd} G`);
+      if (ccoinAdd) parts.push(`+${ccoinAdd} C`);
+      if (itemName) parts.push(`item: ${itemName}`);
+      showToast(`Rewards granted to ${targets.length} adventurer${targets.length > 1 ? 's' : ''}: ${parts.join(', ')}`);
+    }
   }
 
   async function loadParty() {
     setLoading(true);
     try {
-      const chars = await sbFetch('/EchoesDivideChar?select=*&order=created_at.asc');
-      const skills = await sbFetch('/skills?select=*');
-
-      if (!chars.length) return;
+      // Fetch chars and skills together; NPC fetch is isolated so a missing table won't break chars
+      const [chars, skills] = await Promise.all([
+        sbFetch('/EchoesDivideChar?select=*&order=created_at.asc'),
+        sbFetch('/skills?select=*')
+      ]);
+      allChars = chars;
 
       const skillsByChar = {};
       skills.forEach(s => {
@@ -1745,13 +2684,27 @@
 
       chars.forEach((c, i) => {
         c.skills = skillsByChar[c.id] || [];
-        setTimeout(() => addCardToGrid(c), i * 80);
+        setTimeout(() => addCardToGrid(c, 'partyGrid'), i * 80);
       });
     } catch (err) {
       showToast('Could not load characters — check your API key.', true);
       console.error(err);
     } finally {
       setLoading(false);
+    }
+
+    // Load NPCs separately — failure here won't affect character display
+    try {
+      const npcs = await sbFetch('/EchoesDivideNPC?select=*&order=created_at.asc');
+      allNPCs = npcs || [];
+      allNPCs.forEach((c, i) => {
+        c.skills = [];
+        setTimeout(() => addCardToGrid(c, 'npcGrid'), i * 80);
+      });
+    } catch (err) {
+      // Table may not exist yet — silently ignore
+      allNPCs = [];
+      console.warn('NPC table not available:', err.message);
     }
   }
 
@@ -1813,7 +2766,8 @@
     editCharId = charId;
     setLoading(true);
     try {
-      const [char] = await sbFetch(`/EchoesDivideChar?id=eq.${charId}`);
+      let [char] = await sbFetch(`/EchoesDivideChar?id=eq.${charId}`);
+      if (!char) { [char] = await sbFetch(`/EchoesDivideNPC?id=eq.${charId}`); }
       const skills = await sbFetch(`/skills?character_id=eq.${charId}`);
 
       document.getElementById('ef-id').value = char.id;
@@ -1828,6 +2782,10 @@
       const p2sel = document.getElementById('ef-path2'); p2sel.value = char['Path 2'] || '';
       const cnsel = document.getElementById('ef-conname'); cnsel.value = char.constellationame || '';
       document.getElementById('ef-backstory').value = char.backstory || '';
+      // Build and populate attunement picker
+      document.getElementById('ef-att-wrap').innerHTML = buildAttPicker('ef-');
+      ATT_ELEMENTS.forEach(e => { attState['ef-'][e.key] = 0; });
+      setAttPicker('ef-', char.attunement || '');
 
       editSkillRows = skills.map(s => ({ id: s.id, dbId: s.id, name: s.skill_name, stars: s.stars, isNew: false }));
       renderEditSkillRows();
@@ -1872,6 +2830,7 @@
         'Path 2': document.getElementById('ef-path2').value.trim() || null,
         constellationame: document.getElementById('ef-conname').value.trim() || null,
         backstory: document.getElementById('ef-backstory').value.trim() || null,
+        attunement: getAttValue('ef-'),
       };
 
       // Upload new portrait if provided
@@ -1881,7 +2840,8 @@
         charData.portrait_url = url;
       }
 
-      await sbFetch(`/EchoesDivideChar?id=eq.${editCharId}`, {
+      const _editIsNpc = allNPCs.some(n => n.id === editCharId);
+      await sbFetch(`/${_editIsNpc ? 'EchoesDivideNPC' : 'EchoesDivideChar'}?id=eq.${editCharId}`, {
         method: 'PATCH',
         body: JSON.stringify(charData)
       });
@@ -2417,14 +3377,16 @@
     detailCharId = charId;
     setLoading(true);
     try {
-      const [char] = await sbFetch(`/EchoesDivideChar?id=eq.${charId}`);
+      let [char] = await sbFetch(`/EchoesDivideChar?id=eq.${charId}`);
+      if (!char) { [char] = await sbFetch(`/EchoesDivideNPC?id=eq.${charId}`); }
       const skills = await sbFetch(`/skills?character_id=eq.${charId}`);
 
       // Portrait
       const portraitCol = document.getElementById('detail-portrait-col');
+      const _paths = [char['Path 1'], char['Path 2']].filter(Boolean);
       portraitCol.innerHTML = char.portrait_url
         ? `<div class="detail-portrait-wrap"><img class="detail-portrait" src="${char.portrait_url}" alt="${char.name}"></div>`
-        : `<div class="detail-portrait-placeholder">⚔</div>`;
+        : `<div class="detail-portrait-wrap" style="background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:4rem;color:var(--text-faint);">⚔</div>`;
 
       // Name & meta
       document.getElementById('detail-name').textContent = char.name;
@@ -2432,36 +3394,55 @@
         `${char.race || '—'} &nbsp;·&nbsp; Level ${char.level || 1}${char.constellationlevel ? ' &nbsp;·&nbsp; ✦ Constellation ' + char.constellationlevel : ''}`;
 
       // Backstory
-      document.getElementById('detail-backstory').innerHTML = char.backstory
-        ? `<div style="margin-top:0.5rem;padding:0.8rem 1rem;background:var(--bg3);border:1px solid var(--border);border-left:2px solid var(--gold-dim);font-style:italic;color:var(--text-dim);font-size:0.95rem;line-height:1.6;">${char.backstory}</div>`
+      document.getElementById('detail-backstory-full').innerHTML = char.backstory
+        ? `<div style="margin-top:0.5rem;padding:0.8rem 1rem;background:var(--bg3);border:1px solid var(--border);border-left:2px solid var(--gold-dim);font-style:italic;color:var(--text-dim);font-size:1.05rem;line-height:1.75;">${char.backstory}</div>`
         : '';
 
-      // Stats
+      // Stats — compact strip + currencies
+      const _gcoinSvg = `<svg width="11" height="11" viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="5.5" cy="5.5" r="4.5" stroke="currentColor" stroke-width="1"/><circle cx="5.5" cy="5.5" r="2.5" fill="currentColor" opacity="0.5"/></svg>`;
+      const _ccoinSvg = `<svg width="10" height="11" viewBox="0 0 10 11" fill="none" xmlns="http://www.w3.org/2000/svg"><polygon points="5,1 9,4 9,7 5,10 1,7 1,4" stroke="currentColor" stroke-width="1" fill="currentColor" opacity="0.3"/></svg>`;
       document.getElementById('detail-stats').innerHTML = `
-        <div class="detail-stat"><div class="detail-stat-label">XP</div><div class="detail-stat-value">${char.xp || 0}</div></div>
-        <div class="detail-stat"><div class="detail-stat-label">Level</div><div class="detail-stat-value">${char.level || 1}</div></div>
-        ${char.constellationlevel ? `<div class="detail-stat"><div class="detail-stat-label">Constellation Lv.</div><div class="detail-stat-value">${char.constellationlevel}</div></div>` : ''}
-        <div class="detail-stat"><div class="detail-stat-label" style="color:var(--gold)">★ Gold Coins</div><div class="detail-stat-value" style="color:var(--gold)">${char.gcoin || 0}</div></div>
-        <div class="detail-stat"><div class="detail-stat-label" style="color:var(--gold-light)">◆ Currency Coins</div><div class="detail-stat-value" style="color:var(--gold-light)">${char.ccoin || 0}</div></div>
+        <div class="detail-stats-strip">
+          <div class="ds-item"><span class="ds-label">XP</span><span class="ds-val">${char.xp || 0}</span></div>
+          <div class="ds-item"><span class="ds-label">Level</span><span class="ds-val">${char.level || 1}</span></div>
+          ${char.constellationlevel ? `<div class="ds-item"><span class="ds-label">Const.</span><span class="ds-val">${char.constellationlevel}</span></div>` : ''}
+        </div>
+        <div class="detail-currencies">
+          <span class="coin-badge gcoin">${_gcoinSvg} ${char.gcoin || 0} G</span>
+          <span class="coin-badge ccoin">${_ccoinSvg} ${char.ccoin || 0} C</span>
+        </div>
       `;
 
-      // Paths
+      // Attunement
+      const attHtml = char.attunement ? `
+        <div style="margin-bottom:1rem;">
+          <div class="detail-paths-label" style="margin-bottom:0.4rem;">Attunement</div>
+          ${renderAttunementBadges(char.attunement)}
+        </div>` : '';
+      document.getElementById('detail-attunement').innerHTML = attHtml;
+
+      // Paths — render in right column as styled rows
       const paths = [char['Path 1'], char['Path 2']].filter(Boolean);
       document.getElementById('detail-paths').innerHTML = paths.length ? `
         <div class="detail-paths">
           <div class="detail-paths-label">Skill Paths${char.constellationame ? ' &nbsp;·&nbsp; ✦ ' + char.constellationame : ''}</div>
-          <div class="detail-paths-value">${paths.join(' · ')}</div>
+          <div class="detail-paths-value" style="display:flex;flex-direction:column;gap:0.2rem;margin-top:0.3rem;">
+            ${paths.map(p => `<span style="font-size:0.95rem;">${p}</span>`).join('')}
+          </div>
         </div>` : '';
 
       // Skills
       document.getElementById('detail-skills-wrap').innerHTML = skills.length ? `
         <div>
           <div class="detail-paths-label" style="margin-bottom:0.4rem;font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold-dim);">Skill Stars</div>
-          ${skills.map(s => `
-            <div class="detail-skill-row">
-              <span style="font-style:italic;color:var(--text-dim)">${s.skill_name}</span>
-              <span class="stars">${'★'.repeat(s.stars)}<span class="empty-star">${'★'.repeat(5 - s.stars)}</span></span>
-            </div>`).join('')}
+          ${skills.map(s => {
+            const pips = Array.from({length:5},(_,i)=>`<span class="${i<s.stars?'lit':''}"></span>`).join('');
+            const isStar5 = s.stars === 5;
+            return `<div class="detail-skill-row${isStar5 ? ' star5' : ''}" data-tier="${s.stars}">
+              <span style="font-style:italic;color:${isStar5 ? 'var(--gold-light)' : 'var(--text-dim)'};${isStar5 ? 'text-shadow:0 0 10px rgba(201,168,76,0.5);' : ''}">${s.skill_name}</span>
+              <span class="skill-tier-pip" style="margin-left:0.5rem;">${pips}</span>
+            </div>`;
+          }).join('')}
         </div>` : '';
 
       // Constellation Skills
@@ -2473,6 +3454,9 @@
       // Inventory
       await loadInventory(charId);
 
+      // Close all section panels on open
+      document.querySelectorAll('.detail-section-panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.detail-sec-btn').forEach(b => b.classList.remove('active'));
       document.getElementById('detailPage').classList.add('open');
       window.scrollTo(0, 0);
     } catch(err) {
@@ -2512,7 +3496,7 @@
             <div class="path-skill-item-body">
               <div class="path-skill-level">Level ${skill.level} Unlock</div>
               <div class="path-skill-name">${skill.name}</div>
-              <div class="path-skill-desc">${skill.desc}</div>
+              <div class="path-skill-desc">${parseSkillDesc(skill.desc)}</div>
             </div>
             <button class="path-skill-dismiss" onclick="toggleDismissSkill(${char.id}, '${skill.name.replace(/'/g,"\\'")}', this)">
               ${isDismissed ? '↺ Restore' : '✕ Remove'}
@@ -2556,11 +3540,11 @@
       <div class="path-skills-section">
         <div class="path-skills-header">${char.constellationame}</div>
         ${unlocked.map(skill => `
-          <div class="path-skill-item">
+          <div class="path-skill-item" data-tier="${Math.min(5,skill.level)}">
             <div class="path-skill-item-body">
               <div class="path-skill-level">Level ${skill.level}</div>
               <div class="path-skill-name">${skill.name}</div>
-              <div class="path-skill-desc">${skill.desc}</div>
+              <div class="path-skill-desc">${parseSkillDesc(skill.desc)}</div>
             </div>
           </div>`).join('')}
       </div>`;
@@ -2644,5 +3628,63 @@
   // ── INIT ─────────────────────────────────────────────────
   loadParty();
 </script>
+<script>
+(function() {
+  const IMAGES = ['https://aakfivejocyemgsfxkvw.supabase.co/storage/v1/object/public/assets/bg1.png', 'https://aakfivejocyemgsfxkvw.supabase.co/storage/v1/object/public/assets/bg2.png'];
+  const a = document.getElementById('bg-layer-a');
+  const b = document.getElementById('bg-layer-b');
+  let current = Math.random() < 0.5 ? 0 : 1;
+  let useA = true;
+
+  function setBg(el, idx) {
+    el.style.backgroundImage = 'url(' + IMAGES[idx] + ')';
+  }
+
+  setBg(a, current);
+  const next = (current + 1) % IMAGES.length;
+  setBg(b, next);
+
+  setInterval(function() {
+    current = (current + 1) % IMAGES.length;
+    const incoming = (current + 1) % IMAGES.length;
+    if (useA) {
+      a.style.opacity = '0';
+      b.style.opacity = '1';
+      setTimeout(function() { setBg(a, incoming); }, 2600);
+    } else {
+      a.style.opacity = '1';
+      b.style.opacity = '0';
+      setTimeout(function() { setBg(b, incoming); }, 2600);
+    }
+    useA = !useA;
+  }, 45000);
+})();
+</script>
+
+
+<script>
+// ── PAGE TRANSITION ──────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  document.body.classList.add('page-ready');
+});
+function navigateTo(url) {
+  document.body.classList.add('page-out');
+  setTimeout(() => { window.location.href = url; }, 300);
+}
+// Intercept all toolbar/nav buttons that use window.location.href
+document.addEventListener('click', e => {
+  const btn = e.target.closest('button');
+  if (!btn) return;
+  const onclick = btn.getAttribute('onclick') || '';
+  const match = onclick.match(/window\.location\.href\s*=\s*['"]([^'"]+)['"]/);
+  if (match) {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    btn.setAttribute('onclick', '');
+    navigateTo(match[1]);
+  }
+}, true);
+</script>
+
 </body>
 </html>

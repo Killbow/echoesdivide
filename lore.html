@@ -9,15 +9,16 @@
   :root {
     --bg:#3d2b10;--bg2:#4a3418;--bg3:#553c1e;--border:#6e5530;
     --gold:#c9a84c;--gold-light:#e8c97a;--gold-dim:#6b5a2a;
-    --text:#e8dcc8;--text-dim:#d4c4a0;--text-faint:#a08c6a;
+    --text:#e8dcc8;--text-dim:#ddd0b0;--text-faint:#b8a07a;
     --red-light:#c94444;--ink:#1a1208;--purple:#9b4dff;
   }
   *{margin:0;padding:0;box-sizing:border-box;}
-  body{background:var(--bg);color:var(--text);font-family:'Crimson Pro',serif;min-height:100vh;overflow-x:hidden;}
-  body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.12'/%3E%3C/svg%3E");pointer-events:none;z-index:0;mix-blend-mode:multiply;}
-  body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at center,transparent 55%,rgba(10,6,2,0.4) 100%);pointer-events:none;z-index:0;}
+  html{background:#1e1508;}
+  body{background:transparent;color:var(--text);font-family:'Crimson Pro',serif;font-size:17px;line-height:1.65;min-height:100vh;overflow-x:hidden;}
   header{position:relative;text-align:center;padding:3rem 2rem 2rem;border-bottom:1px solid var(--border);background:linear-gradient(180deg,#0e0b06 0%,transparent 100%);z-index:1;}
   header::after{content:'';position:absolute;bottom:-1px;left:50%;transform:translateX(-50%);width:60%;height:1px;background:linear-gradient(90deg,transparent,var(--gold-dim),var(--gold),var(--gold-dim),transparent);}
+  .header-logo{display:block;height:72px;width:auto;margin:0 auto 0.6rem;object-fit:contain;opacity:0;animation:logoSpin 1s cubic-bezier(0.22,1,0.36,1) forwards;transform-origin:center;}
+  @keyframes logoSpin{0%{opacity:0;transform:rotate(-120deg) scale(0.6);filter:drop-shadow(0 0 0px rgba(201,168,76,0));}60%{opacity:1;transform:rotate(8deg) scale(1.05);filter:drop-shadow(0 0 24px rgba(201,168,76,0.7));}80%{transform:rotate(-3deg) scale(0.98);}100%{opacity:1;transform:rotate(0deg) scale(1);filter:drop-shadow(0 0 16px rgba(201,168,76,0.5));}}
   .guild-seal{display:block;font-size:2rem;color:var(--gold-dim);margin-bottom:0.4rem;filter:drop-shadow(0 0 8px rgba(201,168,76,0.4));}
   .guild-name{font-family:'Cinzel',serif;font-size:0.7rem;letter-spacing:0.35em;text-transform:uppercase;color:var(--text-dim);margin-bottom:0.6rem;}
   .records-title{font-family:'Cinzel',serif;font-size:clamp(2rem,5vw,3.5rem);font-weight:900;letter-spacing:0.2em;color:var(--gold-light);text-shadow:0 0 60px rgba(201,168,76,0.5),0 2px 6px rgba(0,0,0,0.9);margin-bottom:0.6rem;line-height:1.1;}
@@ -29,7 +30,7 @@
   .btn-back:hover{border-color:var(--gold-dim);color:var(--gold);}
   .page-wrap{max-width:1100px;margin:0 auto;padding:0 2rem 4rem;position:relative;z-index:1;}
   .codex-tabs{display:flex;justify-content:center;padding:2rem 0 0;}
-  .codex-tab{font-family:'Cinzel',serif;font-size:0.75rem;letter-spacing:0.15em;text-transform:uppercase;background:var(--bg2);border:1px solid var(--border);color:var(--text-faint);padding:0.7rem 2.5rem;cursor:pointer;transition:all 0.2s;}
+  .codex-tab{font-family:'Cinzel',serif;font-size:0.78rem;letter-spacing:0.15em;text-transform:uppercase;background:var(--bg2);border:1px solid var(--border);color:var(--text-faint);padding:0.7rem 2.5rem;cursor:pointer;transition:all 0.2s;}
   .codex-tab:first-child{border-right:none;}
   .codex-tab:hover{color:var(--text-dim);}
   .codex-tab.active{background:var(--bg3);border-color:var(--gold-dim);color:var(--gold);border-bottom-color:var(--bg3);}
@@ -53,7 +54,7 @@
   .lore-tag.red{border-color:var(--red-light);color:var(--red-light);}
   .lore-tag.gold{border-color:var(--gold);color:var(--gold);}
   .lore-title{font-family:'Cinzel',serif;font-size:1.3rem;font-weight:600;color:var(--gold-light);letter-spacing:0.04em;}
-  .lore-text{font-size:1rem;color:var(--text-dim);line-height:1.7;}
+  .lore-text{font-size:1.05rem;color:var(--text-dim);line-height:1.75;}
   .lore-text em{color:var(--text);font-style:italic;}
   .lore-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;}
   @media(max-width:500px){.lore-grid{grid-template-columns:1fr;}}
@@ -67,13 +68,42 @@
   .rank-a{border-color:#4fa3e0;color:#4fa3e0;}
   .rank-g{border-color:#8aad3a;color:#8aad3a;}
   ::-webkit-scrollbar{width:6px;}::-webkit-scrollbar-track{background:var(--bg);}::-webkit-scrollbar-thumb{background:var(--border);}::-webkit-scrollbar-thumb:hover{background:var(--gold-dim);}
+
+  /* ── BACKGROUND IMAGE ── */
+  #bg-vignette{position:fixed;inset:0;background:rgba(20,13,4,0.55);pointer-events:none;z-index:0;}
+  #bg-layer-a, #bg-layer-b {
+    background-color: #1e1508;
+    position: fixed;
+    inset: 0;
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-color: #1e1508;
+    pointer-events: none;
+    z-index: 0;
+    transition: opacity 2.5s ease;
+    will-change: opacity;
+    transform: translateZ(0);
+  }
+  #bg-layer-b { opacity: 0; }
+
+
+  @keyframes pageIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  body.page-ready { animation: pageIn 0.45s ease forwards; }
+  body.page-out { opacity: 0; transition: opacity 0.3s ease; pointer-events: none; }
 </style>
 </head>
 <body>
+<div id="bg-layer-a"></div>
+<div id="bg-layer-b"></div>
+<div id="bg-vignette"></div>
 
 <header>
-  <span class="guild-seal">⚜</span>
-  <div class="guild-name">Adventurers Guild Registry</div>
+  <img src="https://aakfivejocyemgsfxkvw.supabase.co/storage/v1/object/public/assets/logo.png" alt="Echoes Divide" class="header-logo">
+  <div class="guild-name">Echoes Divide</div>
   <div class="records-title">World Codex</div>
   <div class="header-rule"></div>
   <div class="records-subtitle"><span class="ornament">✦</span> Places, Factions &amp; Powers of the Divide <span class="ornament">✦</span></div>
@@ -327,5 +357,63 @@
     document.getElementById('panel-' + panel).classList.add('active');
   }
 </script>
+<script>
+(function() {
+  const IMAGES = ['https://aakfivejocyemgsfxkvw.supabase.co/storage/v1/object/public/assets/bg1.png', 'https://aakfivejocyemgsfxkvw.supabase.co/storage/v1/object/public/assets/bg2.png'];
+  const a = document.getElementById('bg-layer-a');
+  const b = document.getElementById('bg-layer-b');
+  let current = Math.random() < 0.5 ? 0 : 1;
+  let useA = true;
+
+  function setBg(el, idx) {
+    el.style.backgroundImage = 'url(' + IMAGES[idx] + ')';
+  }
+
+  setBg(a, current);
+  const next = (current + 1) % IMAGES.length;
+  setBg(b, next);
+
+  setInterval(function() {
+    current = (current + 1) % IMAGES.length;
+    const incoming = (current + 1) % IMAGES.length;
+    if (useA) {
+      a.style.opacity = '0';
+      b.style.opacity = '1';
+      setTimeout(function() { setBg(a, incoming); }, 2600);
+    } else {
+      a.style.opacity = '1';
+      b.style.opacity = '0';
+      setTimeout(function() { setBg(b, incoming); }, 2600);
+    }
+    useA = !useA;
+  }, 45000);
+})();
+</script>
+
+
+<script>
+// ── PAGE TRANSITION ──────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  document.body.classList.add('page-ready');
+});
+function navigateTo(url) {
+  document.body.classList.add('page-out');
+  setTimeout(() => { window.location.href = url; }, 300);
+}
+// Intercept all toolbar/nav buttons that use window.location.href
+document.addEventListener('click', e => {
+  const btn = e.target.closest('button');
+  if (!btn) return;
+  const onclick = btn.getAttribute('onclick') || '';
+  const match = onclick.match(/window\.location\.href\s*=\s*['"]([^'"]+)['"]/);
+  if (match) {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    btn.setAttribute('onclick', '');
+    navigateTo(match[1]);
+  }
+}, true);
+</script>
+
 </body>
 </html>

@@ -6,14 +6,15 @@
 <title>Echoes Divide — Marketboard</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=Crimson+Pro:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
 <style>
-  :root{--bg:#1e1508;--bg2:#2a1c0c;--bg3:#352211;--border:#6e5530;--gold:#c9a84c;--gold-light:#e8c97a;--gold-dim:#6b5a2a;--text:#e8dcc8;--text-dim:#d4c4a0;--text-faint:#a08c6a;--ink:#1a1208;--purple:#9b4dff;}
+  :root{--bg:#1e1508;--bg2:#2a1c0c;--bg3:#352211;--border:#6e5530;--gold:#c9a84c;--gold-light:#e8c97a;--gold-dim:#6b5a2a;--text:#e8dcc8;--text-dim:#ddd0b0;--text-faint:#b8a07a;--ink:#1a1208;--purple:#9b4dff;--red:#c94444;}
   *{margin:0;padding:0;box-sizing:border-box;}
-  body{background:var(--bg);color:var(--text);font-family:'Crimson Pro',serif;min-height:100vh;overflow-x:hidden;}
-  body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.12'/%3E%3C/svg%3E");pointer-events:none;z-index:0;mix-blend-mode:multiply;}
-  body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at center,transparent 55%,rgba(10,6,2,0.4) 100%);pointer-events:none;z-index:0;}
+  html{background:#1e1508;}
+  body{background:transparent;color:var(--text);font-family:'Crimson Pro',serif;font-size:17px;line-height:1.65;min-height:100vh;overflow-x:hidden;}
 
   header{position:relative;text-align:center;padding:3rem 2rem 2rem;border-bottom:1px solid var(--border);background:linear-gradient(180deg,#0e0b06 0%,transparent 100%);z-index:1;}
   header::after{content:'';position:absolute;bottom:-1px;left:50%;transform:translateX(-50%);width:60%;height:1px;background:linear-gradient(90deg,transparent,var(--gold-dim),var(--gold),var(--gold-dim),transparent);}
+  .header-logo{display:block;height:72px;width:auto;margin:0 auto 0.6rem;object-fit:contain;opacity:0;animation:logoSpin 1s cubic-bezier(0.22,1,0.36,1) forwards;transform-origin:center;}
+  @keyframes logoSpin{0%{opacity:0;transform:rotate(-120deg) scale(0.6);filter:drop-shadow(0 0 0px rgba(201,168,76,0));}60%{opacity:1;transform:rotate(8deg) scale(1.05);filter:drop-shadow(0 0 24px rgba(201,168,76,0.7));}80%{transform:rotate(-3deg) scale(0.98);}100%{opacity:1;transform:rotate(0deg) scale(1);filter:drop-shadow(0 0 16px rgba(201,168,76,0.5));}}
   .guild-seal{display:block;font-size:2rem;color:var(--gold-dim);margin-bottom:0.4rem;filter:drop-shadow(0 0 8px rgba(201,168,76,0.4));}
   .guild-name{font-family:'Cinzel',serif;font-size:0.7rem;letter-spacing:0.35em;text-transform:uppercase;color:var(--text-dim);margin-bottom:0.6rem;}
   .records-title{font-family:'Cinzel',serif;font-size:clamp(2rem,5vw,3.5rem);font-weight:900;letter-spacing:0.2em;color:var(--gold-light);text-shadow:0 0 60px rgba(201,168,76,0.5),0 2px 6px rgba(0,0,0,0.9);margin-bottom:0.6rem;line-height:1.1;}
@@ -21,15 +22,16 @@
   .records-subtitle{font-size:0.95rem;font-style:italic;color:var(--text-dim);letter-spacing:0.1em;}
 
   .toolbar{display:flex;justify-content:center;padding:1.5rem 2rem 0.5rem;gap:1rem;flex-wrap:wrap;position:relative;z-index:1;}
-  .btn{font-family:'Cinzel',serif;font-size:0.75rem;letter-spacing:0.12em;padding:0.65rem 1.6rem;border:1px solid var(--gold-dim);background:transparent;color:var(--text);cursor:pointer;transition:all 0.2s;text-transform:uppercase;position:relative;overflow:hidden;}
+  .btn{font-family:'Cinzel',serif;font-size:0.78rem;letter-spacing:0.12em;padding:0.65rem 1.6rem;border:1px solid var(--gold-dim);background:transparent;color:var(--text);cursor:pointer;transition:all 0.2s;text-transform:uppercase;position:relative;overflow:hidden;}
   .btn::before{content:'';position:absolute;inset:0;background:var(--gold);opacity:0;transition:opacity 0.2s;}
   .btn:hover{border-color:var(--gold);color:var(--ink);}
   .btn:hover::before{opacity:1;}
   .btn span{position:relative;z-index:1;}
+  .btn.primary{border-color:var(--gold);background:rgba(201,168,76,0.1);}
 
   /* TAB NAV */
   .tab-nav{display:flex;justify-content:center;flex-wrap:wrap;gap:0;padding:2rem 2rem 0;position:relative;z-index:1;max-width:1100px;margin:0 auto;}
-  .tab-btn{font-family:'Cinzel',serif;font-size:0.7rem;letter-spacing:0.12em;text-transform:uppercase;padding:0.65rem 1.8rem;border:1px solid var(--border);background:transparent;color:var(--text-faint);cursor:pointer;transition:all 0.2s;border-right:none;}
+  .tab-btn{font-family:'Cinzel',serif;font-size:0.75rem;letter-spacing:0.12em;text-transform:uppercase;padding:0.65rem 1.8rem;border:1px solid var(--border);background:transparent;color:var(--text-faint);cursor:pointer;transition:all 0.2s;border-right:none;}
   .tab-btn:last-child{border-right:1px solid var(--border);}
   .tab-btn.active{background:var(--bg2);color:var(--gold-light);border-color:var(--gold-dim);border-bottom:1px solid var(--bg2);position:relative;top:1px;}
   .tab-btn:not(.active):hover{color:var(--text-dim);background:rgba(255,255,255,0.02);}
@@ -47,33 +49,136 @@
   .search-label{font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-faint);white-space:nowrap;}
 
   /* ITEMS GRID */
-  .items-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1px;border:1px solid var(--border);}
-  .item-row{display:flex;justify-content:space-between;align-items:center;padding:0.65rem 1rem;background:var(--bg2);border-bottom:1px solid var(--border);transition:background 0.15s;gap:1rem;}
+  .items-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1px;border:1px solid var(--border);}
+  .item-row{display:flex;justify-content:space-between;align-items:center;padding:0.6rem 0.8rem 0.6rem 1rem;background:var(--bg2);border-bottom:1px solid var(--border);transition:background 0.15s;gap:0.6rem;}
   .item-row:last-child{border-bottom:none;}
   .item-row:hover{background:var(--bg3);}
   .item-row.hidden{display:none;}
-  .item-name{font-size:0.95rem;color:var(--text-dim);}
-  .item-price{font-family:'Cinzel',serif;font-size:0.78rem;color:var(--gold);letter-spacing:0.05em;white-space:nowrap;}
+  .item-name{font-size:1rem;color:var(--text-dim);flex:1;}
+  .item-price{font-family:'Cinzel',serif;font-size:0.8rem;color:var(--gold);letter-spacing:0.05em;white-space:nowrap;}
   .item-price.service{color:var(--purple);}
+  .buy-btn{font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.22rem 0.55rem;border:1px solid var(--gold-dim);background:transparent;color:var(--gold-dim);cursor:pointer;transition:all 0.15s;flex-shrink:0;}
+  .buy-btn:hover{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,0.08);}
 
-  /* SECTION HEADER inside panel */
-  .market-section-rule{display:flex;align-items:center;gap:1rem;margin:2rem 0 1rem;}
-  .market-section-rule::before,.market-section-rule::after{content:'';flex:1;height:1px;background:var(--border);}
-  .market-section-title{font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);white-space:nowrap;}
-
-  /* CATEGORY CARD for all-items view */
   .category-block{margin-bottom:2.5rem;}
-  .category-heading{font-family:'Cinzel',serif;font-size:0.75rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:0.6rem;padding-bottom:0.4rem;border-bottom:1px solid var(--border);}
-
+  .category-heading{font-family:'Cinzel',serif;font-size:0.8rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:0.6rem;padding-bottom:0.4rem;border-bottom:1px solid var(--border);}
   .empty-msg{text-align:center;color:var(--text-faint);font-style:italic;padding:3rem 0;font-size:0.95rem;}
 
+  /* ── SHOP MODAL ── */
+  .modal-backdrop{position:fixed;inset:0;background:rgba(10,6,2,0.75);z-index:200;display:flex;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(3px);opacity:0;pointer-events:none;transition:opacity 0.2s;}
+  .modal-backdrop.open{opacity:1;pointer-events:all;}
+  .modal{background:var(--bg2);border:1px solid var(--border);width:100%;max-width:520px;max-height:90vh;overflow-y:auto;position:relative;transform:translateY(12px);transition:transform 0.2s;}
+  .modal-backdrop.open .modal{transform:translateY(0);}
+  .modal-header{display:flex;justify-content:space-between;align-items:center;padding:1rem 1.2rem;border-bottom:1px solid var(--border);background:var(--bg3);}
+  .modal-title{font-family:'Cinzel',serif;font-size:0.85rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold-light);}
+  .modal-close{background:none;border:1px solid var(--border);color:var(--text-dim);width:28px;height:28px;cursor:pointer;font-size:0.85rem;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
+  .modal-close:hover{border-color:var(--gold-dim);color:var(--gold);}
+  .modal-body{padding:1.2rem;}
+
+  /* char picker */
+  .char-pick-list{display:flex;flex-direction:column;gap:0.35rem;max-height:180px;overflow-y:auto;margin-bottom:1rem;}
+  .char-pick-row{display:flex;align-items:center;gap:0.7rem;padding:0.45rem 0.75rem;background:var(--bg3);border:1px solid var(--border);cursor:pointer;transition:all 0.15s;user-select:none;}
+  .char-pick-row:hover{border-color:var(--gold-dim);}
+  .char-pick-row.selected{border-color:var(--gold);background:rgba(201,168,76,0.1);}
+  .char-pick-thumb{width:30px;height:30px;object-fit:cover;object-position:top;border:1px solid var(--border);flex-shrink:0;}
+  .char-pick-placeholder{width:30px;height:30px;background:var(--bg2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:0.8rem;flex-shrink:0;}
+  .char-pick-info{flex:1;min-width:0;}
+  .char-pick-name{font-family:'Cinzel',serif;font-size:0.78rem;color:var(--text);}
+  .char-pick-sub{font-size:0.72rem;color:var(--text-faint);font-style:italic;}
+  .char-pick-wallet{font-family:'Cinzel',serif;font-size:0.72rem;color:var(--gold);white-space:nowrap;}
+
+  /* divider */
+  .shop-divider{display:flex;align-items:center;gap:0.8rem;margin:1rem 0 0.8rem;}
+  .shop-divider::before,.shop-divider::after{content:'';flex:1;height:1px;background:var(--border);}
+  .shop-divider span{font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-faint);white-space:nowrap;}
+
+  /* cart */
+  .cart-empty{color:var(--text-faint);font-style:italic;font-size:0.88rem;padding:0.5rem 0;}
+  .cart-list{display:flex;flex-direction:column;gap:0.3rem;margin-bottom:0.8rem;max-height:150px;overflow-y:auto;}
+  .cart-row{display:flex;align-items:center;gap:0.6rem;padding:0.4rem 0.6rem;background:var(--bg3);border:1px solid var(--border);}
+  .cart-row-name{flex:1;font-size:0.88rem;color:var(--text-dim);}
+  .cart-row-qty{font-family:'Cinzel',serif;font-size:0.72rem;color:var(--text-faint);white-space:nowrap;}
+  .cart-row-price{font-family:'Cinzel',serif;font-size:0.78rem;color:var(--gold);white-space:nowrap;min-width:60px;text-align:right;}
+  .cart-row-del{background:none;border:none;color:var(--text-faint);cursor:pointer;font-size:0.85rem;padding:0 0.2rem;transition:color 0.15s;flex-shrink:0;}
+  .cart-row-del:hover{color:var(--red);}
+
+  /* total + custom spend */
+  .cart-total-row{display:flex;justify-content:space-between;align-items:center;padding:0.5rem 0.6rem;border-top:1px solid var(--border);margin-top:0.2rem;}
+  .cart-total-label{font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-faint);}
+  .cart-total-val{font-family:'Cinzel',serif;font-size:1rem;color:var(--gold-light);}
+  .cart-total-val.over{color:var(--red);}
+
+  .custom-spend-row{display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-top:0.8rem;}
+  .custom-spend-row label{display:block;font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:0.2rem;}
+  .custom-spend-row input{width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:0.45rem 0.6rem;font-family:'Crimson Pro',serif;font-size:0.9rem;outline:none;transition:border-color 0.15s;}
+  .custom-spend-row input:focus{border-color:var(--gold-dim);}
+
+  .form-actions{display:flex;justify-content:flex-end;gap:0.8rem;margin-top:1.1rem;}
+  .btn-cancel{font-family:'Cinzel',serif;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.6rem 1.4rem;border:1px solid var(--border);background:transparent;color:var(--text-dim);cursor:pointer;transition:all 0.15s;}
+  .btn-cancel:hover{border-color:var(--gold-dim);color:var(--text);}
+  .btn-submit{font-family:'Cinzel',serif;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.6rem 1.4rem;border:1px solid var(--gold);background:rgba(201,168,76,0.12);color:var(--gold-light);cursor:pointer;transition:all 0.15s;}
+  .btn-submit:hover{background:var(--gold);color:var(--ink);}
+  .btn-submit:disabled{opacity:0.5;cursor:not-allowed;}
+
+  /* toast */
+  .toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(20px);background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:0.7rem 1.4rem;font-family:'Cinzel',serif;font-size:0.72rem;letter-spacing:0.08em;z-index:999;opacity:0;transition:all 0.3s;pointer-events:none;white-space:nowrap;}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+  .toast.err{border-color:var(--red);color:var(--red);}
+
+
+  .item-row.unaffordable { opacity: 0.38; }
+  .item-row.unaffordable .item-name { color: var(--text-faint); }
+  .item-row.unaffordable .buy-btn { opacity: 0.4; pointer-events: none; }
+  .item-row.affordable .buy-btn {
+    border-color: var(--gold); color: var(--gold);
+    background: rgba(201,168,76,0.07);
+  }
+  .buyer-balance {
+    display: flex; align-items: center; gap: 0.6rem;
+    padding: 0.5rem 0.8rem; margin-bottom: 0.5rem;
+    background: rgba(201,168,76,0.06); border: 1px solid var(--gold-dim);
+    font-family: 'Cinzel', serif; font-size: 0.7rem; letter-spacing: 0.08em;
+    color: var(--gold-dim);
+  }
+  .buyer-balance strong { color: var(--gold-light); }
+  #buyer-balance-bar { display: none; }
+
   ::-webkit-scrollbar{width:6px;} ::-webkit-scrollbar-track{background:var(--bg);} ::-webkit-scrollbar-thumb{background:var(--border);} ::-webkit-scrollbar-thumb:hover{background:var(--gold-dim);}
+
+  /* ── BACKGROUND IMAGE ── */
+  #bg-vignette{position:fixed;inset:0;background:rgba(20,13,4,0.55);pointer-events:none;z-index:0;}
+  #bg-layer-a, #bg-layer-b {
+    background-color: #1e1508;
+    position: fixed;
+    inset: 0;
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-color: #1e1508;
+    pointer-events: none;
+    z-index: 0;
+    transition: opacity 2.5s ease;
+    will-change: opacity;
+    transform: translateZ(0);
+  }
+  #bg-layer-b { opacity: 0; }
+
+
+  @keyframes pageIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  body.page-ready { animation: pageIn 0.45s ease forwards; }
+  body.page-out { opacity: 0; transition: opacity 0.3s ease; pointer-events: none; }
 </style>
 </head>
 <body>
+<div id="bg-layer-a"></div>
+<div id="bg-layer-b"></div>
+<div id="bg-vignette"></div>
 
 <header>
-  <span class="guild-seal">⚜</span>
+  <img src="https://aakfivejocyemgsfxkvw.supabase.co/storage/v1/object/public/assets/logo.png" alt="Echoes Divide" class="header-logo">
   <div class="guild-name">Echoes Divide</div>
   <div class="records-title">Marketboard</div>
   <div class="header-rule"></div>
@@ -83,6 +188,7 @@
 <div class="toolbar">
   <button class="btn" onclick="window.location.href='index.html'"><span>&#8592; Guild Registry</span></button>
   <button class="btn" onclick="window.location.href='lore.html'"><span>&#128214; World Codex</span></button>
+  <button class="btn primary" onclick="openShop()"><span>&#9670; Open Shop</span></button>
 </div>
 
 <div class="tab-nav">
@@ -94,91 +200,178 @@
 </div>
 <div class="tab-underline"></div>
 
+<div id="buyer-balance-bar" class="buyer-balance">Viewing prices for <strong id="buyer-balance-name">—</strong> &nbsp;·&nbsp; <span id="buyer-balance-wallet"></span></div>
+<!-- ALL ITEMS PANEL -->
+<div class="market-panel active" id="panel-all">
+  <div id="search-wrap" style="margin-bottom:1.5rem;">
+    <div class="search-bar">
+      <span class="search-label">Search</span>
+      <input type="text" placeholder="Filter items..." oninput="onSearch(event)">
+    </div>
+  </div>
+</div>
+<div class="market-panel" id="panel-blacksmith"></div>
+<div class="market-panel" id="panel-faith"></div>
+<div class="market-panel" id="panel-luxury"></div>
+<div class="market-panel" id="panel-transport"></div>
+
+<!-- ── SHOP MODAL ── -->
+<div class="modal-backdrop" id="shopBackdrop" onclick="handleShopBackdrop(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">&#9670; Shop</span>
+      <button class="modal-close" onclick="closeShop()">&#10005;</button>
+    </div>
+    <div class="modal-body">
+
+      <!-- 1. Character picker -->
+      <div style="font-family:'Cinzel',serif;font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:0.4rem;">Buyer</div>
+      <div class="char-pick-list" id="shopCharList">
+        <div style="color:var(--text-faint);font-style:italic;font-size:0.88rem;">Loading characters…</div>
+      </div>
+
+      <div class="shop-divider"><span>Cart</span></div>
+
+      <!-- 2. Cart -->
+      <div id="cartEmpty" class="cart-empty">No items added yet. Click Buy on any listing, or use Quick Add below.</div>
+      <div class="cart-list" id="cartList" style="display:none;"></div>
+      <div class="cart-total-row" id="cartTotalRow" style="display:none;">
+        <span class="cart-total-label">Cart Total</span>
+        <span class="cart-total-val" id="cartTotalVal">0 G</span>
+      </div>
+
+      <div class="shop-divider"><span>Quick Add / Custom Spend</span></div>
+
+      <!-- 3. Custom fields -->
+      <div class="custom-spend-row">
+        <div>
+          <label>Item Name (optional)</label>
+          <input type="text" id="shop-custom-item" placeholder="e.g. Mystery Potion">
+        </div>
+        <div>
+          <label>&#9733; Gold to deduct</label>
+          <input type="number" id="shop-custom-gcoin" placeholder="0" min="0">
+        </div>
+      </div>
+      <div class="custom-spend-row" style="grid-template-columns:1fr;margin-top:0.4rem;">
+        <div>
+          <label>&#9670; Currency Coins to deduct (optional)</label>
+          <input type="number" id="shop-custom-ccoin" placeholder="0" min="0">
+        </div>
+      </div>
+      <div style="margin-top:0.6rem;">
+        <button class="buy-btn" style="font-size:0.65rem;padding:0.3rem 0.8rem;" onclick="addCustomToCart()">+ Add to Cart</button>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn-cancel" onclick="closeShop()">Cancel</button>
+        <button class="btn-submit" id="shopSubmitBtn" onclick="submitPurchase()">Confirm Purchase</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
 <script>
+// ── SUPABASE ──────────────────────────────────────────────
+const SUPABASE_URL = 'https://aakfivejocyemgsfxkvw.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFha2ZpdmVqb2N5ZW1nc2Z4a3Z3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzOTU4MDQsImV4cCI6MjA4ODk3MTgwNH0.pbGpbDWYQHUZwQL90k8lszZVCEn0e8EjCxV5m9ppAqw';
+
+async function sbFetch(path, opts = {}) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1${path}`, {
+    headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=representation', ...opts.headers },
+    ...opts
+  });
+  if (!res.ok) { const e = await res.json().catch(() => ({})); throw new Error(e.message || res.statusText); }
+  return res.status === 204 ? null : res.json();
+}
+
+function showToast(msg, isErr = false) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'toast' + (isErr ? ' err' : '');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3200);
+}
+
+// ── MARKET DATA ───────────────────────────────────────────
 const MARKET_DATA = {
-  blacksmith: {
-    label: "Blacksmith / Armory",
-    icon: "&#9876;",
-    items: [
-      { name: "Full Armor", price: "2,000 G" },
-      { name: "Extra Weapon", price: "150 G" },
-      { name: "Extra Shield", price: "150 G" },
-      { name: "Ball Bearings", price: "25 G" },
-      { name: "Chain", price: "50 G" },
-      { name: "Lamp", price: "25 G" },
-      { name: "Miner's Pick", price: "50 G" },
-      { name: "Repair Hammer (Single Use)", price: "50 G" },
-      { name: "Musical Instrument", price: "100 G" },
-    ]
-  },
-  faith: {
-    label: "Faith Supplies",
-    icon: "&#9728;",
-    items: [
-      { name: "Curative Flask (Heals 1 HP)", price: "20 G" },
-      { name: "Curative Bag (Heals 3 HP)", price: "50 G" },
-      { name: "Curative Kit (Heals 6 HP)", price: "100 G" },
-      { name: "Sacred Herb (Heals one Condition)", price: "75 G" },
-      { name: "Scriptures", price: "20 G" },
-      { name: "Chalk", price: "5 G" },
-      { name: "Holy Water", price: "150 G" },
-      { name: "Incense", price: "50 G" },
-      { name: "Mana Salts (Lets you cast a ritual)", price: "300 G" },
-      { name: "Service: Raise Dead", price: "3,000 G", service: true },
-    ]
-  },
-  luxury: {
-    label: "Luxury Items & Crafting Goods",
-    icon: "&#9752;",
-    items: [
-      { name: "Reef Rock", price: "28 G" },
-      { name: "Ceiba Cotton", price: "17 G" },
-      { name: "Hagnos Lumber", price: "39 G" },
-      { name: "Weaver's Spindle", price: "285 G" },
-      { name: "Moogle Tuft", price: "265 G" },
-      { name: "Turtlerock", price: "770 G" },
-      { name: "Glamour Prism", price: "218 G" },
-      { name: "Chocobo Feed", price: "12 G" },
-      { name: "Exotic Perfume", price: "427 G" },
-      { name: "High Durium Nugget", price: "2,120 G" },
-      { name: "Star Quartz", price: "5,780 G" },
-    ]
-  },
-  transport: {
-    label: "Transportation",
-    icon: "&#9650;",
-    items: [
-      { name: "Camel", price: "300 G" },
-      { name: "Donkey", price: "150 G" },
-      { name: "Horse, Draft", price: "500 G" },
-      { name: "Horse, Riding", price: "800 G" },
-      { name: "Elephant", price: "5,000 G" },
-      { name: "Mastiff", price: "200 G" },
-      { name: "Pony", price: "250 G" },
-      { name: "Warhorse", price: "2,000 G" },
-      { name: "Chocobo", price: "2,300 G" },
-      { name: "Carriage", price: "1,200 G" },
-      { name: "Chariot", price: "800 G" },
-      { name: "Sled", price: "200 G" },
-      { name: "Rowboat", price: "300 G" },
-      { name: "Sailing Boat", price: "1,500 G" },
-      { name: "Galley", price: "25,000 G" },
-      { name: "Saddlebags", price: "50 G" },
-      { name: "Feed (per day)", price: "5 G" },
-      { name: "Stabling (per day)", price: "10 G" },
-    ]
-  }
+  blacksmith: { label: "Blacksmith / Armory", icon: "&#9876;", items: [
+    { name: "Full Armor", price: "2,000 G", gold: 2000 },
+    { name: "Extra Weapon", price: "150 G", gold: 150 },
+    { name: "Extra Shield", price: "150 G", gold: 150 },
+    { name: "Ball Bearings", price: "25 G", gold: 25 },
+    { name: "Chain", price: "50 G", gold: 50 },
+    { name: "Lamp", price: "25 G", gold: 25 },
+    { name: "Miner's Pick", price: "50 G", gold: 50 },
+    { name: "Repair Hammer (Single Use)", price: "50 G", gold: 50 },
+    { name: "Musical Instrument", price: "100 G", gold: 100 },
+  ]},
+  faith: { label: "Faith Supplies", icon: "&#9728;", items: [
+    { name: "Curative Flask (Heals 1 HP)", price: "20 G", gold: 20 },
+    { name: "Curative Bag (Heals 3 HP)", price: "50 G", gold: 50 },
+    { name: "Curative Kit (Heals 6 HP)", price: "100 G", gold: 100 },
+    { name: "Sacred Herb (Heals one Condition)", price: "75 G", gold: 75 },
+    { name: "Scriptures", price: "20 G", gold: 20 },
+    { name: "Chalk", price: "5 G", gold: 5 },
+    { name: "Holy Water", price: "150 G", gold: 150 },
+    { name: "Incense", price: "50 G", gold: 50 },
+    { name: "Mana Salts (Lets you cast a ritual)", price: "300 G", gold: 300 },
+    { name: "Service: Raise Dead", price: "3,000 G", gold: 3000, service: true },
+  ]},
+  luxury: { label: "Luxury Items & Crafting Goods", icon: "&#9752;", items: [
+    { name: "Reef Rock", price: "28 G", gold: 28 },
+    { name: "Ceiba Cotton", price: "17 G", gold: 17 },
+    { name: "Hagnos Lumber", price: "39 G", gold: 39 },
+    { name: "Weaver's Spindle", price: "285 G", gold: 285 },
+    { name: "Moogle Tuft", price: "265 G", gold: 265 },
+    { name: "Turtlerock", price: "770 G", gold: 770 },
+    { name: "Glamour Prism", price: "218 G", gold: 218 },
+    { name: "Chocobo Feed", price: "12 G", gold: 12 },
+    { name: "Exotic Perfume", price: "427 G", gold: 427 },
+    { name: "High Durium Nugget", price: "2,120 G", gold: 2120 },
+    { name: "Star Quartz", price: "5,780 G", gold: 5780 },
+  ]},
+  transport: { label: "Transportation", icon: "&#9650;", items: [
+    { name: "Camel", price: "300 G", gold: 300 },
+    { name: "Donkey", price: "150 G", gold: 150 },
+    { name: "Horse, Draft", price: "500 G", gold: 500 },
+    { name: "Horse, Riding", price: "800 G", gold: 800 },
+    { name: "Elephant", price: "5,000 G", gold: 5000 },
+    { name: "Mastiff", price: "200 G", gold: 200 },
+    { name: "Pony", price: "250 G", gold: 250 },
+    { name: "Warhorse", price: "2,000 G", gold: 2000 },
+    { name: "Chocobo", price: "2,300 G", gold: 2300 },
+    { name: "Carriage", price: "1,200 G", gold: 1200 },
+    { name: "Chariot", price: "800 G", gold: 800 },
+    { name: "Sled", price: "200 G", gold: 200 },
+    { name: "Rowboat", price: "300 G", gold: 300 },
+    { name: "Sailing Boat", price: "1,500 G", gold: 1500 },
+    { name: "Galley", price: "25,000 G", gold: 25000 },
+    { name: "Saddlebags", price: "50 G", gold: 50 },
+    { name: "Feed (per day)", price: "5 G", gold: 5 },
+    { name: "Stabling (per day)", price: "10 G", gold: 10 },
+  ]}
 };
+
+// ── ITEM RENDERING ────────────────────────────────────────
+function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;'); }
 
 function buildItemRow(item, query) {
   const nameLC = item.name.toLowerCase();
   const hidden = query && !nameLC.includes(query) ? ' hidden' : '';
   const priceClass = item.service ? ' service' : '';
-  return `<div class="item-row${hidden}"><span class="item-name">${item.name}</span><span class="item-price${priceClass}">${item.price}</span></div>`;
+  return `<div class="item-row${hidden}">
+    <span class="item-name">${item.name}</span>
+    <span class="item-price${priceClass}">${item.price}</span>
+    <button class="buy-btn" data-name="${esc(item.name)}" data-gold="${item.gold}" onclick="addToCartFromBtn(this)">Buy</button>
+  </div>`;
 }
 
 function renderAll(query) {
   const panel = document.getElementById('panel-all');
+  const searchWrap = document.getElementById('search-wrap');
   let html = '';
   let anyVisible = false;
   for (const [key, cat] of Object.entries(MARKET_DATA)) {
@@ -191,7 +384,9 @@ function renderAll(query) {
     </div>`;
   }
   if (!anyVisible) html = '<div class="empty-msg">No items matched your search.</div>';
-  panel.innerHTML = html;
+  panel.innerHTML = '';
+  panel.appendChild(searchWrap);
+  panel.insertAdjacentHTML('beforeend', html);
 }
 
 function renderCategory(key) {
@@ -206,39 +401,308 @@ function switchTab(panelId, btn) {
   document.querySelectorAll('.market-panel').forEach(p => p.classList.remove('active'));
   btn.classList.add('active');
   document.getElementById('panel-' + panelId).classList.add('active');
-  document.getElementById('search-wrap').style.display = panelId === 'all' ? 'flex' : 'none';
 }
 
 function onSearch(e) {
-  const q = e.target.value.trim().toLowerCase();
-  renderAll(q);
+  renderAll(e.target.value.trim().toLowerCase());
 }
 
-// Init
+// ── SHOP STATE ────────────────────────────────────────────
+let allPeople = [];
+let selectedCharId = null;
+let cart = []; // { name, gold, ccoin, qty }
+let pendingCartItem = null;
+
+async function openShop() {
+  if (!pendingCartItem) cart = []; // only wipe cart on manual open, not Buy-triggered open
+  selectedCharId = null;
+  renderCart();
+  document.getElementById('shop-custom-item').value = '';
+  document.getElementById('shop-custom-gcoin').value = '';
+  document.getElementById('shop-custom-ccoin').value = '';
+
+  const list = document.getElementById('shopCharList');
+  list.innerHTML = '<div style="color:var(--text-faint);font-style:italic;font-size:0.88rem;">Loading…</div>';
+  document.getElementById('shopBackdrop').classList.add('open');
+
+  try {
+    const [chars, npcs] = await Promise.all([
+      sbFetch('/EchoesDivideChar?select=id,name,race,level,gcoin,ccoin,portrait_url&order=created_at.asc'),
+      sbFetch('/EchoesDivideNPC?select=id,name,race,level,gcoin,ccoin,portrait_url&order=created_at.asc').catch(() => [])
+    ]);
+    allPeople = [...(chars||[]), ...(npcs||[])];
+    // Flush any item that was clicked before the modal opened
+    if (pendingCartItem) {
+      addToCart(pendingCartItem.name, pendingCartItem.gold);
+      pendingCartItem = null;
+    }
+
+    // Trigger affordability update after list renders
+    setTimeout(updateAffordability, 50);
+
+    list.innerHTML = allPeople.length
+      ? allPeople.map(c => `
+        <div class="char-pick-row" id="spick-${c.id}" onclick="selectShopChar(${c.id})">
+          ${c.portrait_url
+            ? `<img class="char-pick-thumb" src="${c.portrait_url}" alt="${c.name}">`
+            : `<div class="char-pick-placeholder">⚔</div>`}
+          <div class="char-pick-info">
+            <div class="char-pick-name">${c.name}</div>
+            <div class="char-pick-sub">${c.race||'—'} · Lv.${c.level||1}</div>
+          </div>
+          <span class="char-pick-wallet" id="swallet-${c.id}">★${c.gcoin||0} ◆${c.ccoin||0}</span>
+        </div>`).join('')
+      : '<div style="color:var(--text-faint);font-style:italic;font-size:0.88rem;">No characters found.</div>';
+  } catch(e) {
+    list.innerHTML = '<div style="color:var(--red);font-size:0.88rem;">Failed to load characters.</div>';
+  }
+}
+
+function selectShopChar(id) {
+  selectedCharId = id;
+  document.querySelectorAll('.char-pick-row').forEach(r => r.classList.remove('selected'));
+  document.getElementById('spick-' + id)?.classList.add('selected');
+  renderCart();
+  updateAffordability();
+}
+
+function updateAffordability() {
+  const char = allPeople.find(c => c.id === selectedCharId);
+  const bar = document.getElementById('buyer-balance-bar');
+  const nameEl = document.getElementById('buyer-balance-name');
+  const walletEl = document.getElementById('buyer-balance-wallet');
+  if (!char) { bar.style.display = 'none'; return; }
+
+  bar.style.display = 'flex';
+  nameEl.textContent = char.name;
+  const gcoinSvg = '<svg width="11" height="11" viewBox="0 0 11 11" fill="none"><circle cx="5.5" cy="5.5" r="4.5" stroke="currentColor" stroke-width="1"/><circle cx="5.5" cy="5.5" r="2.5" fill="currentColor" opacity="0.5"/></svg>';
+  const ccoinSvg = '<svg width="10" height="11" viewBox="0 0 10 11" fill="none"><polygon points="5,1 9,4 9,7 5,10 1,7 1,4" stroke="currentColor" stroke-width="1" fill="currentColor" opacity="0.3"/></svg>';
+  walletEl.innerHTML = `<span style="color:var(--gold);display:inline-flex;align-items:center;gap:3px;">${gcoinSvg} ${(char.gcoin||0).toLocaleString()} G</span>
+    &nbsp; <span style="color:#c084fc;display:inline-flex;align-items:center;gap:3px;">${ccoinSvg} ${(char.ccoin||0).toLocaleString()} C</span>`;
+
+  // Mark each item row affordable/unaffordable
+  document.querySelectorAll('.item-row').forEach(row => {
+    const btn = row.querySelector('.buy-btn');
+    if (!btn) return;
+    const gold = parseInt(btn.dataset.gold) || 0;
+    row.classList.remove('affordable', 'unaffordable');
+    if (gold > 0) {
+      row.classList.add((char.gcoin||0) >= gold ? 'affordable' : 'unaffordable');
+    }
+  });
+}
+
+function closeShop() {
+  document.getElementById('shopBackdrop').classList.remove('open');
+}
+function handleShopBackdrop(e) {
+  if (e.target === document.getElementById('shopBackdrop')) closeShop();
+}
+
+// ── CART ──────────────────────────────────────────────────
+function addToCartFromBtn(btn) {
+  const name = btn.dataset.name;
+  const gold = parseInt(btn.dataset.gold);
+  // If shop is already open just add to cart, otherwise open it with the item queued
+  if (document.getElementById('shopBackdrop').classList.contains('open')) {
+    addToCart(name, gold);
+  } else {
+    pendingCartItem = { name, gold };
+    openShop();
+  }
+}
+
+function addToCart(name, gold) {
+  const existing = cart.find(r => r.name === name && r.ccoin === 0 && r.gold === gold);
+  if (existing) { existing.qty++; }
+  else { cart.push({ name, gold, ccoin: 0, qty: 1 }); }
+  renderCart();
+  showToast(`Added: ${name}`);
+}
+
+function addCustomToCart() {
+  const name  = document.getElementById('shop-custom-item').value.trim() || 'Custom Purchase';
+  const gold  = parseInt(document.getElementById('shop-custom-gcoin').value)  || 0;
+  const ccoin = parseInt(document.getElementById('shop-custom-ccoin').value) || 0;
+  if (!gold && !ccoin) { showToast('Enter a gold or coin amount.', true); return; }
+  cart.push({ name, gold, ccoin, qty: 1 });
+  document.getElementById('shop-custom-item').value = '';
+  document.getElementById('shop-custom-gcoin').value = '';
+  document.getElementById('shop-custom-ccoin').value = '';
+  renderCart();
+  showToast(`Added: ${name}`);
+}
+
+function removeFromCart(idx) {
+  cart.splice(idx, 1);
+  renderCart();
+}
+
+function cartTotals() {
+  return cart.reduce((acc, r) => {
+    acc.gold  += r.gold  * r.qty;
+    acc.ccoin += r.ccoin * r.qty;
+    return acc;
+  }, { gold: 0, ccoin: 0 });
+}
+
+function renderCart() {
+  const listEl   = document.getElementById('cartList');
+  const emptyEl  = document.getElementById('cartEmpty');
+  const totalRow = document.getElementById('cartTotalRow');
+  const totalVal = document.getElementById('cartTotalVal');
+
+  if (!cart.length) {
+    listEl.style.display = 'none';
+    totalRow.style.display = 'none';
+    emptyEl.style.display = 'block';
+    return;
+  }
+  emptyEl.style.display = 'none';
+  listEl.style.display = 'flex';
+  totalRow.style.display = 'flex';
+
+  listEl.innerHTML = cart.map((r, i) => `
+    <div class="cart-row">
+      <span class="cart-row-name">${r.name}</span>
+      <span class="cart-row-qty">×${r.qty}</span>
+      <span class="cart-row-price">${r.gold * r.qty > 0 ? `★${(r.gold*r.qty).toLocaleString()}` : ''}${r.ccoin * r.qty > 0 ? ` ◆${r.ccoin*r.qty}` : ''}</span>
+      <button class="cart-row-del" onclick="removeFromCart(${i})" title="Remove">✕</button>
+    </div>`).join('');
+
+  const { gold, ccoin } = cartTotals();
+  const char = allPeople.find(c => c.id === selectedCharId);
+  const parts = [];
+  if (gold)  parts.push(`★ ${gold.toLocaleString()} G`);
+  if (ccoin) parts.push(`◆ ${ccoin} C`);
+  totalVal.textContent = parts.join('  ') || '0';
+
+  // Turn red if buyer can't afford it
+  const canAffordGold  = !char || (char.gcoin||0) >= gold;
+  const canAffordCcoin = !char || (char.ccoin||0) >= ccoin;
+  totalVal.className = 'cart-total-val' + ((!canAffordGold || !canAffordCcoin) && char ? ' over' : '');
+}
+
+// ── PURCHASE ──────────────────────────────────────────────
+async function submitPurchase() {
+  if (!selectedCharId) { showToast('Select a character first.', true); return; }
+  if (!cart.length)    { showToast('Cart is empty.', true); return; }
+
+  const char = allPeople.find(c => c.id === selectedCharId);
+  if (!char) { showToast('Character not found.', true); return; }
+
+  const { gold, ccoin } = cartTotals();
+  if ((char.gcoin||0) < gold)   { showToast(`${char.name} can't afford this — needs ${gold} G, has ${char.gcoin||0} G.`, true); return; }
+  if ((char.ccoin||0) < ccoin)  { showToast(`${char.name} doesn't have enough currency coins.`, true); return; }
+
+  const btn = document.getElementById('shopSubmitBtn');
+  btn.disabled = true; btn.textContent = 'Processing…';
+
+  try {
+    const isNpc = !allPeople.slice(0, allPeople.length).find(c => c.id === selectedCharId && c._isChar);
+    // Determine table — try chars first
+    let table = 'EchoesDivideChar';
+    try { const [r] = await sbFetch(`/EchoesDivideChar?id=eq.${selectedCharId}&select=id`); if (!r) table = 'EchoesDivideNPC'; }
+    catch { table = 'EchoesDivideNPC'; }
+
+    const newGcoin = (char.gcoin||0) - gold;
+    const newCcoin = (char.ccoin||0) - ccoin;
+    await sbFetch(`/${table}?id=eq.${selectedCharId}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ gcoin: newGcoin, ccoin: newCcoin })
+    });
+
+    // Add each item to inventory (skip pure-gold-deduct entries with no name or labelled "Custom Purchase" with no item)
+    const itemsToAdd = cart.filter(r => r.name && r.name !== 'Custom Purchase');
+    if (itemsToAdd.length) {
+      const rows = itemsToAdd.flatMap(r =>
+        Array.from({ length: r.qty }, () => ({ character_id: selectedCharId, item_name: r.name }))
+      );
+      await sbFetch('/inventory', { method: 'POST', body: JSON.stringify(rows) });
+    }
+
+    // Update local wallet display
+    char.gcoin = newGcoin;
+    char.ccoin = newCcoin;
+    const walletEl = document.getElementById('swallet-' + selectedCharId);
+    if (walletEl) walletEl.textContent = `★${newGcoin} ◆${newCcoin}`;
+
+    const summary = [];
+    if (gold)  summary.push(`${gold.toLocaleString()} G`);
+    if (ccoin) summary.push(`${ccoin} C`);
+    showToast(`Purchase complete for ${char.name} — spent ${summary.join(' + ')}`);
+    cart = [];
+    renderCart();
+  } catch(e) {
+    showToast('Error: ' + e.message, true);
+  } finally {
+    btn.disabled = false; btn.textContent = 'Confirm Purchase';
+  }
+}
+
+// ── INIT ──────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   for (const key of Object.keys(MARKET_DATA)) renderCategory(key);
   renderAll('');
 });
 </script>
+<script>
+(function() {
+  const IMAGES = ['https://aakfivejocyemgsfxkvw.supabase.co/storage/v1/object/public/assets/bg1.png', 'https://aakfivejocyemgsfxkvw.supabase.co/storage/v1/object/public/assets/bg2.png'];
+  const a = document.getElementById('bg-layer-a');
+  const b = document.getElementById('bg-layer-b');
+  let current = Math.random() < 0.5 ? 0 : 1;
+  let useA = true;
 
-<!-- ALL ITEMS PANEL -->
-<div class="market-panel active" id="panel-all">
-  <!-- rendered by JS -->
-</div>
+  function setBg(el, idx) {
+    el.style.backgroundImage = 'url(' + IMAGES[idx] + ')';
+  }
 
-<!-- CATEGORY PANELS -->
-<div class="market-panel" id="panel-blacksmith"></div>
-<div class="market-panel" id="panel-faith"></div>
-<div class="market-panel" id="panel-luxury"></div>
-<div class="market-panel" id="panel-transport"></div>
+  setBg(a, current);
+  const next = (current + 1) % IMAGES.length;
+  setBg(b, next);
 
-<!-- Search bar (shown only on All Items tab) -->
-<div id="search-wrap" class="toolbar" style="padding-top:0;margin-top:-0.5rem;">
-  <div class="search-bar" style="max-width:500px;width:100%;margin:0 auto;">
-    <span class="search-label">Search</span>
-    <input type="text" placeholder="Filter items..." oninput="onSearch(event)">
-  </div>
-</div>
+  setInterval(function() {
+    current = (current + 1) % IMAGES.length;
+    const incoming = (current + 1) % IMAGES.length;
+    if (useA) {
+      a.style.opacity = '0';
+      b.style.opacity = '1';
+      setTimeout(function() { setBg(a, incoming); }, 2600);
+    } else {
+      a.style.opacity = '1';
+      b.style.opacity = '0';
+      setTimeout(function() { setBg(b, incoming); }, 2600);
+    }
+    useA = !useA;
+  }, 45000);
+})();
+</script>
+
+
+<script>
+// ── PAGE TRANSITION ──────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  document.body.classList.add('page-ready');
+});
+function navigateTo(url) {
+  document.body.classList.add('page-out');
+  setTimeout(() => { window.location.href = url; }, 300);
+}
+// Intercept all toolbar/nav buttons that use window.location.href
+document.addEventListener('click', e => {
+  const btn = e.target.closest('button');
+  if (!btn) return;
+  const onclick = btn.getAttribute('onclick') || '';
+  const match = onclick.match(/window\.location\.href\s*=\s*['"]([^'"]+)['"]/);
+  if (match) {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    btn.setAttribute('onclick', '');
+    navigateTo(match[1]);
+  }
+}, true);
+</script>
 
 </body>
 </html>
